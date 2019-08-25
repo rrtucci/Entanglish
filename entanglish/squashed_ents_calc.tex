@@ -1,0 +1,1653 @@
+\documentclass[12pt]{article}%\usepackage{squashed_ents_lab}
+\usepackage{epsfig}     %standard package. Note graphics<graphicx<epsfig
+%\usepackage{color}     %standard package
+%\usepackage[pdfmark,colorlinks]{hyperref} %standard package written by Sebastian Rahtz
+%\usepackage{subeqn}    %allows equations 1a, 1b
+%\usepackage{subfig}    %allows figures 1a, 1b
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\paperheight=11in
+\topmargin=0in
+\headheight=0in
+\headsep=0in
+\topskip=0in
+\textheight=8.5in
+\footskip=.5in
+
+\paperwidth=8.5in
+\oddsidemargin=.25in
+\evensidemargin=.25in
+\textwidth=6.0in
+\parindent=.5in
+
+\newtheorem{claim}{Claim}
+\newcommand{\proof}[0]{{\bf proof:} }
+\newcommand{\qed}[0]{\newline\noindent{\bf QED }}
+
+
+\newcommand{\bra}[1]{\langle#1|}
+\newcommand{\ket}[1]{|#1\rangle}
+\newcommand{\av}[1]{\langle#1\rangle}
+\newcommand{\pder}[2]{\frac{\partial#1}{\partial#2}}
+\newcommand{\tr}[0]{{\rm tr }}
+\newcommand{\beq}{\begin{equation}}
+\newcommand{\eeq}{\end{equation}}
+\newcommand{\bsub}{\begin{subequations}}
+\newcommand{\esub}{\end{subequations}}
+\newcommand{\beqa}{\begin{eqnarray}}
+\newcommand{\eeqa}{\end{eqnarray}}
+\newcommand{\rarrow}[0]{\rightarrow}
+\newcommand{\larrow}[0]{\leftarrow}
+\newcommand{\Rarrow}[0]{\Rightarrow}
+\newcommand{\nRarrow}[0]{\nRightarrow}
+\newcommand{\Larrow}[0]{\Leftarrow}
+\newcommand{\nLarrow}[0]{\nLeftarrow}
+\newcommand{\ul}[1]{\underline{#1}}
+\newcommand{\ZZ}[0]{ {\mathbb{Z}}}
+\newcommand{\RR}[0]{{ \mathbb{R}} }
+\newcommand{\CC}[0]{{ \mathbb{C}} }
+\newcommand{\ground}{{}_{\stackrel{\stackrel{\displaystyle{\bot}}{-}}{.}}}
+
+
+\newcommand{\rva}[0]{{\ul{a}}}
+\newcommand{\rvb}[0]{{\ul{b}}}
+\newcommand{\rvc}[0]{{\ul{c}}}
+\newcommand{\rvd}[0]{{\ul{d}}}
+\newcommand{\rve}[0]{{\ul{e}}}
+\newcommand{\rvf}[0]{{\ul{f}}}
+\newcommand{\rvg}[0]{{\ul{g}}}
+\newcommand{\rvh}[0]{{\ul{h}}}
+\newcommand{\rvi}[0]{{\ul{i}}}
+\newcommand{\rvj}[0]{{\ul{j}}}
+\newcommand{\rvk}[0]{{\ul{k}}}
+\newcommand{\rvl}[0]{{\ul{l}}}
+\newcommand{\rvm}[0]{{\ul{m}}}
+\newcommand{\rvn}[0]{{\ul{n}}}
+\newcommand{\rvo}[0]{{\ul{o}}}
+\newcommand{\rvp}[0]{{\ul{p}}}
+\newcommand{\rvq}[0]{{\ul{q}}}
+\newcommand{\rvr}[0]{{\ul{r}}}
+\newcommand{\rvs}[0]{{\ul{s}}}
+\newcommand{\rvt}[0]{{\ul{t}}}
+\newcommand{\rvu}[0]{{\ul{u}}}
+\newcommand{\rvv}[0]{{\ul{v}}}
+\newcommand{\rvw}[0]{{\ul{w}}}
+\newcommand{\rvx}[0]{{\ul{x}}}
+\newcommand{\rvy}[0]{{\ul{y}}}
+\newcommand{\rvz}[0]{{\ul{z}}}
+
+\newcommand{\rvX}[0]{{\ul{X}}}
+\newcommand{\rvY}[0]{{\ul{Y}}}
+\newcommand{\rvZ}[0]{{\ul{Z}}}
+
+\newcommand{\rvA}[0]{{\ul{A}}}
+\newcommand{\rvB}[0]{{\ul{B}}}
+\newcommand{\rvC}[0]{{\ul{C}}}
+\newcommand{\rvD}[0]{{\ul{D}}}
+
+
+
+
+\newcommand{\proj}[0]{{\rm proj}}
+\newcommand{\diag}[0]{{\rm diag}}
+\newcommand{\biprod}[2]{\left[\begin{array}{c}#1\\#2\end{array}\right]^\times}
+\newcommand{\setofall}[2]{\{#1\}_{\forall #2}}
+
+\newcommand{\calc}[0]{{\cal C}}
+\newcommand{\cald}[0]{{\cal D}}
+\newcommand{\cale}[0]{{\cal E}}
+\newcommand{\calh}[0]{{\cal H}}
+\newcommand{\cali}[0]{{\cal I}}
+\newcommand{\cals}[0]{{\cal S}}
+\newcommand{\calt}[0]{{\cal T}}
+
+
+
+\newcommand{\lam}[0]{\lambda}
+
+\newcommand{\nev}[0]{{n_{\rm eva}}}
+\newcommand{\nra}[0]{{n_{\rm ra}}}
+\newcommand{\nr}[0]{{n_{\rm rows}}}
+\newcommand{\nab}[0]{{n_{\rm ab}}}
+\newcommand{\nbs}[0]{{n_{\rm bs}}}
+\newcommand{\norm}[1]{\parallel #1 \parallel_2}
+\newcommand{\rvalp}[0]{{\ul{\alpha}}}
+\newcommand{\alp}[0]{{\alpha}}
+\newcommand{\brazo}{ \begin{array}{r}
+ \bra{0^{n_0}}
+ \\
+ \bra{1^{n_1}}
+ \end{array}
+ }
+ \newcommand{\ketzo}{ \begin{array}{l}
+ \ket{0^{n_0}}
+ \\
+ \ket{1^{n_1}}
+ \end{array}
+ }
+\newcommand{\darrow}[0]{{\downarrow}}
+
+\begin{document}
+
+\title{Algorithms for\\
+Exact and Approximate Calculation\\
+of Squashed Entanglement}
+
+
+\author{Robert R. Tucci\\
+        P.O. Box 226\\
+        Bedford,  MA   01730\\
+        tucci@ar-tiste.com}
+
+
+\date{ \today}
+
+\maketitle
+
+\vskip2cm
+\section*{Abstract}
+In this paper, we propose an algorithm
+for calculating the squashed entanglement
+of
+any pure or mixed quantum state $\rho$.
+Our algorithm is a generalization
+of the Arimoto-Blahut algorithm
+ of classical
+information theory,
+where it is used to calculate channel capacities.
+If the dimension of $\rho$ isn't too large,
+one can calculate the squashed entanglement ``exactly"
+using standard methods from Linear Algebra.
+If the dimension of $\rho$ is large, then
+one can calculate the squashed entanglement ``approximately"
+ using a method that we call
+  ``bootstrapped perturbation
+theory" that is described in this paper.
+In order to test
+the values of squashed
+entanglement that our algorithm
+yields, we introduce
+a family of pure states of multiple qubits
+that we call the symmetrized N-up states.
+We give and prove an analytical formula
+for the squashed entanglement of this
+family of states.
+
+\newpage
+\section{Introduction}
+
+In this paper, we propose an algorithm
+for calculating the squashed entanglement
+(Ref.\cite{sq-wiki}) of
+any pure or mixed quantum state $\rho$.
+Our algorithm is a generalization
+of the Arimoto-Blahut algorithm (Ref.\cite{ab-algo})
+ of classical
+information theory,
+where it is used to calculate channel capacities.
+
+Executing the algorithm requires
+finding the eigen-decompositions of
+various Hermitian matrices
+of the same dimension
+as the matrix $\rho$.
+If the dimension of $\rho$
+is small, finding
+these eigen-decompositions,
+with acceptable
+speed and accuracy,
+is feasible
+using standard matrix
+diagonalization methods.
+But
+for dimension of $\rho$
+bigger than a certain
+value, these standard methods
+will not work adequately.
+We present an algorithm
+that we call ``bootstrapped perturbation
+theory" which
+can handle better
+than the standard
+matrix diagonalization methods
+those $\rho$'s
+with a large dimension.
+
+In order to test
+the values of squashed
+entanglement that our algorithm
+yields, we introduce
+a family of pure states of multiple qubits
+that we call the symmetrized N-up states.
+We give and prove an analytical formula
+for the squashed entanglement of this
+family of states.
+
+For a review of the history of squashed
+entanglement, see Ref.\cite{sq-wiki}.
+The property
+of strong subadditivity
+of quantum entropy (i.e., that
+$S(\rvx:\rvy|\rvalp)\geq 0$)
+which guarantees that
+squashed entanglement is non-negative, was first proven by Lieb and Ruskai in Ref.\cite{subadd-proof}.
+The definition of squashed entanglement was first
+proposed
+and some of its properties
+were first discovered by Tucci in a series of six papers
+Refs.\cite{Tuc99}-\cite{Tuc02}
+during the years 1999 to 2002.
+One of those six papers, Ref.\cite{Tuc01a},
+proposed a method
+for calculating squashed
+entanglement that is different to the one
+proposed in this paper, but also takes inspiration
+from the Arimoto-Blahut algorithm.
+The first paper to study
+squashed entanglement
+post Tucci's work appears to be
+Ref.\cite{Chr03}, by Christiandl and Winter in 2003.
+They proved that squashed entanglement
+satisfies other interesting properties
+not touched upon in Tucci's work.
+The fact that the squashed entanglement
+of $\rho$ is
+``faithful", meaning that it
+is zero iff $\rho$ is ``separable"
+was conjectured in the work of Tucci
+(see  Ref.\cite{Tuc00a}) and was later proven
+more rigorously in Refs.\cite{sep-proof1} and \cite{sep-proof2}.
+
+
+
+\section{Notation and Preliminaries}
+In this section, we will discuss some notation
+and standard definitions that are used throughout the paper.
+
+Let $\theta(\cals)$ be the so called truth or indicator
+function. It equals 1 if statement $\cals$
+is true and zero otherwise.
+For example, $\theta(x>1)$ equals 1 when $x>1$
+and zero otherwise.
+$\delta(a, b)=\delta^a_b=\theta(a=b)$
+ will denote the Kronecker
+delta function.
+
+We will use $Z_I$ to
+denote the set of integers contained in an interval $I$,
+where $I$ is an interval of real numbers
+whose left side can be either
+open or closed, and the same for its
+right side. For example, $Z_{[0, 4)} = \{0, 1, 2, 3\}$
+and
+$Z_{[0, 4]} = \{0, 1, 2, 3, 4\}$.
+
+For any positive integers $n,k$ with $k\leq n$, let
+
+\beq
+n^{\darrow k} = n(n-1)(n-2)\ldots (n-k+1)
+\;.
+\eeq
+For example, $n^{\darrow 3} = n(n-1)(n-2)$.
+$n^{\darrow k}$
+has some properties in common with $n^k$,
+the $k$'th power of $n$. ``$n$ choose $k$",
+i.e.,
+the number of combinations of $n$
+objects taken $k$ at
+a time, can be expressed using $n^{\darrow k}$.
+Indeed, one has
+
+
+\beq
+{n\choose k} = \frac{n!}{k!(n-k)!}
+ = \frac{n^{\darrow k}}{k!}
+\;.
+\eeq
+
+For any square matrix $M$,  let
+$\norm{M} = \sqrt{\tr(MM^\dag)}$,
+where $M^\dag$ is the Hermitian
+conjugate of $M$. This is called the 2-norm
+or Frobenius norm of $M$. If all the entries of $M$ are
+put into a column vector $v$, this is just the magnitude
+$\sqrt{v^\dag v}$ of the vector.
+
+Given any Hermitian matrix $\rho$, one can express $\rho$ as
+an eigen-decomposition
+$\rho=UDU^\dag$, where $U$ is a unitary
+matrix and $D=\diag(
+\lam_0, \lam_1, \ldots \lam_{\nev-1})$ is
+a diagonal
+matrix that contains the eigenvalues $\lam_j$  of $\rho$
+along its diagonal. Let
+$\pi_1(\rho)$ represent
+the matrix one obtains
+from the eigen-decomposition of $\rho$
+ if one replaces
+each $\lam_j$ in the matrix $D$
+by $\theta(|\lam_j|>\epsilon)$ for some small number
+$\epsilon>0$. Let $\pi_0(\rho)=1-\pi_1(\rho)$,
+so in $\pi_0(\rho)$, each $\lam_j$
+in $D$ is replaced
+by $\theta(|\lam_j|\leq \epsilon)$.
+$\pi_1(\rho)$ (resp., $\pi_0(\rho)$)
+are the projectors onto the vector
+space of non-zero (resp., zero)
+eigenvalues of $\rho$. One can define the so called ``Penrose
+pseudo-inverse" of $\rho$
+ as:
+
+\beq
+{\rm pinv}(\rho)=
+\pi_1(\rho)\rho^{-1} \pi_1(\rho)
+\;.
+\eeq
+What this means is that, to arrive
+at pinv$(\rho)$, one replaces
+in the eigen-decomposition
+of $\rho$, each
+eigenvalue $\lam_j$ in $D$ by
+$1/\lam_j$ if $|\lam_j|>\epsilon$
+and by 0 otherwise.
+
+In this paper, random variables will be
+represented by underlined letters
+ instead of by the more common
+convention of using capital letters to represent them.
+For example $P_{\rvx, \rvy}(x, y)=P(\rvx=x,\rvy=y)=P(x,y)$
+will denote a joint distribution of the random variables
+$\rvx$ and $\rvy$.
+
+Next, we review a few standard definitions
+used in classical and quantum
+information theory.
+
+In
+classical information theory, one defines
+the entropy of a classical
+probability distribution $P_\rvx(x)$ by
+\beq
+H(\rvx) = -\sum_x P(x)\log P(x)
+\;,
+\eeq
+where the sum is over all values that $\rvx$
+can assume.
+Then one defines the conditional information (CI) by
+
+\beqa
+H(\rvx|\rvy) &=&\sum_{x, y}
+P(x, y) \log \frac{ 1}{P(x|y)}
+\\
+&=&
+H(\rvx, \rvy)
+-
+H(\rvy)
+\;,
+\eeqa
+and the conditional mutual information (CMI) by
+
+\beqa
+H(\rvx:\rvy|\rvalp) &=&\sum_{x, y, \alp}
+P(x, y, \alp) \log \frac{ P(x, y,| \alp)}{P(x|\alp)P(y|\alp)}
+\\
+&=&
+-H(\rvx, \rvy| \rvalp)
++
+H(\rvx| \rvalp)
++
+H(\rvy| \rvalp)
+\;.
+\eeqa
+(The mutual information (MI) is the CMI without the $\rvalp$).
+
+In quantum information theory, one defines
+the von Neumann entropy of a density matrix $\rho_\rvx$
+by
+
+\beq
+S(\rvx) = S(\rho_\rvx) =
+-\tr_\rvx [\rho_\rvx \log \rho_\rvx]
+\;,
+\eeq
+where the rows (and columns) of $\rho_\rvx$
+are labelled by the  values that $\rvx$ can assume.
+Then one defines the conditional information (CI) by
+
+\beq
+S(\rvx|\rvy) = S(\rvx, \rvy) - S(\rvy)
+\;,
+\eeq
+and the conditional mutual information (CMI) by
+
+\beq
+S(\rvx : \rvy | \rvalp)=
+-S(\rvx, \rvy| \rvalp)
++
+S(\rvx| \rvalp)
++
+S(\rvy| \rvalp)
+\;.
+\eeq
+(The mutual information (MI) is the CMI without the $\rvalp$).
+
+
+
+
+
+\section{Generalization of Arimoto Blahut Algorithm}
+In this section, we will
+propose an algorithm for
+calculating the squashed entanglement
+of any pure or mixed state.
+A different algorithm for doing
+the same thing was proposed by Tucci
+in Ref.\cite{Tuc01a} in 2001.
+The algorithm presented below is significantly
+better and simpler than the 2001 one. Both algorithms
+are generalizations to the quantum regime
+of the famous
+Arimoto Blahut algorithm of classical information
+theory, where it is used, for example, to calculate
+channel capacities. See Ref.\cite{sq-wiki} for a
+quick review of squashed entanglement. The section
+of this paper entitled Introduction contains
+additional references about it.
+
+Consider a bipartite system
+consisting of two parts labelled
+by the random variable $\rvx$ and $\rvy$,
+and
+described by a density matrix $\rho_{\rvx, \rvy}$.
+The squashed entanglement of  such a system
+is defined as
+
+\beq
+E_{\rvx, \rvy}(\rho_{\rvx, \rvy}) =
+\frac{1}{2}
+\min S(\rvx : \rvy|\rvalp)
+\;.
+\eeq
+The min()---or inf()
+if one wishes to be more mathematically
+rigorous---is
+over all density matrices $\rho_{\rvx, \rvy,\rvalp}$
+such that $\tr_\rvalp \; \rho_{\rvx, \rvy,\rvalp}=
+\rho_{\rvx, \rvy}$ with $\rho_{\rvx, \rvy}$ held fixed.
+This definition of $E_{\rvx,\rvy}$
+has many desirable properties. For example,
+
+
+\begin{itemize}
+\item
+$E_{\rvx, \rvy} = E_{\rvy, \rvx}\geq 0$. This is true
+because of the so called ``strong subadditivity
+of quantum entropy", which states that
+$S(\rvx : \rvy|\rvalp)\geq 0$
+for all density matrices
+$\rho_{\rvx,\rvy, \rvz}$.
+See Ref.\cite{subadd-proof}
+for the first ever proof of $S(\rvx : \rvy|\rvalp)\geq 0$.
+
+\item
+If $\rho_{\rvx, \rvy}$ is pure (which is true iff
+$\tr( \rho_{\rvx, \rvy}^2 - \rho_{\rvx, \rvy}) = 0$) then\footnote{ The factor of 1/2 in
+the definition of squashed entanglement
+is necessary to make this true.
+Contrary to what Ref.\cite{sep-proof2} claims,
+this factor
+of 1/2 appears in all of Tucci's
+ papers about squashed entanglement,
+from the very earliest.
+Doh, the fact that
+squashed entanglement reduces to
+the pure state entanglement
+definition, which was invented much earlier,
+ was one of the
+original motivations for Tucci for defining
+squashed entanglement.}
+
+\beq
+E_{\rvx, \rvy} = S(\rvx) = S(\rvy)
+\;.
+\eeq
+
+\item
+$E_{\rvy, \rvx}(\rho_{\rvx, \rvy})= 0$ iff
+$\rho_{\rvx, \rvy}$
+is stochastically separable,
+by which we mean that $\rho_{\rvx, \rvy}$
+can be expressed as\footnote{
+It is more conventional in the literature to call
+property Eq.(\ref{eq-stoch-sep})
+simply ``separability" instead of stochastic
+separability, but I prefer to use the word
+``separable" to refer to case that
+$\rho_{\rvx,\rvy} = \rho_\rvx \rho_\rvy$.}
+
+\beq
+\rho_{\rvx,\rvy}= \sum_\alp w^\alp
+\rho^\alp_\rvx \rho^\alp_\rvy
+\;,
+\label{eq-stoch-sep}
+\eeq
+where $w^\alp$ for all $\alp$
+is a probability distribution,
+and $\rho_\rvx^\alp, \rho_\rvy^\alp$
+are density matrices.
+In particular,
+this implies that squashed entanglement
+is zero
+in the classical case when
+$\rho_{\rvx,\rvy}$ is diagonal.
+This property is enunciated by some by saying that
+``squashed entanglement is faithful".
+
+
+\end{itemize}
+
+We will assume that $\rho_{\rvx, \rvy, \rvalp}$
+is of the form
+\beq
+\rho_{\rvx, \rvy, \rvalp} =
+\sum_\alp w^\alp \ket{\alp}\bra{\alp} \rho_{\rvx, \rvy}^\alp
+\;,
+\eeq
+where $w_\alp$ for $\alp\in Z_{[0, n_\alp)}$
+is a probability distribution
+, where $\rho^\alp_{\rvx, \rvy}$
+for each $\alp$ is a density matrix,
+and where the states $\ket{\alp}$
+for all $\alp$ are orthonormal.
+Therefore,
+
+\beq
+\rho_{\rvx, \rvy} =
+\tr_\rvalp\; \rho_{\rvx, \rvy, \rvalp} =
+\sum_\alp
+w^\alp \rho_{\rvx, \rvy}^\alp
+\;.
+\eeq
+
+Below, we will use the symbols $K_{\rvx, \rvy}^\alp$,
+$K_{\rvx,\rvy}$ and
+$R_{\rvx, \rvy}^\alp$ to denote
+\beq
+K_{\rvx, \rvy}^\alp = w^\alp \rho_{\rvx, \rvy}^\alp
+\;,
+\eeq
+
+\beq
+ K_{\rvx, \rvy} =
+\sum_\alp K_{\rvx, \rvy}^\alp =
+ \rho_{\rvx, \rvy}
+\;,
+\eeq
+and
+
+\beq
+R_{\rvx, \rvy}^\alp=
+\frac{K_{\rvx}^\alp K_{\rvy}^\alp}{w^\alp}
+\;.
+\eeq
+
+
+
+The algorithm for calculating
+squashed entanglement of either pure or mixed states
+consists of the two steps of Eqs.(\ref{eq-ab-algo})\footnote{The notation used in Eqs.(\ref{eq-ab-algo})
+is identical to that used in Ref.\cite{Tuc01a},
+except that in Eqs.(\ref{eq-ab-algo})
+we introduce
+a new operator $\cale^{(n)}_{\rvx, \rvy}$
+which is related to the operator
+$\Delta^{(n)}_{\rvx, \rvy}$ used in
+Ref.\cite{Tuc01a}
+by the following equation:
+$
+\cale^{(n)}_{\rvx, \rvy}=
+K_{\rvx, \rvy}\Delta^{(n)}_{\rvx, \rvy}
+$.}
+iterated for $n=0, 1, 2, \ldots, \nab-1$,
+where the number of Arimoto Blahut steps $\nab$
+can be fixed a priori
+or decided on the fly. If on the fly, one can
+stop when the change in $E_{\rvx, \rvy}$
+between  consecutive steps
+becomes smaller than a pre-decided constant $\epsilon>0$.
+
+\begin{subequations}
+\label{eq-ab-algo}
+\beq
+\cale^{(n)}_{\rvx, \rvy}=
+\sum_\alp
+K_{\rvx, \rvy}^{\alp (n)}
+\left(
+\log K_{\rvx, \rvy}^{\alp (n)}
+- \log R_{\rvx, \rvy}^{\alp (n)}
+\right)
+\;,
+\label{eq-ab-algo-a}
+\eeq
+
+\beq
+K_{\rvx, \rvy}^{\alp (n+1)}=
+\exp\left[
+{\rm pinv}(K_{\rvx, \rvy})
+\left(
+K_{\rvx, \rvy}
+\log K_{\rvx, \rvy}^{\alp (n)}
+- \cale_{\rvx, \rvy}^{(n)}
+\right)
+\pi_1(K_{\rvx, \rvy})
+\right]-\pi_0(K_{\rvx, \rvy})
+\;.
+\label{eq-ab-algo-b}
+\eeq
+\end{subequations}
+
+In the algorithm of Eqs.(\ref{eq-ab-algo}),
+the entanglement $E_{\rvx, \rvy}$ (which is a
+non-negative number)
+is computed as the limit
+of the trace of the
+entanglement operator $\cale^{(n)}_{\rvx, \rvy}$:
+
+\beq
+E_{\rvx, \rvy} = \lim_{n\rarrow \infty}
+\tr_{\rvx, \rvy} \cale^{(n)}_{\rvx, \rvy}
+\approx
+\tr_{\rvx, \rvy} \cale^{(\nab-1)}_{\rvx, \rvy}
+\;.
+\eeq
+
+Here is some intuition about the use of
+projectors $
+\pi_0(K_{\rvx, \rvy}), \pi_1(K_{\rvx, \rvy})$ in Eqs.(\ref{eq-ab-algo}).
+When $K_{\rvx, \rvy}$ has zero
+eigenvalues, its inverse doesn't exist, but its pseudo
+inverse does.
+The argument of the exp() in Eq.(\ref{eq-ab-algo-b})
+is sandwitched between
+two $\pi_1(K_{\rvx, \rvy})$.
+Each zero eigenvalue of
+$K_{\rvx, \rvy}$,
+when exponentiated becomes a 1 because $\exp(0)=1$,
+and each of those ones along the diagonal
+is cancelled by
+subtracting a $\pi_0(K_{\rvx, \rvy})$.
+The net effect of using
+the projectors $\pi_0(K_{\rvx, \rvy})$
+and $\pi_1(K_{\rvx, \rvy})$
+in Eq.(\ref{eq-ab-algo-b}) is to produce
+ a $K_{\rvx, \rvy}^{\alp (n+1)}$
+that satisfies
+
+\beq
+\pi_0(K_{\rvx, \rvy})
+K_{\rvx, \rvy}^{\alp (n+1)}
+\pi_0(K_{\rvx, \rvy})
+=0
+\;,
+\eeq
+which, if one sums over $\alp$,
+guarantees that
+
+\beq
+\pi_0(K_{\rvx, \rvy})
+K_{\rvx, \rvy}^{(n+1)}
+\pi_0(K_{\rvx, \rvy})
+=0
+\;.
+\label{eq-constraint}
+\eeq
+Eq.(\ref{eq-constraint}) is a good constraint to impose because
+it must be satisfied as $n\rarrow\infty$.
+
+
+Of course, if $K_{\rvx, \rvy}$ doesn't have any
+zero eigenvalues (i.e., is non-singular),
+then the pseudo-inverse becomes the usual
+inverse, $\pi_0(K_{\rvx, \rvy})=0$,
+and $\pi_1(K_{\rvx, \rvy})=1$.
+
+
+
+
+\section{Bootstrapped 2nd Order Perturbation Theory}
+
+In this section, we
+propose a method for calculating perturbatively
+any function $f(\rho)$ of $\rho$
+ expressible
+as a power series of $\rho$, for any quantum density
+matrix $\rho$. We are especially interested
+in using this method
+to evaluate any function  $f(\cdot)$
+that arises in the calculation of
+squashed entanglement for pure or mixed states.
+
+First, let us review the standard theory,
+as used in Quantum Mechanics, of
+(stationary, time independent)
+ perturbation theory for a Hamiltonian $H$.
+ We will denote the eigen-system
+ of $H$ by
+
+\beq
+{\rm esys}(H) = \{ (\lam_j, v_j)\}_{j=0, 1, ..., \nev-1}
+\;,
+\eeq
+where $\lam_j$ are the
+eigenvalues of $H$ and the column vectors $v_j$
+are eigenvectors satisfying $Hv_j = \lam_jv_j$.
+One can define a unitary matrix $U$
+by stacking
+side by side the column vectors $v_j$,
+and a diagonal matrix $D$
+by placing the eigenvalues of
+$H$ along the diagonal of $D$. Then
+
+\beq
+U = [ v_0, v_1, \ldots, v_{\nev-1}],\;\;\;
+D = {\rm diag}(\lam_0, \lam_1, \ldots, \lam_{\nev-1})
+\;
+\eeq
+and
+
+\beq
+H = \sum_{j=0, 1, ..., \nev-1} \lam_j v_jv^\dag_j
+= UDU^\dag
+\;.
+\eeq
+
+Suppose
+\beq H = H_0 + V
+\;,
+\eeq
+where $H_0$ is a Hermitian matrix for which esys($H_0$)
+is known. $H_0$ is called the unperturbed
+Hamiltonian and $V$ is called
+the perturbation.  Perturbation
+Theory is a method for finding an
+approximation, call it ${\rm esys}^\approx(H)$,
+for the exact eigen-system esys$(H)$ of $H$.
+Symbolically, perturbation theory
+takes us from esys$(H_0)$
+to ${\rm esys}^\approx(H)$:
+
+
+\beq
+{\rm esys}(H_0) \rarrow {\rm esys}^\approx(H)
+\;.
+\eeq
+
+
+The terms of the approximation ${\rm esys}^\approx(H)$
+are grouped by their order (power) of $V$.
+Ref\cite{pert-wiki} is quite useful because
+it lists all terms up to fifth order!
+ For completeness, we
+list them here next,
+up to 3rd order for the eigenvalues
+and up to 2nd order for the eigenvectors.
+To switch from our notation to the notation
+of Ref.\cite{pert-wiki}, let
+$\lam_j \rarrow E_j$ , $v_j\rarrow \ket{j}$,
+$v_j^\dag \rarrow \bra{j}$. Also let
+
+\beq
+V_{nm} = \bra{n^{(0)}} V \ket{m^{(0)}}
+\;,
+\eeq
+
+\beq
+E_{nm} = E^{(0)}_n - E^{(0)}_m
+\;,
+\eeq
+
+\beq
+E_n = E^{(0)}_n + E^{(1)}_n +  E^{(2)}_n +\ldots
+\;
+\eeq
+
+\beq
+\ket{n} = \ket{n^{(0)}} +
+ \ket{n^{(1)}} +\ket{n^{(2)}} + \ldots
+\;.
+\eeq
+
+The eigenvalue approximations
+ up to 3rd order are:
+
+
+\beqa
+E^{(1)}_n &=& V_{nn}
+\\
+E^{(2)}_n &=& \sum_{k_2\neq n}\frac{|V_{nk_2}|^2}{E_{nk_2}}
+\\
+E^{(3)}_n &=&
+\sum_{k_2\neq n, k_3\neq n}
+\frac{V_{nk_3}V_{k_3k_2}V_{k_2n}}{E_{nk_2}E_{nk_3}}
+-\sum_{k_3\neq n} V_{nn}\frac{|V_{nk_3}|^2}{E^2_{nk_3}}
+\;.
+\eeqa
+The eigenvector approximations
+up to 2nd order are:
+
+\beqa
+\ket{n^{(1)}} &=&
+\sum_{k_1\neq n} \frac{V_{k_1n}}{E_{nk_1}}\ket{k^{(0)}_1}
+\\
+\ket{n^{(2)}}&=&
+\sum_{k_1\neq n, k_2\neq n}
+\frac{V_{k_1k_2}V_{k_2n}}{E_{nk_1}E_{nk_2}}\ket{k_1^{(0)}}
+- \sum_{k_1\neq n}\left(
+\frac{V_{nn}V_{k_1n}}{E^2_{nk_1}}\ket{k^{(0)}_1}
++ \frac{V_{nk_1}V_{k_1n}}{2E_{nk_1}^2}\ket{n^{(0)}}
+\right)
+\;.
+\eeqa
+
+The higher order terms in
+these perturbative approximations
+to the eigenvalues and eigenvectors
+diverge
+when  some eigenvalues are degenerate,
+i.e., when at least one eigenvalue
+has an eigenspace that is of bigger
+dimension than 1. For those cases,
+one does what is called
+``degenerate perturbation theory".
+One does a similarity transformation
+(change of bases) in each degenerate
+eigenspace so as to diagonalize $V$
+within that eigenspace.
+After that change of
+basis, for any $n,m$ with $n\neq m$,
+if $E_{nm}=0$ then $V_{nm}=0$ too.
+So now instead of getting expression
+that have a finite numerator and a zero
+denominator, the
+only problematic expressions that we get are
+of the type 0/0, which we set to zero.
+
+
+Next we try to answer the question, how
+can we apply this machinery of perturbation
+theory for Hamiltonians  $H$ to do perturbation
+theory of density matrices $\rho$.
+Both $H$ and $\rho$ are Hermitian matrices,
+which insures that
+their eigen systems exist and the eigenvalues are real
+numbers. In the case of $\rho$,
+the eigenvalues are also guaranteed to be $\geq 0$.
+Let us begin by expressing $\rho$
+as a sum of an unperturbed density matrix $\rho_0$
+and a perturbation $\delta \rho$.
+
+\beq
+\rho = \rho_0 + \delta \rho
+\;.
+\eeq
+Then the machinery of perturbation
+theory will allow us to go from
+esys($\rho_0$) to ${\rm esys^\approx(\rho)}$.
+
+\beq
+{\rm esys}(\rho_0) \rarrow {\rm esys^\approx(\rho)}
+\;.
+\eeq
+It remains for us to define what is $\rho_0$.
+We want a $\rho_0$ that
+is easy to calculate
+from $\rho$,
+and such that esys($\rho_0$) is easy to
+calculate, much easier
+than calculating esys($\rho$).
+Next we define
+a $\rho_0$ that satisfies this desiderata, and
+which is also a particularly natural
+choice for studying entanglement.
+
+Before defining $\rho_0$, let us
+define certain terms describing
+the shape and partial traces of $\rho$.
+For this, we will use a vocabulary
+very close to the one used in the
+documentation of the Python library numpy.
+
+We will use a fixed $\rho$ in two different shapes:
+either as an $\nr\times\nr$ matrix,
+or as a tensor with $2\nra$ axes (axes are the same as
+tensor indices). So
+\beq
+\rho \in \CC^{\nr\times\nr}
+\simeq \CC^{[n_0\times n_1 \times\cdots\times(\nra-1)]^2}
+\;
+\eeq
+where
+
+\begin{itemize}
+\item row shape = $(n_0, n_1, \ldots, \nra-1)$
+\item $\nr$ = number of rows = product(row shape)
+\item $\nra$ = number of row axes = len(row shape)
+\end{itemize}
+In the language of quantum information,
+one can call say that $\rho$ describes $\nra$
+qudits where $d=n_j$ for the $j'$th qudit.
+
+Consider a $\rho$
+with $\nra = 4$ for definiteness.
+Such a $\rho$ can be represented by all of the following
+equivalent notations:
+\beq
+\rho= \rho(0, 1, 2, 3) =\rho_{\rvx_0, \rvx_1, \rvx_2, \rvx_3}=
+\rho^{j_0, j_1, j_2, j_3; j'_0, j'_1, j'_2, j'_3}
+\;
+\eeq
+
+Partial traces
+of a density matrix
+are fundamental to a rigorous definition
+of entanglement. They are analogous to
+finding the marginals of a
+joint distribution in classical
+probability. As an example of how we define
+and express them in this paper,
+suppose we want to
+take the trace of $\rho(0, 1, 2, 3)$
+with respect to the axes $1, 3$.
+Using the notation of
+this paper, we might write:
+
+\beqa
+\rho(0,2) &=&\rho_{\rvx_0,\rvx_2}
+\\&=&
+\tr_{\rvx_1, \rvx_3}\rho_{\rvx_0, \rvx_1, \rvx_2, \rvx_3}
+\\&=&\sum_{j_1, j'_1}\sum_{j_3, j'_3}
+\delta(j_1, j'_1)
+\delta(j_3, j_3') \rho^{j_0, j_1, j_2, j_3; j'_0, j'_1, j'_2, j'_3}
+\;.
+\eeqa
+
+Suppose that
+\beq
+{\rm All\;Row\;Axes} = A = Z_{[0, \nra)}
+\;.
+\eeq
+Hence
+
+\beq
+\rho= \rho(A)
+\;.
+\eeq
+We define
+
+\beq
+\rho(j) = \tr_{A-\{j\}}
+\;\;\rho
+\;
+\eeq
+and
+
+\beq
+\rho_0 = \rho(0)\otimes \rho(1)
+\otimes\ldots \otimes \rho(\nra-1)
+\;.
+\eeq
+We will refer to the density matrix $\rho_0$ as
+the separable approximation of $\rho$.
+
+To find esys($\rho_0$),
+we only need to find
+the esys($\rho(j)$) for each qudit $j$.
+In fact, suppose
+
+\beq
+\rho(j) = U(j)D(j)U^\dag(j)
+\;,
+\eeq
+for $j\in Z_{[0, \nra)}$ where $U(j)$
+is a unitary matrix and $D(j)$
+is a diagonal matrix. Then it follows that
+
+\beq
+\rho_0 = UDU^\dag
+\;,
+\eeq
+where
+
+\beqa
+U &=& U(0)\otimes U(1)\otimes\ldots\otimes U(\nra-1)
+\\
+D &=& D(0)\otimes D(1)\otimes\ldots\otimes D(\nra-1)
+\;.
+\eeqa
+In the case that the
+row shape
+of $\rho$ is $(2,2, \ldots 2)$
+with $\nra$ components, i.e, if all the qudits are qubits,
+each $\rho(j)$
+is a 2-dim matrix which can be diagonalized
+trivially. So,
+as we stipulated in our desiderata,
+finding esys($\rho_0$)
+is much easier than finding
+esys($\rho$), especially if
+the dimension $\nr$ of $\rho$ is large.
+
+
+With this definition of $\rho_0$,
+there is no reason that
+$\delta \rho = \rho -\rho_0$
+must satisfy
+$\norm{\delta\rho}  << 1$.
+But we would like that inequality to be true
+to insure that the perturbation theory
+converges quickly.
+If we define
+
+\beq
+\delta'\rho = \frac{\delta\rho }{\nbs},
+ \;
+ \eeq
+ for some integer $\nbs$, then,
+ for large enough $\nbs$,
+ $\norm{\delta'\rho} <<1$
+ will be true. This suggests what we
+ will refer to as
+ ``bootstrap" perturbation theory.
+ The idea is to define a chain of
+ density matrices, where adjacent
+density matrices in the chain are
+ a distance
+ $\delta'\rho<<1$ apart,
+ even if the beginning and end
+ of the chain are much farther apart.
+ Let
+
+ \beq
+ \rho_j = \rho_0 + j \delta'\rho
+ \;\;\;{\rm for} \;\;j=0, 1, \ldots, \nbs-1
+ \;.
+ \eeq
+ Then one can apply 2nd order perturbation
+ theory to
+ bootstrap ourselves
+from $\rho_0$ to $\rho$
+by advancing a small distance
+$\delta'\rho$ many times
+until we cover the full distance
+$\delta\rho$. Bootstrap perturbation
+can be represented symbolically by
+
+
+\beq
+{\rm esys}(\rho_0)\rarrow
+{\rm esys}^\approx(\rho_1)\rarrow\cdots\rarrow
+{\rm esys}^\approx(\rho_{\nbs-1})=
+{\rm esys}^\approx(\rho)
+\;,
+\eeq
+where approximations
+are indicated by a $\approx$
+superscript.
+
+
+Consider any function $f(\rho)$ of $\rho$
+expressible as a power series of $\rho$.
+$f(\rho)$ can be many things. For example,
+${\rm log}(\rho)$, ${\rm exp}(\rho)$,
+$\sqrt{\rho}$, ${\rm pinv}(\rho)$
+$\rho\log\rho$, etc.
+One has
+
+\beqa
+f(\rho) &=& f(UDU^\dag) \approx
+f(U^\approx D^\approx U^{\approx\dag})\\
+&\approx&
+U^\approx f(D^\approx})U^{\approx\dag
+\;,
+\eeqa
+where, as before, $\rho=UDU^\dag$,
+$U$ is unitary, $D$ is diagonal, and
+approximations
+are indicated by a $\approx$
+superscript.
+
+In conclusion,  bootstrap perturbation
+allows us to
+calculate esys$(\rho_0)$
+easily,
+to bootstrap
+esys$(\rho_0)$ to
+${\rm esys}^\approx(\rho)$,
+and to approximate $f(\rho)$ from that
+${\rm esys}^\approx(\rho)$. Finding such an approximation
+ of $f(\rho)$ was the goal that
+we set out for ourselves at
+the beginning of this section.
+
+\section{Concluding Summary}
+We have presented an algorithm given by Eqs.(\ref{eq-ab-algo})
+for calculating the squashed
+entanglement of any pure or mixed state $\rho$.
+For pure states, however,  it is
+simpler and gives the same answer
+if one just evaluates the von Neumann entropy
+of $\rho$ traced over either of the two
+subsystems which characterize the bipartite
+entanglement. Whether one uses Eqs.(\ref{eq-ab-algo})
+or the von Neumann entropy
+of a partial trace of $\rho$,
+various eigen-systems of Hermitian matrices will
+have to be calculated along the way to
+obtain exp(), log(), pinv() etc. of
+various  matrices.
+If the dimension of $\rho$ isn't too large,
+one can calculate those
+eigen-systems ``exactly"
+using standard methods from Linear Algebra.
+If the dimension of $\rho$ is too large
+for that, then
+one can use the ``bootstrapped perturbation
+theory" method described in this paper.
+
+\appendix
+\section{Appendix: Symmetrized N-up States}
+
+In order to test the numerical algorithms
+presented in this paper for calculating
+squashed entanglement, it is very useful
+to have a family of quantum states for which
+the squashed entanglement is known
+analytically. In this appendix, we describe
+one such family of quantum states,
+what we call the symmetrized N-up states.
+
+
+The symmetrized N-up states
+ are pure states composed of
+multiple qubits (so no qudits with $d\neq 2$ in them).
+They are simply obtained by starting
+with a state
+that is a tensor product
+of  $n_1$ states $\ket{1}$
+and $n_0$ states $\ket{0}$
+and applying a full symmetrization
+operator to that.
+
+Let Sym($n$) be the group
+of all permutations of $n$ objects
+(often called the Symmetric Group on $n$ letters).
+Then we define the full symmetrization
+operator $S_n$ by
+
+
+
+\beq
+S_n = \frac{1}{n!} \sum_{\sigma \in {\rm Sym(n)}}\sigma
+\;.
+\eeq
+For example, for $n=3$, we have
+
+\beq
+S_3 = \frac{1}{3!}[
+1 + \sigma_{0,1}
++ \sigma_{1,2}
++ \sigma_{0,2}
++ \sigma_{0,1}\sigma_{1,2}
++ \sigma_{1,2}\sigma_{0,1}
+]
+\;,
+\eeq
+where $\sigma_{\alp, \beta}$ is the operator
+that swaps qubits $\alp$ and $\beta$.
+A nice discussion of the properties and use of $S_n$
+in Group Theory can be
+found in Ref.\cite{cvit} by Cvitanovic.
+Note that $S_n$ is ``idempotent" (it equals its square):
+
+
+\beqa
+S_n^2 &=& \left(\frac{1}{n!}\right)^2 \sum_{\sigma_1}\sigma_1
+\sum_{\sigma_2}\sigma_2
+\\
+ &=&\frac{1}{n!} \sum_{\sigma}\sigma
+ \\
+ &=& S_n
+ \;.
+ \eeqa
+
+
+Let
+ \beq
+ n = n_0 + n_1
+ \;,
+ \eeq
+ where $n_0, n_1\in Z_{[0, \infty)}$.
+Let
+
+ \beq
+ \ketzo = \underbrace{
+ \ket{0}\otimes\ket{0}\ldots\ket{0}}
+ _{n_0\; {\rm factors}}
+ \otimes
+ \underbrace{
+ \ket{1}\otimes\ket{1}\ldots\ket{1}}
+ _{n_1\; {\rm factors}}
+ \;.
+ \eeq
+ We define  the ``symmetrized
+ $n_1$-up state" as the following $n$ qubit state:
+
+
+
+ \beq
+ \ket{\psi^{n}_{n_1}} =
+ \sqrt{n\choose n_1}S_n
+\ketzo
+ \;.
+ \eeq
+ The normalization of these states has
+ been chosen so that they satisfy
+ the following condition:
+
+ \begin{claim}
+ \beq
+ \av{\psi^{n}_{n_1} | \psi^{n}_{n'_1}}
+ = \delta(n_1, n'_1)
+ \;.
+ \eeq
+ \end{claim}
+ \proof
+
+
+ \beqa
+ \av{\psi^{n}_{n_1} | \psi^{n}_{n_1}}
+ &=&
+{n\choose n_1}
+\brazo
+S_n
+\ketzo
+ \\
+ &=& 1
+ \;.
+ \eeqa
+ \qed
+
+
+ \begin{claim}
+ \beq
+ \brazo \ket{\psi^n_{n_1}}=
+ \begin{array}{c}
+  \bra{1^{n_1}}
+ \\
+ \bra{0^{n_0}}
+ \end{array}
+ \ket{\psi^n_{n_1}} =
+ \frac{1}{\sqrt{n\choose n_1}}
+ \;.
+ \eeq
+ \end{claim}
+ \proof
+
+ \beqa
+ \brazo \ket{\psi^n_{n_1}} &=&
+ \sqrt{n\choose n_1}
+ \brazo S_n \ketzo
+ \\
+ &=&
+  \frac{1}{\sqrt{n\choose n_1}}
+ \;.
+ \eeqa
+ \qed
+
+ \begin{claim}
+
+ \beq
+ \ket{\psi^n_{n_1}}=
+ \sqrt{\frac{n_0}{n}}
+ \begin{array}{l}
+ \ket{0}
+ \\
+ \ket{\psi^{n-1}_{n_1}}
+ \end{array}
+ +
+ \sqrt{\frac{n_1}{n}}
+ \begin{array}{l}
+ \ket{1}
+ \\
+ \ket{\psi^{n-1}_{n_1-1}}
+ \end{array}
+ \;.
+ \label{eq-top-qubit-resolved}
+ \eeq
+ \end{claim}
+ \proof
+
+ By symmetry, there
+ have to exist $a,b \in \CC$
+ so that
+
+ \beq
+ \ket{\psi^n_{n_1}}=
+ a
+ \begin{array}{l}
+ \ket{0}
+ \\
+ \ket{\psi^{n-1}_{n_1}}
+ \end{array}
+ +
+ b
+ \begin{array}{l}
+ \ket{1}
+ \\
+ \ket{\psi^{n-1}_{n_1-1}}
+ \end{array}
+ \;.
+ \eeq
+
+ To find $a$ and $b$, one notes that
+
+ \beq
+ \brazo \ket{\psi^n_{n_1}}
+ =
+ a
+ \begin{array}{r}
+  \bra{0^{n_0-1}}
+ \\
+ \bra{1^{n_1}}
+ \end{array}
+  \ket{\psi^{n-1}_{n_1}}
+ \;,
+ \eeq
+ so
+
+ \beq
+ a = \sqrt{\frac{{n-1\choose n_1}}{{n\choose n_1}}}
+=
+ \sqrt{\frac{n_0}{n}}
+ \;.
+ \eeq
+
+Likewise, one notes that
+ \beq
+  \begin{array}{r}
+  \bra{1^{n_1}}
+ \\
+ \bra{0^{n_0}}
+ \end{array}
+ \ket{\psi^n_{n_1}}
+ =
+ b
+ \begin{array}{r}
+  \bra{1^{n_1-1}}
+ \\
+ \bra{0^{n_0}}
+ \end{array}
+  \ket{\psi^{n-1}_{n_1-1}}
+ \;,
+ \eeq
+ so
+
+ \beq
+ b = \sqrt{\frac{{n-1\choose n_1-1}}{{n\choose n_1}}}
+=
+ \sqrt{\frac{n_1}{n}}
+ \;.
+ \eeq
+ \qed
+
+Let  $\Gamma$ be a subset of
+$ Z_{[0,n)}$ and let $\Gamma^c$ be
+$Z_{[0,n)}-\Gamma$, i.e.,  the complement
+ of
+$\Gamma$ in
+$ Z_{[0,n)}$.
+We will denote the number of elements
+(cardinality) of these two sets by
+$\gamma = |\Gamma|$,
+$\gamma^c = |\Gamma^c|$.
+Let
+
+\beq
+\rho^n_{n_1}= \rho^n_{n_1}(Z_{[1,n)})
+=
+\ket{\psi^n_{n_1}}
+\bra{\psi^n_{n_1}}
+\;.
+\eeq
+We define $\rho^n_{n_1}(\Gamma)$ by
+
+\beq
+\rho^n_{n_1}(\Gamma) =
+\tr_{\Gamma^c}
+\rho^n_{n_1}
+\;.\label{eq-rho-n-none}
+\eeq
+The squashed entanglement is defined
+for this case as simply the von Neumann entropy
+of the trace over $\Gamma^c$ of $\rho^n_{n_1}$:
+
+\beq
+E_{\Gamma, \Gamma^c} = S[\rho^n_{n_1}(\Gamma)]
+\;.
+\label{eq-s-entang}
+\eeq
+The goal of the rest of this appendix will
+be to find an analytical expression for the
+right hand side of Eq.(\ref{eq-s-entang}).
+
+Because the states
+$\ket{\psi^n_{n_1}}$ from which
+$\rho^n_{n_1}(\Gamma)$  is built are fully symmetrized,
+$\rho^n_{n_1}(\Gamma)$ is the same for all $\Gamma$
+with a fixed cardinality.
+Thus,
+we will assume from here on, without loss of generality, that
+
+
+\beq
+\Gamma^c = Z_{[0, \gamma^c)},\;\;
+\Gamma = Z_{[\gamma^c, n)}
+\;.
+\eeq
+Thus,
+in Eq.(\ref{eq-rho-n-none}), we will take a
+trace over the first (top) $\gamma^c$
+qudits of $\ket{\psi^n_{n_1}}
+\bra{\psi^n_{n_1}}$.
+
+Multiplying Eq.(\ref{eq-top-qubit-resolved})
+times its Hermitian conjugate,
+and taking the trace
+of this product over the top qudit,
+one finds that
+
+\beq
+\rho^{n}_{n_1}(\Gamma)=
+\frac{n_0}{n}\rho^{n-1}_{n_1}(\Gamma)
++
+\frac{n_1}{n}\rho^{n-1}_{n_1-1}(\Gamma)
+\;.
+\label{eq-recurse-rho}
+\eeq
+
+Next, we will apply Eq.(\ref{eq-recurse-rho})
+recursively. Each recursion will
+``get rid of" the trace over the current top qudit.
+After $\gamma^c-1$ recursions, we will have
+gotten rid of the trace of the top
+$\gamma^c$ qudits of the original
+state $\ket{\psi^n_{n_1}}
+\bra{\psi^n_{n_1}}$.
+
+
+Here is the result of doing 1
+ recursion of Eq.(\ref{eq-recurse-rho}):
+
+\beqa
+\rho^{n}_{n_1}(\Gamma)&=&
+\frac{n_0}{n}\rho^{n-1}_{n_1}(\Gamma)
++
+\frac{n_1}{n}\rho^{n-1}_{n_1-1}(\Gamma)
+\\
+&=&
+\frac{n_0}{n}
+\left[
+\frac{n_0-1}{n-1}\rho^{n-2}_{n_1}(\Gamma)
++
+\frac{n_1}{n-1}\rho^{n-2}_{n_1-1}(\Gamma)
+\right]
+\\
+&& +
+\frac{n_1}{n}
+\left[
+\frac{n_0}{n-1}\rho^{n-2}_{n_1-1}(\Gamma)
++
+\frac{n_1-1}{n-1}\rho^{n-2}_{n_1-2}(\Gamma)
+\right]
+\\
+&=&
+\frac{n_0^{\darrow 2}}{n^{\darrow 2}}
+\rho^{n-2}_{n_1}(\Gamma)
++
+\frac{2n_0 n_1}{n^{\darrow 2}}
+\rho^{n-2}_{n_1-1}(\Gamma)
++
+\frac{n_1^{\darrow 2}}{n^{\darrow 2}}
+\rho^{n-2}_{n_1-2}(\Gamma)
+\;.
+\eeqa
+
+Here is the result of doing 2 recursions
+of Eq.(\ref{eq-recurse-rho}):
+
+\beq
+\rho^{n}_{n_1}(\Gamma)=
+\frac{n_0^{\darrow 3}}{n^{\darrow 3}}
+\rho^{n-3}_{n_1}(\Gamma)
++
+3\frac{n_0^{\darrow 2}n_1}{n^{\darrow 3}}
+\rho^{n-3}_{n_1-1}(\Gamma)
++
+3\frac{n_0 n_1^{\darrow 2}}{n^{\darrow 3}}
+\rho^{n-3}_{n_1-2}(\Gamma)
++
+\frac{n_1^{\darrow 3}}{n^{\darrow 2}}
+\rho^{n-3}_{n_1-3}(\Gamma)
+\;.
+\label{eq-gamma-c-tres}
+\eeq
+Note that in Eq.(\ref{eq-gamma-c-tres}),
+
+\beq
+{\rm coefficient\;of\;}
+\rho^{n-3}_{n_1-k} =
+\left(\frac{3!}{n^{\darrow 3}}\right)
+\left(\frac{n_0^{\darrow k}}{k!}\right)
+\left(\frac{n_1^{\darrow 3-k}}{(3-k)!}\right)
+=
+\frac{{n_0\choose k}{n_1 \choose 3-k}}{{n\choose 3}}
+\;
+\label{eq-coef-gamma-c-tres}
+\eeq
+for $k=0,1,2,3$.
+
+We claim at this point
+that it is possible
+to prove by induction
+that if one goes the full way and recurses
+Eq.(\ref{eq-recurse-rho}) $\gamma^c-1$
+times, then
+Eq.(\ref{eq-coef-gamma-c-tres})
+is still valid but with
+3 replaced by $\gamma^c$.
+
+The right hand side of Eq.(\ref{eq-coef-gamma-c-tres})
+is easy to recognize as the hypergeometric
+probability distribution. In fact, under the
+replacements
+\beqa
+k&\rarrow&k
+\\
+K&\rarrow&n_0
+\\
+N&\rarrow&n
+\\
+n&\rarrow&\gamma^c
+\;,
+\eeqa
+one gets
+\beq
+P(k| K, N, n) =
+\frac{{K\choose k}{N-K \choose n-k}}{{N\choose n}}
+\;,
+\eeq
+which is the definition of the
+hypergeometric distribution in
+the notation of Ref.\cite{wiki-hypergeo}.
+$P(k)$ for $k \in Z_{[0, n_0]}$
+ is bell shaped with mean at $\gamma^c\;\;\frac{n_0}{n}$.
+
+Finally, note that
+if $\gamma^c=3$, then in Eq.(\ref{eq-gamma-c-tres}),
+the states
+$\rho^{n-3}_{n_1-k}$ on the right hand side are
+mutually orthogonal pure states.
+Hence, in the appropriate
+basis,  Eq.(\ref{eq-gamma-c-tres})
+is a diagonal matrix.
+The von Neuman entropy of
+a diagonal density matrix is
+just
+the classical entropy of
+the probability distribution
+that appears on the diagonal
+of that diagonal density matrix.
+
+
+
+\begin{thebibliography}{99}
+\bibitem{sq-wiki}
+https://en.wikipedia.org/wiki/Squashed\_entanglement
+\bibitem{ab-algo}
+Richard E. Blahut, {\it Principles and Practice of Information Theory} (1987, Addison-Wesley)
+\bibitem{subadd-proof} Elliott H. Lieb, Mary Beth Ruskai, ``Proof of the Strong Subadditivity of Quantum-Mechanical Entropy", Journal of Mathematical Physics 14 (1973) 1938-1941.
+\bibitem{Tuc99} Tucci, Robert R. (1999). ``Quantum Entanglement and Conditional Information Transmission". arXiv:quant-ph/9909041.
+\bibitem{Tuc00a} Tucci, Robert R. (2000). ``Separability of Density Matrices and Conditional Information Transmission". arXiv:quant-ph/0005119.
+\bibitem{Tuc00b} Tucci, Robert R. (2000). ``Entanglement of Formation and Conditional Information Transmission". arXiv:quant-ph/0010041.
+\bibitem{Tuc01a} Tucci, Robert R. (2001). ``Relaxation Method for Calculating Quantum Entanglement". arXiv:quant-ph/0101123.
+\bibitem{Tuc01b} Tucci, Robert R. (2001). ``Entanglement of Bell Mixtures of Two Qubits". arXiv:quant-ph/0103040.
+\bibitem{Tuc02} Tucci, Robert R. (2002). ``Entanglement of Distillation and Conditional Mutual Information". arXiv:quant-ph/0202144
+
+\bibitem{Chr03} Matthias Christandl, Andreas Winter (2003). ````Squashed Entanglement": An Additive Entanglement Measure". Journal of Mathematical Physics. 45 (3): 829–840. arXiv:quant-ph/0308088
+
+\bibitem{sep-proof1}
+ P. Hayden, R. Jozsa, D. Petz, and A. Winter.  ``Structure of states which satisfy strong subadditivity of
+quantum entropy with equality",
+Comm. Math. Phys.
+, 246:359, 2004
+
+\bibitem{sep-proof2}
+ Brandao, F., Christandl, M., Yard, J. (September 2011). ``Faithful Squashed Entanglement". Communications in Mathematical Physics. 306 (3): 805–830. arXiv:1010.1750
+
+\bibitem{pert-wiki}
+https://en.wikipedia.org/wiki/Perturbation\_theory\_(quantum\_mechanics)
+
+\bibitem{cvit}
+P. Cvitanović, {\it Group Theory: Birdtracks, Lie's, and Exceptional Groups}, Princeton University Press, Princeton 2008, available online at http://birdtracks.eu/
+
+\bibitem{wiki-hypergeo}
+https://en.wikipedia.org/wiki/Hypergeometric\_distribution
+
+
+\end{thebibliography}
+
+
+
+
+\end{document}
