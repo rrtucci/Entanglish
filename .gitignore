@@ -1,0 +1,9 @@
+.DS_Store
+.idea
+__pycache__
+.ipynb_checkpoints
+.octave-workspace
+*.aux
+*.dvi
+*.log
+*.synctex
