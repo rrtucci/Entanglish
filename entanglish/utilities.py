@@ -64,6 +64,7 @@ def mat_elem(v1, a, v2):
     """
     return np.dot(np.dot(v1.conj().T, a), v2)
 
+
 def switch_arr_basis(arr, umat, reverse=False):
     """
     This method takes as input a square array 'arr' and returns a new array
@@ -90,6 +91,23 @@ def switch_arr_basis(arr, umat, reverse=False):
     else:
         new_arr = np.dot(np.dot(umat, arr), umat_H)
     return new_arr
+
+
+def clip(x, limits):
+    """
+    This method clips x between limits[0] and limits[1]
+
+    Parameters
+    ----------
+    x : int|float
+    limits : list[int|float]
+
+    Returns
+    -------
+    int|float
+
+    """
+    return min(max(limits[0], x), limits[1])
 
 
 def clipped_log_of_vec(vec):
@@ -166,7 +184,7 @@ def fun_of_herm_arr(fun_of_evas, herm_arr):
     """
     This method does the same as the method ut.fun_of_herm_arr_from_eigen(),
     except that it calculates evas and eigen_cols from the matrix herm_arr
-    which is has as input.
+    which it has as input.
 
     Parameters
     ----------
@@ -207,13 +225,32 @@ def get_equiv_classes(li):
         found_twin = False
         # eq_class = equivalence class
         for eq_class in classes:
-            if abs(val-li[eq_class[0]]) < 1e-6:
+            diff = val-li[eq_class[0]]
+            if abs(diff) < 1e-4:
                 eq_class.append(k)
                 found_twin = True
                 break
         if not found_twin:
             classes.append([k])
     return classes
+
+
+def is_unitary(umat):
+    """
+    Returns True iff umat is a unitary matrix
+
+    Parameters
+    ----------
+    umat : np.ndarray
+
+    Returns
+    -------
+    bool
+
+    """
+
+    return np.linalg.norm(np.dot(umat.conj().T, umat)
+                          - np.eye(umat.shape[0])) < 1e-5
 
 
 def assert_positive_arr(arr, halt=True):
@@ -279,7 +316,7 @@ def assert_is_prob_dist(prob_dist, halt=True):
     if not np.all(prob_dist > -1e-6):
         print('some negative probs')
         error = True
-    if not abs(suma - 1) < 1e-5:
+    if not abs(suma - 1) < 1e-3:
         print("probs don't sum to one")
         error = True
     if error:
@@ -304,6 +341,7 @@ def get_entropy_from_probs(probs):
 
     """
     assert_is_prob_dist(probs)
+    # print('bbbnnnnn evas', probs)
     ent = 0.0
     for val in probs:
         if val > 1e-6:
@@ -328,6 +366,7 @@ def random_unitary(dim):
     Q, R = np.linalg.qr(rmat)
     return Q
 
+
 def random_st_vec(dim):
     """
     This method returns a random complex 1D numpy array, normalized, of size
@@ -345,6 +384,7 @@ def random_st_vec(dim):
     st_vec = np.random.randn(dim) + 1j*np.random.randn(dim)
     st_vec /= np.linalg.norm(st_vec)
     return st_vec
+
 
 def comb(n, k):
     """
@@ -369,18 +409,16 @@ def comb(n, k):
 
 def prob_hypergeometric(x, xx, n, nn):
     """
-
     This method returns
 
-    P(x | xx, n, n) = comb(xx, x)*comb(nn-xx, n-x)/comb(nn, n)
+    P(x | xx, n, nn) = comb(xx, x)*comb(nn-xx, n-x)/comb(nn, n)
 
     where
     0 <= x <= xx
     0 <= n-x <= nn-xx
     0 <= n <= nn
 
-
-    This P(x | ) defines the hypergeomeric distribution
+    This P(x | ) defines the hypergeometric distribution
 
     References
     ----------
@@ -404,6 +442,7 @@ def prob_hypergeometric(x, xx, n, nn):
         return 0
 
     return comb(xx, x)*comb(nn-xx, n-x)/comb(nn, n)
+
 
 """
 In[3]: import numpy as np

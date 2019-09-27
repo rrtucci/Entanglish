@@ -35,13 +35,18 @@ class DenMat:
     To use this class in conjunction with Qubiter, replace self.arr in this
     class with the output of Qubiter.StateVec.get_den_mat()
 
+    The marginals of self is defined as a list of partial traces of self.
+    The n'th item in the list of marginals is the partial trace of self,
+    traced over all qudits except the n'th. The Kronecker product of the
+    marginals of self is a "separable" density matrix, in the sense that
+    there is no correlation among its qudits.
+
     Attributes
     ----------
-    __marginals : list[DenMat]
-        See @property method self.marginals for explanation of what this is.
     arr : np.ndarray
         numpy array of shape (num_rows, num_rows) which contains entries of
         a density matrix
+    marginals : list[DenMat]
     num_rows : int
     row_shape : tuple[int]
         tuple of integers whose product is num_rows
@@ -57,6 +62,7 @@ class DenMat:
         num_rows : int
         row_shape : tuple[int]
         arr : np.ndarray
+            shape=(num_rows, num_rows)
 
         Returns
         -------
@@ -76,54 +82,28 @@ class DenMat:
             assert arr.shape == (num_rows, num_rows)
 
         # calculate marginals only if they they are needed
-        self.__marginals = None
+        self.marginals = None
 
-    @property
-    def marginals(self):
+    def set_marginals(self):
         """
-        The marginals of self is defined as a list of partial traces of
-        self. The n'th item in the list of marginals is the partial trace of
-        self, traced over all qudits except the n'th. The Kronecker product
-        of the marginals of self is a "separable" density matrix, in the
-        sense that there is no correlation among its qudits.
-
-        This method calculates the class attribute self.__marginals if is
-        empty and returns it when self.marginals is called.
+        This method calculates the single-axis marginals of self and stores
+        them in self.marginals.
 
         Returns
         -------
         None
 
         """
-        if self.__marginals is None:
-            num_row_axes = len(self.row_shape)
-            if num_row_axes == 1:
-                marginals = [self.copy()]
-            else:
-                marginals = []
-                for k in range(num_row_axes):
-                    traced_axes_set = set(
-                        [ax for ax in range(num_row_axes) if ax != k])
-                    marginals.append(self.get_partial_tr(traced_axes_set))
-            self.__marginals = marginals
-        return self.__marginals
-
-    @marginals.setter
-    def marginals(self, x):
-        """
-        Setter. It permits
-        self.marginals = x
-
-        Parameters
-        ----------
-        x : list[DenMat]
-
-        Returns
-        -------
-        None
-
-        """
-        self.__marginals = x
+        num_row_axes = len(self.row_shape)
+        if num_row_axes == 1:
+            marginals = [self.copy()]
+        else:
+            marginals = []
+            for k in range(num_row_axes):
+                traced_axes_set = set(
+                    [ax for ax in range(num_row_axes) if ax != k])
+                marginals.append(self.get_partial_tr(traced_axes_set))
+        self.marginals = marginals
 
     def copy(self):
         """
@@ -137,15 +117,15 @@ class DenMat:
         return DenMat(self.num_rows, self.row_shape, cp.copy(self.arr))
 
     @staticmethod
-    def constant_dm_like(dm, const):
+    def new_const_den_mat(num_rows, row_shape, const):
         """
-        This method returns a DenMat object with the same num_rows and
-        row_shape as the input DenMat 'dm', but with an arr which is a
-        diagonal matrix with 'const' in its diagonal.
+        This method returns a DenMat object with an arr which is a diagonal
+        matrix with 'const' in its diagonal.
 
         Parameters
         ----------
-        dm : DenMat
+        num_rows : int
+        row_shape : tuple[int]
         const : int|float|complex
 
         Returns
@@ -153,8 +133,8 @@ class DenMat:
         DenMat
 
         """
-        arr = np.diag(np.array([const]*dm.num_rows))
-        return DenMat(dm.num_rows, dm.row_shape, arr)
+        arr = np.diag(np.array([const]*num_rows))
+        return DenMat(num_rows, row_shape, arr)
 
     def set_arr_to_zero(self):
         """
@@ -173,11 +153,11 @@ class DenMat:
         evas = eigenvalues. 
         
         This method sets self.arr to a random density matrix UDU^dag,
-        where U is a unitary matrix, D is a diagonal matrix with diagonal
-        equal to the input 1D array 'evas', and U^dag is the Hermitian
-        conjugate of U. The matrix U is a random unitary matrix. This method
-        checks that evas is a probability distribution. The DenMat returned
-        by this method is useful for testing purposes.
+        where U is a random unitary matrix, D is a non-random diagonal
+        matrix with diagonal equal to the input 1D array 'evas', and U^dag
+        is the Hermitian conjugate of U. This method checks that evas is a
+        probability distribution. The DenMat returned by this method is
+        useful for testing purposes.
 
         Parameters
         ----------
@@ -209,6 +189,7 @@ class DenMat:
         Parameters
         ----------
         st_vec : np.ndarray
+            shape=(self.num_rows,)
 
         Returns
         -------
@@ -220,7 +201,7 @@ class DenMat:
 
     def add_const_to_diag_of_arr(self, const):
         """
-        Adds constant 'const' to diagonal of self.arr.
+        Adds constant `const` to diagonal of self.arr.
 
         Parameters
         ----------
@@ -235,7 +216,7 @@ class DenMat:
 
     def add_vec_to_diag_of_arr(self, vec_arr):
         """
-        Adds vector 'vec_arr' to diagonal of self.arr
+        Adds vector `vec_arr` to diagonal of self.arr
 
         Parameters
         ----------
@@ -281,7 +262,7 @@ class DenMat:
         assert abs(tr) > 1e-6
         self.arr[np.diag_indices_from(self.arr)] /= tr
 
-    def normalize_self(self):
+    def normalize_entire_arr(self):
         """
         Divides all of self.arr by the trace of self.arr.
 
@@ -293,6 +274,25 @@ class DenMat:
         tr = np.trace(self.arr).real
         assert abs(tr) > 1e-6
         self.arr /= tr
+
+    def depurify(self, eps):
+        """
+        This method replaces self for a pure state by a nearby density mat
+        that is mixed
+
+        Parameters
+        ----------
+        eps : float
+            small positive number
+
+        Returns
+        -------
+        None
+
+        """
+        probs = np.random.random(self.num_rows)
+        probs = probs/np.sum(probs)
+        self.arr = (self.arr + eps*np.diag(probs)) / (self.trace() + eps)
 
     @staticmethod
     def get_kron_prod_of_den_mats(den_mat_list):
@@ -317,11 +317,43 @@ class DenMat:
         arr = ut.kron_prod([dm.arr for dm in den_mat_list])
         return DenMat(num_rows, row_shape, arr)
 
-    def get_Kxy(self, x_axes, y_axes):
+    @staticmethod
+    def new_with_permuted_qudits(dm, perm):
+        """
+        This method returns a DenMat in which the rows (and columns) of
+        dm.arr have been permuted according to perm.
+
+        Parameters
+        ----------
+        dm : DenMat
+        perm : list[int}
+            perm is a permutation of range(len(self.row_shape))
+
+        Returns
+        -------
+        DenMat
+
+        """
+        nrows = dm.num_rows
+        sorted_perm = sorted(perm)
+        sorted_perm1 = list(range(len(dm.row_shape)))
+        assert sorted_perm1 == sorted_perm,\
+            'got:' + str(sorted_perm) + ', but expected:' +\
+                str(sorted_perm1)
+        displaced_perm = [k + len(perm) for k in perm]
+        new_row_shape = tuple([dm.row_shape[k] for k in perm])
+        new_arr = cp.copy(dm.arr)
+        new_arr = new_arr.reshape(tuple(list(dm.row_shape)*2))
+        # print(",,,", new_arr.shape)
+        new_arr = np.transpose(new_arr, perm + displaced_perm)
+        new_arr = new_arr.reshape((nrows, nrows))
+        return DenMat(nrows, new_row_shape, new_arr)
+
+    def get_rho_xy(self, x_axes, y_axes):
         """
         The inputs 'x_axes' and 'y_axes' must be mutually exclusive lists 
         whose union, after sorting, is range(len(self.row_shape)), 
-        which equals [0, 1, 2, ..., number of row axes -1]. The output is a 
+        which equals [0, 1, 2, ..., number of row axes -1]. The output is a
         DenMat in which the rows (and columns) of self.arr have been 
         permuted to the order x_axes + y_axes. 
 
@@ -335,22 +367,7 @@ class DenMat:
         DenMat
 
         """
-        dim_xy = self.num_rows
-        xy_axes = x_axes + y_axes
-        sorted_xy_axes = sorted(xy_axes)
-        sorted_xy_axes1 = list(range(len(self.row_shape)))
-        assert sorted_xy_axes1 == sorted_xy_axes,\
-            'got:' + str(sorted_xy_axes) + ', but expected:' +\
-                str(sorted_xy_axes1)
-        displaced_xy_axes = [k + len(xy_axes) for k in xy_axes]
-        arr_xy = cp.copy(self.arr)
-        row_shape_xy = tuple([self.row_shape[k] for k in xy_axes])
-        arr_xy = arr_xy.reshape(tuple(list(row_shape_xy)*2))
-        # print(",,,", arr_xy.shape)
-        arr_xy = np.transpose(arr_xy, xy_axes + displaced_xy_axes)
-        arr_xy = arr_xy.reshape((dim_xy, dim_xy))
-
-        return DenMat(dim_xy, row_shape_xy, arr_xy)
+        return DenMat.new_with_permuted_qudits(self, x_axes + y_axes)
 
     def get_partial_tr(self, traced_axes_set):
         """
@@ -395,6 +412,25 @@ class DenMat:
         # print('///', arr.shape)
         arr = arr.reshape((new_num_rows, new_num_rows))
         return DenMat(new_num_rows, new_row_shape, arr)
+
+    def get_set_of_all_other_axes(self, axes_set):
+        """
+        This method returns the complement set wrt range(len(self.row_shape))
+        of the set of axes axes_set
+
+        Parameters
+        ----------
+        axes_set : set[int]
+
+        Returns
+        -------
+        set[int]
+
+        """
+
+        all_axes = range(len(self.row_shape))
+        comp_axes_set = set([ax for ax in all_axes if ax not in axes_set])
+        return comp_axes_set
 
     def get_entropy(self, method='eigen'):
         """
@@ -492,6 +528,7 @@ class DenMat:
         Returns
         -------
         DenMat
+            returns self
 
         """
         assert self.num_rows == right.num_rows
@@ -699,7 +736,8 @@ class DenMat:
         float
 
         """
-        assert np.trace(self.arr).imag < 1e-6
+        im = np.trace(self.arr).imag
+        assert im < 1e-4, im
         return np.trace(self.arr).real
 
     def exp(self, method='eigen'):
@@ -804,26 +842,27 @@ class DenMat:
 
     def pseudo_inv(self):
         """
-        This method returns a DenMat which is the pseudo inverse matrix of
-        self. By pseudo inverse, we mean that it takes the inverse of
-        non-zero eigenvalues only, but keeps the zero ones the same.
+        This method returns a DenMat which is the Penrose pseudo inverse
+        matrix of self. By pseudo inverse, we mean that it takes the inverse
+        of non-zero eigenvalues only, but keeps the zero ones the same.
 
-        Returns
+        Re turns
         -------
         DenMat
 
         """
         pseudo_inv_arr = ut.fun_of_herm_arr(
-            lambda x: x if abs(x) > 1e-5 else 0, self.arr)
+            lambda x: 1/x if abs(x) > 1e-5 else 0, self.arr)
         return DenMat(self.num_rows, self.row_shape, pseudo_inv_arr)
 
     def get_eigenvalue_proj_ops(self):
         """
-        This method returns a tuple of 2 Hermitian projection operators:
+        This method returns a tuple of 2 DenMat that carry Hermitian
+        projection operators:
 
         proj_0 projects out the space of zero eigenvalues. It is obtained by
-        replacing in the eigen decomposition of self.arr, zero eigenvalues by
-        1 and non-zero ones by 0.
+        replacing in the eigen decomposition of self.arr, zero eigenvalues
+        by 1 and non-zero ones by 0.
 
         proj_1 projects out the space of non-zero eigenvalues. It is
         obtained by replacing in the eigen decomposition of self.arr,
@@ -862,11 +901,11 @@ class DenMat:
 
         This method assumes self is Hermitian.
 
-        We will call an eigensystem of a density matrix: a tuple, whose
-        first item is a 1D numpy array, call it evas, with the eigenvalues
-        of the density matrix, and the second item is a 2D numpy array,
-        call it eigen_cols, whose i'th columns is an eigenvector for the
-        i'th eigenvalue (i.e., evas[i]) of the density matrix.
+        We will call an 'eigensystem' of a density matrix: a tuple, whose
+        first item is a 1D numpy array, call it evas, that carries the
+        eigenvalues of the density matrix, and the second item is a 2D numpy
+        array, call it eigen_cols, whose i'th columns is an eigenvector for
+        the i'th eigenvalue (i.e., evas[i]) of the density matrix.
 
         This method returns a tuple of two lists. The first list contains
         the first part (eigenvalues) of the eigensystem of each marginal of
@@ -880,6 +919,7 @@ class DenMat:
         """
         vec_list = []
         mat_list = []
+        assert self.marginals
         for marg in self.marginals:
             # vec_evas = vector with eigenvalues
             # mat_evecs = unitary matrix with eigenvectors as columns
@@ -891,11 +931,9 @@ class DenMat:
 
     def switch_arr_basis(self, umat, reverse=False):
         """
-        This method returns a new DenMat whose arr is a similarity
-        transformation U^dag(self.arr)U of self.arr that changes the basis
-        of self.arr from inbasis to sbasis (or the reverse,
-        U(self.arr)U^dag, from sbasis to inbasis if the input bool parameter
-        'reverse' is set to True.) U = umat , U^dag = Hermitian conjugate of U
+        This method returns a new DenMat whose arr is U^dag(self.arr)U (or
+        the reverse, U(self.arr)U^dag, if the input bool parameter 'reverse'
+        is set to True.) U = umat , U^dag = Hermitian conjugate of U
 
         Parameters
         ----------
@@ -911,10 +949,44 @@ class DenMat:
         new_arr = ut.switch_arr_basis(self.arr, umat, reverse)
         return DenMat(self.num_rows, self.row_shape, new_arr)
 
+    @staticmethod
+    def get_fun_of_dm_from_eigen_sys(num_rows, row_shape,
+                                     eigen_sys, fun_of_scalars):
+        """
+        If (evas, U) = eigen_sys and fun = fun_of_scalars, then this method
+        returns U.fun(evas).U^dag, where U^dag is the Hermitian conjugate of
+        the unitary matrix U.
+
+        The function calculated (for example, np.exp, np.log, etc.) is
+        passed in as the input 'fun_of_scalars'. To get just an approx to dm
+        instead of an approx to fun of dm, use fun_of_scalars = lambda x: x
+
+        Parameters
+        ----------
+        num_rows : int
+        row_shape : tuple[int]
+        eigen_sys : tuple[np.ndarray, np.ndarray]
+        fun_of_scalars :
+            function that can act on scalars or numpy arrays element-wise
+
+        Returns
+        -------
+        DenMat
+
+        """
+        evas = eigen_sys[0]
+        evec_cols = eigen_sys[1]
+        arr = ut.fun_of_herm_arr_from_eigen_sys(
+            fun_of_scalars, evas, evec_cols)
+        return DenMat(num_rows, row_shape, arr)
+
 
 if __name__ == "__main__":
     def main():
         dm1 = DenMat(3, (3,))
+
+        dm = DenMat.new_const_den_mat(dm1.num_rows, dm1.row_shape, 2)
+        print('constant 2\n', dm)
 
         dm1.set_arr_to_zero()
         print('set_arr_to_zero\n', dm1)
@@ -941,35 +1013,43 @@ if __name__ == "__main__":
         print('normalize_diag_of_arr\n', dm1)
 
         dm1 *= 3
-        dm1.normalize_self()
-        print('normalize self\n', dm1)
+        dm1.normalize_entire_arr()
+        print('normalize entire\n', dm1)
 
         dm1 = DenMat(2, (2,))
         dm1.arr = np.array([[.5, .2], [.2, .5]])
         print('1 qubit dm\n', dm1)
 
-        dm2 = DenMat.get_kron_prod_of_den_mats([dm1]*4)
-        print('4 fold kron of rot_y\n', dm2)
+        id2 = DenMat(2, (2,))
+        id2.arr = np.array([[1, 0], [0, 1]])
+        print('id2\n', id2)
 
-        Kxy = dm2.get_Kxy([0, 2], [1, 3])
-        print('K_02,13\n', Kxy)
+        dm2 = DenMat.get_kron_prod_of_den_mats([dm1, id2*.5, dm1, id2*.5])
+        # print('4 fold kron of rot_y\n', dm2)
+        dm2.set_marginals()
+        print("init marginals dm1,id2, dm1, id2\n", dm2.marginals)
 
-        Kx = Kxy.get_partial_tr({1, 3})
-        print('K_02\n', Kx)
+        rho_xy = dm2.get_rho_xy([0, 2], [1, 3])
+        # print('rho_02,13\n', rho_xy)
+        rho_xy.set_marginals()
+        print("permuted marginals dm1, dm1, id2, id2\n", rho_xy.marginals)
 
-        print('K_0 - dm1\n', Kx.get_partial_tr({1}) - dm1)
-        print('K_2 - dm1\n', Kx.get_partial_tr({0}) - dm1)
+        rho_x = rho_xy.get_partial_tr({1, 3})
+        print('rho_02\n', rho_x)
 
-        print('entropy of Kx=', Kx.get_entropy())
+        print('rho_0 - dm1\n', rho_x.get_partial_tr({1}) - dm1)
+        print('rho_2 - id2*.5\n', rho_x.get_partial_tr({0}) - id2*.5)
 
-        print('mutual info of Kxy=', Kxy.get_mutual_info({0, 2}))
+        print('entropy of rho_x=', rho_x.get_entropy())
 
-        print('Kxy - dm2\n', Kxy-dm2)
-        print('Kxy + dm2\n', Kxy+dm2)
-        print('Kx*inv_Kx\n', Kx*Kx.inv())
-        print('Kxy[0, 0]=', Kxy[0, 0])
+        print('mutual info of rho_xy=', rho_xy.get_mutual_info({0, 2}))
 
-        eigen_sys_of_margs = dm2.get_eigen_sys_of_marginals()
+        print('rho_xy - dm2\n', rho_xy-dm2)
+        print('rho_xy + dm2\n', rho_xy+dm2)
+        print('rho_x*inv_rho_x\n', rho_x*rho_x.inv())
+        print('rho_xy[0, 0]=', rho_xy[0, 0])
+        print('rho_x-log exp rho_x\n', rho_x - rho_x.log().exp())
+        print('rho_x*pinv_rho_x\n', rho_x*rho_x.pseudo_inv())
 
     main()
 

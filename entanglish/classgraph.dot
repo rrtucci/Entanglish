@@ -1,0 +1,7 @@
+strict digraph  {
+EntangCase;
+PureStEnt;
+SquashedEnt;
+EntangCase -> PureStEnt;
+EntangCase -> SquashedEnt;
+}

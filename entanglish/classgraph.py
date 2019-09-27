@@ -7,23 +7,17 @@ from shutil import copyfile
 
 """
 The purpose of this script is to generate a file called classgraph.pdf 
-with the class graph for qubiter. The script also generates a file called 
+with the class graph for entanglish. The script also generates a file called 
 classgraph_orphans.html that lists the orphan classes. Orphan classes (i.e., 
 classes with no parents or children) don't show up in classgraph.pdf. 
 """
 
-# cl_to_data = pyclbr.readmodule("SEO_reader")
-# print(name_to_data)
 
 # create cl_to_parents: dict[str, list[str]]
 cl_to_parents = {}
 
 dir_whitelist = [
-    "./",
-    'adv_applications',
-    'device_specific',
-    'latex_tools',
-    'quantum_CSD_compiler'
+    "./"
     ]
 file_blacklist = [
     '__init__.py',

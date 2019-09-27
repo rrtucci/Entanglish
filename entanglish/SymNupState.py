@@ -20,6 +20,13 @@ class SymNupState:
     known and has a simple analytical expression given by the classical
     entropy of a hyper-geometric distribution.
 
+    See Ref.1 for a more detailed explanation of the algos used in this class.
+
+    References
+    ----------
+    1. R.R. Tucci, "A New  Algorithm for Calculating Squashed Entanglement
+    and a Python Implementation Thereof"
+
 
     Attributes
     ----------
@@ -57,6 +64,7 @@ class SymNupState:
         Returns
         -------
         np.ndarray
+            shape=(2^self.num_bits, )
 
         """
         st_vec = np.zeros(tuple([2]*self.num_bits), dtype=complex)
@@ -70,45 +78,50 @@ class SymNupState:
         st_vec /= mag
         return st_vec.reshape((1 << self.num_bits,))
 
-    def get_entang(self, num_traced_axes):
+    def get_known_entang(self, num_x_axes):
         """
-        This method calculates the (bipartite) entanglement
+        This method calculates the (bipartite) entanglement analytically,
+        from a known formula, not numerically.
 
         E(x_axes, y_axes)=E(y_axes, x_axes) (order of x_axes and y_axes
         arguments doesn't matter)
 
-        for the state, where len(x_axes)= num_traced_axes, and len(y_axes)=
-        total_num_row_axes - num_traced_axes. Because of the symmetrization of
-        the state, E(x_axes, y_axes) only depends of the lengths of x_axes
-        and y_axes. One can prove that E(x_axes, y_axes) is expressible
-        analytically as the classical entropy of a hyper-geometric
-        distribution (
-        https://en.wikipedia.org/wiki/Hypergeometric_distribution)
+        len(x_axes)= num_x_axes, and len(y_axes)= num_row_axes - num_x_axes.
+        After the symmetrization of the state, E(x_axes, y_axes) only
+        depends of the numbers of x_axes and y_axes.
+
+        One can prove that E(x_axes, y_axes) is given by the hyper-geometric
+        distribution (see Ref.1)
+
+        References
+        ----------
+        1. https://en.wikipedia.org/wiki/Hypergeometric_distribution)
 
         Parameters
         ----------
-        num_traced_axes : int
+        num_x_axes : int
 
         Returns
         -------
         float
 
         """
-        assert 0 <= num_traced_axes <= self.num_bits
+        assert 0 <= num_x_axes <= self.num_bits
         nn = self.num_bits
-        n = self.num_bits - num_traced_axes
+        n = num_x_axes
         xx = self.num_up
         probs = [ut.prob_hypergeometric(x, xx, n, nn)
                  for x in range(xx + 1)]
         return ut.get_entropy_from_probs(np.array(probs))
+
 
 if __name__ == "__main__":
     def main():
         num_up = 4
         num_bits = 5
         st = SymNupState(num_up, num_bits)
-        print('st_vec\n', st.get_st_vec())
-        for num_traced_axes in range(0, num_bits+1):
-            print('entang for ' + str(num_traced_axes) + ' traced axes=',
-                  st.get_entang(num_traced_axes))
+        print('st_vec=\n', st.get_st_vec())
+        for num_x_axes in range(0, num_bits+1):
+            print('known entang for ' + str(num_x_axes) + ' x axes=',
+                  st.get_known_entang(num_x_axes))
     main()

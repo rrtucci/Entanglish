@@ -7,11 +7,12 @@ class DenMatPertTheory:
     DenMat, dm, den_mat all stand for density matrix.
 
     This class performs operations associated with perturbation theory (
-    second order, mainly) of the eigenvalues and eigenvectors of a density
+    more precisely, second order, time-independent perturbation theory in
+    quantum mechanics) of the eigenvalues and eigenvectors of a density
     matrix.
 
-    In quantum mechanics, perturbation theory is used to approximate the
-    eigenvalues and eigenvectors of a Hamiltonian H
+    In quantum mechanics, such perturbation theory is used to approximate
+    the eigenvalues and eigenvectors of a Hamiltonian H
 
     H = H0 + V,
 
@@ -23,10 +24,10 @@ class DenMatPertTheory:
     is Hermitian too, pert theory can be used for density matrices as well
     as for Hamiltonians. The question is, what to use for dm0? The
     constructor of this class (__init__) leaves that question unanswered.
-    However, the static function DenMatPertTheory.new_from_dm() answers this
-    question. It takes a density matrix dm as input, and returns an object
-    of this class, i.e., DenMatPertTheory, assuming that dm0 equals the
-    Kronecker product of the marginals of dm.
+    However, the static function DenMatPertTheory.new_with_separable_dm0()
+    answers this question. It takes a density matrix dm as input,
+    and returns an object of this class, i.e., DenMatPertTheory, assuming
+    that dm0 equals the Kronecker product of the one-axis marginals of dm.
 
     The marginals of a square array arr is defined as a list of partial
     traces of arr. The n'th item in the list of marginals is the partial
@@ -38,8 +39,8 @@ class DenMatPertTheory:
     where d is the number of states of the qudit. If d is small for all the
     marginals, it is much easier to diagonalize every marginal than to
     diagonalize the whole density matrix dm. So it is reasonable to assume
-    that the evas and evecs of dm0 can be calculated easily exactly,
-    and that we wish to use those to approximate perturbatively the evas and
+    that the evas and evecs of dm0 can be calculated easily exactly. We wish
+    to use those evas and evecs to approximate perturbatively the evas and
     evecs of dm.
 
     We will call an eigensystem of a density matrix: a tuple, whose first
@@ -48,28 +49,35 @@ class DenMatPertTheory:
     eigen_cols, whose i'th columns is an eigenvector for the i'th eigenvalue
     (i.e., evas[i]) of the density matrix.
 
+    See Ref.1 for a more detailed explanation of the algos used in this class.
+
+    References
+    ----------
+    1. R.R. Tucci, "A New  Algorithm for Calculating Squashed Entanglement
+    and a Python Implementation Thereof"
 
     Attributes
     ----------
-    __evec_cols_of_dm_to_2nd_order : np.ndarray
-        This is a unitary matrix with (a second order approx of) the
-        eigenvectors of dm as columns. If this matrix is U, the dm \approx
-        UDU^dag, where D is diagonal and U^dag is the Hermitian conjugate of
-        U.
     del_dm : DenMat
         defined above
     del_dm_in_sbasis: DenMat
         del_dm is in inbasis. It is convenient to change it to sbasis (
-        separable basis) so that if v1 = dm0_eigen_sys[0][n1] and v2 =
-        dm0_eigen_sys[0][n2] then del_dm_in_sbasis[n1, n2] = <v1| del_dm |v2>
+        separable basis) so that if v1 = dm0_eigen_sys[1][n1] and v2 =
+        dm0_eigen_sys[1][n2] then del_dm_in_sbasis[n1, n2] = <v1| del_dm |v2>
     dm0_eigen_sys : tuple[np.ndarray, np.ndarray]
         eigensystem of density matrix dm0.
     evas_of_dm_to_2nd_order : np.ndarray
         1D array of floats. Eigenvalues of dm to second order.
+    evec_cols_of_dm_to_2nd_order : np.ndarray
+        This is a unitary matrix with (a second order approx of) the
+        eigenvectors of dm as columns. If this matrix is U, the dm \approx
+        UDU^dag, where D is diagonal and U^dag is the Hermitian conjugate of
+        U.
+    verbose : bool
 
     """
 
-    def __init__(self, dm0_eigen_sys, del_dm):
+    def __init__(self, dm0_eigen_sys, del_dm, verbose=False):
         """
         Constructor
         
@@ -77,26 +85,38 @@ class DenMatPertTheory:
         ----------
         dm0_eigen_sys : tuple[np.ndarray, np.ndarray]
         del_dm : DenMat
+        verbose : bool
 
         Returns
         -------
 
 
         """
+        self.verbose = verbose
         self.dm0_eigen_sys = dm0_eigen_sys
+        # will not assume trace is one
+        # ut.assert_is_prob_dist(np.array(dm0_eigen_sys[0]), halt=True)
         self.del_dm = del_dm
+        # even if dm and dm0 don't have unit trace,
+        # assume their traces are equal
+        assert abs(del_dm.trace()) < 1e-5, abs(del_dm.trace())
+        # print('aaaaaaaa1', np.linalg.norm(del_dm.arr))
         self.del_dm_in_sbasis = del_dm.switch_arr_basis(dm0_eigen_sys[1])
+        # print('aaaaaaaa2', np.linalg.norm(self.del_dm_in_sbasis.arr))
+        # print('aaaaaaa2-zero-if-esys-unitary', np.linalg.norm(np.dot(
+        #    dm0_eigen_sys[1].conj().T, dm0_eigen_sys[1])-
+        #       np.eye(del_dm.num_rows)))
         self.diagonalize_del_dm_in_sbasis_in_degenerate_spaces()
+        # print('aaaaaaaa3', np.linalg.norm(self.del_dm_in_sbasis.arr))
 
         self.evas_of_dm_to_2nd_order = None
-        self.__evec_cols_of_dm_to_2nd_order = None
+        self.evec_cols_of_dm_to_2nd_order = None
 
         self.set_evas_of_dm_to_2nd_order()
-        # calculate self.evec_cols_of_dm_to_2nd_order
-        # only if it is needed
+        self.set_evec_cols_of_dm_to_2nd_order()
 
     @staticmethod
-    def new_from_dm(dm):
+    def new_with_separable_dm0(dm, verbose=False):
         """
         This method returns a DenMatPertTheory built from a density matrix
         dm, assuming that dm0 is the Kronecker product of the marginals of dm.
@@ -104,56 +124,26 @@ class DenMatPertTheory:
         Parameters
         ----------
         dm : DenMat
+        verbose : bool
 
         Returns
         -------
         DenMatPertTheory
 
         """
+        if dm.marginals is None:
+            dm.set_marginals()
         esys = dm.get_eigen_sys_of_marginals()
         dm0_eigen_sys = (ut.kron_prod(esys[0]), ut.kron_prod(esys[1]))
-        arr = ut.fun_of_herm_arr_from_eigen_sys(
-            lambda x: x, dm0_eigen_sys[0], dm0_eigen_sys[1])
+        arr = ut.kron_prod([marg.arr for marg in dm.marginals])
         dm0 = DenMat(dm.num_rows, dm.row_shape, arr)
 
-        return DenMatPertTheory(dm0_eigen_sys, dm - dm0)
-
-    @property
-    def evec_cols_of_dm_to_2nd_order(self):
-        """
-        This method calculates the class attribute
-        self.__evec_cols_of_dm_to_2nd_order if it is empty and returns it
-        when self.evec_cols_of_dm_to_2nd_order is called.
-
-        Returns
-        -------
-        np.ndarray
-
-        """
-        if self.__evec_cols_of_dm_to_2nd_order is None:
-            self.set_evec_cols_of_dm_to_2nd_order()
-        return self.__evec_cols_of_dm_to_2nd_order
-
-    @evec_cols_of_dm_to_2nd_order.setter
-    def evec_cols_of_dm_to_2nd_order(self, x):
-        """
-        Setter. It permits
-        self.evec_cols_of_dm_to_2nd_order = x
-
-        Parameters
-        ----------
-        x : np.ndarray
-
-        Returns
-        -------
-        None
-
-        """
-        self.__evec_cols_of_dm_to_2nd_order = x
+        return DenMatPertTheory(dm0_eigen_sys, dm - dm0, verbose)
 
     def get_dm0(self):
         """
-        This method returns the unperturbed density matrix dm0.
+        This method returns the unperturbed density matrix dm0. We define
+        this method so as to avoid storing dm0.
 
         Returns
         -------
@@ -187,17 +177,31 @@ class DenMatPertTheory:
         for eq_class in classes:
             dim = len(eq_class)
             if dim > 1:
+                if self.verbose:
+                    print("non-trivial eq class", eq_class)
                 eq_class = sorted(eq_class)
                 arr = np.empty((dim, dim), dtype=complex)
                 for k1, kk1 in enumerate(eq_class):
                     for k2, kk2 in enumerate(eq_class):
                         arr[k1, k2] = self.del_dm_in_sbasis[kk1, kk2]
-                _, evec_cols = np.linalg.eigh(arr)
-                for k1, kk1 in enumerate(eq_class):
-                    for k2, kk2 in enumerate(eq_class):
-                        umat[kk1, kk2] = evec_cols[k1, k2]
-        self.del_dm_in_sbasis.arr = \
-            np.dot(np.dot(umat.conj().T, self.del_dm_in_sbasis.arr), umat)
+                norm_arr = np.linalg.norm(arr)
+                # print('norm arr', norm_arr)
+                if norm_arr > 1e-4:
+                    _, evec_cols = np.linalg.eigh(arr)
+                    assert ut.is_unitary(evec_cols)
+                    # print('bbbbbbbb', np.around(np.dot(np.dot(
+                    #         evec_cols.conj().T,
+                    #               arr), evec_cols).real,4))
+                    for k1, kk1 in enumerate(eq_class):
+                        for k2, kk2 in enumerate(eq_class):
+                            umat[kk1, kk2] = evec_cols[k1, k2]
+        assert ut.is_unitary(umat)
+        # print('ccccccccnorm of rotated_del_dm', np.linalg.norm(
+        # self.del_dm_in_sbasis.arr))
+        rotated_del_dm = np.dot(
+            np.dot(umat.conj().T, self.del_dm_in_sbasis.arr), umat)
+        # print('norm of rotated_del_dm', np.linalg.norm(rotated_del_dm))
+        self.del_dm_in_sbasis.arr = rotated_del_dm
 
     def set_evas_of_dm_to_2nd_order(self):
         """
@@ -223,7 +227,7 @@ class DenMatPertTheory:
         """
         num_evas = len(self.dm0_eigen_sys[0])
         evas_to_2nd_order = []
-        use_3rd_order= True
+        use_3rd_order = True
         for n in range(num_evas):
             eva = self.dm0_eigen_sys[0][n]
             # print('...../', eva, self.del_dm.arr)
@@ -235,7 +239,7 @@ class DenMatPertTheory:
                     me_n_n = self.del_dm_in_sbasis[n, n]
                     lam_n_k1 = self.dm0_eigen_sys[0][n] -\
                                self.dm0_eigen_sys[0][k1]
-                    if abs(lam_n_k1) > 1e-6:
+                    if abs(lam_n_k1) > 1e-5:
                         eva += (me_n_k1*me_k1_n).real/lam_n_k1
                         if use_3rd_order:
                             eva += -(me_n_n*me_n_k1*me_k1_n).real/lam_n_k1**2
@@ -245,7 +249,10 @@ class DenMatPertTheory:
                         #  over the degenerate eigenspace so that the
                         # numerator becomes zero. This is called degenerate
                         # 2nd order perturbation theory
-                        assert abs(me_n_k1) < 1e-6
+
+                        # assert abs(me_n_k1) < 1e-5, str(me_n_k1) + \
+                        #                         ' / ' + str(abs(lam_n_k1))
+                        pass
                     if use_3rd_order:
                         for k2 in range(num_evas):
                             if k2 != n:
@@ -261,17 +268,26 @@ class DenMatPertTheory:
                                     eva += numer/denom
                                     # print(';;;', eva)
                                 else:
-                                    assert abs(numer) < 1e-6
+                                    pass
+                                    # assert abs(numer) < 1e-5, str(numer)
 
             evas_to_2nd_order.append(eva)
-        self.evas_of_dm_to_2nd_order = np.array(evas_to_2nd_order)
+
+        evas = np.array(evas_to_2nd_order)
+
+        fix = True
+        if fix:
+            evas = np.array([ut.clip(x, [0, 1]) for x in evas])
+            evas = evas/sum(evas)
+
+        self.evas_of_dm_to_2nd_order = evas
         # print("===", evas_to_2nd_order)
 
     def set_evec_cols_of_dm_to_2nd_order(self):
         """
-        This function sets the class attribute
-        __evec_cols_of_dm_to_2nd_order (a matrix with the eigenvectors,
-        as columns, of dm, to second order in pert theory).
+        This function sets the class attribute evec_cols_of_dm_to_2nd_order
+        (a matrix with the eigenvectors, as columns, of dm, to second order
+        in pert theory).
 
         Formulas used here come from the Wikipedia article Ref.1. That
         article has a figure containing the eigenvalues and eigenvectors to
@@ -312,14 +328,17 @@ class DenMatPertTheory:
                                     coef_n_k1[n, k1] += \
                                         me_k1_k2*me_k2_n/(lam_n_k1*lam_n_k2)
                                 else:
-                                    assert abs(me_k2_n) < 1e-6
+                                    # assert abs(me_k2_n) < 1e-
+                                    pass
                     else:
                         # if denominator is zero, numerator should be too.
                         # if it isn't, del_dm must be diagonalized
                         #  over the degenerate eigenspace so that the
                         # numerator becomes zero. This is called degenerate
                         # 2nd order perturbation theory
-                        assert abs(me_k1_n) < 1e-6
+
+                        # assert abs(me_k1_n) < 1e-6
+                        pass
         # umat = unitary matrix
         # umat0 contains evecs as cols of separable den mat to 0th order
         umat0 = self.dm0_eigen_sys[1]
@@ -330,10 +349,17 @@ class DenMatPertTheory:
             for k1 in range(num_evas):
                 umat[:, n] += coef_n_k1[n, k1]*umat0[:, k1]
 
-        self.__evec_cols_of_dm_to_2nd_order = umat
+        fix = True
+        if fix:
+            # this use of the qr decomposition replaces umat by a matrix
+            # which is close to it, but repaired to fix any
+            # deviation from unitarity
+            umat, _ = np.linalg.qr(umat)
+
+        self.evec_cols_of_dm_to_2nd_order = umat
 
     @staticmethod
-    def get_bstrap_fin_eigen_sys(dm0_eigen_sys, del_dm, num_steps=1):
+    def do_bstrap(dm0_eigen_sys, del_dm, num_steps=1, verbose=False):
         """
         If we define sub_del_dm = del_dm/num_steps, then this method
         calculates an eigensystem for dm0 + sub_del_dm*(k+1) from the
@@ -347,6 +373,7 @@ class DenMatPertTheory:
         dm0_eigen_sys : tuple[np.ndarray, np.ndarray]
         del_dm : DenMat
         num_steps : int
+        verbose : bool
 
         Returns
         -------
@@ -354,86 +381,68 @@ class DenMatPertTheory:
 
         """
         sub_del_dm = del_dm * (1/num_steps)
-        cur_pert = DenMatPertTheory(dm0_eigen_sys, sub_del_dm)
+        # print('xxxxxxxxxxxxxx-sub-del-dm\n', sub_del_dm)
+        if verbose:
+            print('------------------beginning of step', 0, '/', num_steps)
+            print('bstrap input evas\n', np.sort(dm0_eigen_sys[0]),
+                  'sum=', np.sum(dm0_eigen_sys[0]))
+        cur_pert = DenMatPertTheory(dm0_eigen_sys, sub_del_dm, verbose)
+
         for k in range(1, num_steps):
+            if verbose:
+                print('------------------beginning of step', k, '/', num_steps)
+                print('bstrap input evas\n', np.sort(
+                    cur_pert.evas_of_dm_to_2nd_order),
+                    'sum=', np.sum(cur_pert.evas_of_dm_to_2nd_order))
             cur_dm0_eigen_sys = (cur_pert.evas_of_dm_to_2nd_order,
                                  cur_pert.evec_cols_of_dm_to_2nd_order)
-            cur_pert = DenMatPertTheory(cur_dm0_eigen_sys, sub_del_dm)
+            cur_pert = DenMatPertTheory(cur_dm0_eigen_sys, sub_del_dm, verbose)
         evas = cur_pert.evas_of_dm_to_2nd_order
         evec_cols = cur_pert.evec_cols_of_dm_to_2nd_order
         return evas, evec_cols
 
     @staticmethod
-    def get_bstrap_fin_eigen_sys_m(dm, num_steps=1):
+    def do_bstrap_with_separable_dm0(dm, num_steps=1, verbose=False):
         """
         This method returns the same thing as the method (found in its
-        parent class) DenMatPertTheory.get_final_eigen_sys( ). However,
-        their names differ by a '_m' at the end (_m stands for marginals)
-        and their inputs are different. This one takes as input a density
-        matrix dm and calculates dm0_eigen_sys and del_dm from that,
-        assuming that dm0 is the Kronecker product of the marginals of dm.
-
-        To get just an approx to dm instead of an approx to fun of dm, use
-        fun_of_scalars = lambda x: x
+        parent class) DenMatPertTheory.do_bstrap( ). However, their names
+        differ by a '_with_separable_dm0' at the end and their inputs are
+        different. This one takes as input a density matrix dm and
+        calculates dm0_eigen_sys and del_dm from that, assuming that dm0 is
+        the Kronecker product of the marginals of dm.
 
         Parameters
         ----------
         dm : DenMat
         num_steps : int
+        verbose : bool
 
         Returns
         -------
         tuple[np.ndaray, np.ndarray]
 
         """
+        if dm.marginals is None:
+            dm.set_marginals()
         esys = dm.get_eigen_sys_of_marginals()
         dm0_eigen_sys = (ut.kron_prod(esys[0]),
                          ut.kron_prod(esys[1]))
-        arr = ut.fun_of_herm_arr_from_eigen_sys(
-            lambda x: x, dm0_eigen_sys[0], dm0_eigen_sys[1])
+        arr = ut.kron_prod([marg.arr for marg in dm.marginals])
         dm0 = DenMat(dm.num_rows, dm.row_shape, arr)
-        return DenMatPertTheory.get_bstrap_fin_eigen_sys(
-            dm0_eigen_sys, dm-dm0, num_steps)
+        return DenMatPertTheory.do_bstrap(
+            dm0_eigen_sys, dm-dm0, num_steps, verbose)
 
-    @staticmethod
-    def get_fun_of_dm_to_2nd_order(num_rows, row_shape,
-            final_eigen_sys, fun_of_scalars):
-        """
-        If evas, U = final_eigen_sys and fun = fun_of_scalars, then this
-        method returns U.fun(evas).U^dag, where U^dag is the Hermitian
-        conjugate of the unitary matrix U.
-
-        The function calculated (for example, np.exp, np.log, etc.) is
-        passed in as the input 'fun_of_scalars'. To get just an approx to dm
-        instead of an approx to fun of dm, use fun_of_scalars = lambda x: x
-
-        Parameters
-        ----------
-        num_rows : int
-        row_shape : tuple[int]
-        final_eigen_sys : tuple[np.ndarray, np.ndarray]
-        fun_of_scalars :
-            function that can act on scalars or numpy arrays element-wise
-
-        Returns
-        -------
-        DenMat
-
-        """
-        evas = final_eigen_sys[0]
-        evec_cols = final_eigen_sys[1]
-        arr = ut.fun_of_herm_arr_from_eigen_sys(
-            fun_of_scalars, evas, evec_cols)
-        return DenMat(num_rows, row_shape, arr)
 
 if __name__ == "__main__":
+    from entanglish.SymNupState import *
 
-    def main_test(dm, pert, num_steps):
+    def main_test(dm, exact_evas, pert, num_steps):
         """
 
         Parameters
         ----------
         dm : DenMat
+        exact_evas : np.ndarray
         pert : DenMatPertTheory
         num_steps : int
 
@@ -442,11 +451,14 @@ if __name__ == "__main__":
         None
 
         """
-        print('******after ', num_steps, ' steps:')
-        fin_esys = DenMatPertTheory.get_bstrap_fin_eigen_sys(
-            pert.dm0_eigen_sys, pert.del_dm, num_steps)
-        print('evas of dm to 2nd order\n', fin_esys[0])
-        dm_2nd_order = DenMatPertTheory.get_fun_of_dm_to_2nd_order(
+        # print('******do ', num_steps, ' steps:')
+        fin_esys = DenMatPertTheory.do_bstrap(
+            pert.dm0_eigen_sys, pert.del_dm, num_steps, pert.verbose)
+        print('final evas of dm to 2nd order\n', np.sort(fin_esys[0]),
+              'sum=', np.sum(fin_esys[0]))
+        print('evas_of_dm\n', np.sort(exact_evas), 'sum=', np.sum(exact_evas))
+
+        dm_2nd_order = DenMat.get_fun_of_dm_from_eigen_sys(
             dm.num_rows, dm.row_shape, fin_esys, lambda x: x)
         # print('dm_to_2nd_order\n', dm_2nd_order)
         diff_arr = dm_2nd_order.arr - dm.arr
@@ -454,7 +466,7 @@ if __name__ == "__main__":
         print('distance(dm_to_2nd_order, dm)\n', np.linalg.norm(diff_arr))
 
         true_exp = dm.exp()
-        approx_exp = DenMatPertTheory.get_fun_of_dm_to_2nd_order(
+        approx_exp = DenMat.get_fun_of_dm_from_eigen_sys(
             dm.num_rows, dm.row_shape, fin_esys, np.exp)
         print('distance(approx_exp, true_exp)\n',
               np.linalg.norm(approx_exp.arr - true_exp.arr))
@@ -462,16 +474,17 @@ if __name__ == "__main__":
     def main1():
         print('--------------------main1')
         np.random.seed(123)
-        dm = DenMat(4, (2, 2))
-        evas = np.array([.1, .3, .4, .5])
-        evas /= np.sum(evas)
-        print('evas of dm\n', evas)
-        dm.set_arr_to_rand_den_mat(evas)
+        dm = DenMat(8, (2, 2, 2))
+        exact_evas = np.array([.1, .3, .3, .1, .2, .1, .6, .7])
+        exact_evas /= np.sum(exact_evas)
+        print('evas of dm\n', np.sort(exact_evas))
+        dm.set_arr_to_rand_den_mat(exact_evas)
 
-        pert = DenMatPertTheory.new_from_dm(dm)
-        print('evas of dm to 2nd order (after 1 step)\n',
-              pert.evas_of_dm_to_2nd_order,
-              'sum=', np.sum(pert.evas_of_dm_to_2nd_order))
+        pert = DenMatPertTheory.new_with_separable_dm0(dm, verbose=True)
+        # print('evas of dm to 2nd order (after 1 step)\n',
+        #       np.sort(pert.evas_of_dm_to_2nd_order),
+        #       'sum=', np.sum(pert.evas_of_dm_to_2nd_order))
+        # print('evas of dm\n', np.sort(evas))
 
         # print('evas_of_dm0\n', pert.dm0_eigen_sys[0])
         #
@@ -482,9 +495,9 @@ if __name__ == "__main__":
         # dm0 = pert.get_dm0()
         # print('dm0\n', dm0)
 
-        num_steps = 10
+        num_steps = 40
         # print('evas_of_dm\n', evas)
-        main_test(dm, pert, num_steps)
+        main_test(dm, exact_evas, pert, num_steps)
 
     def main2():
         print('--------------------main2')
@@ -494,26 +507,50 @@ if __name__ == "__main__":
         evas1 = np.array([.1, .1, .4])
         evas1 /= np.sum(evas1)
         dm1.set_arr_to_rand_den_mat(evas1)
-        print('dm1\n', dm1)
+        # print('dm1\n', dm1)
 
         dm2 = DenMat(2, (2,))
-        evas2 = np.array([.1, .3])
+        evas2 = np.array([.8, .3])
         evas2 /= np.sum(evas2)
         dm2.set_arr_to_rand_den_mat(evas2)
-        print('dm2\n', dm2)
+        # print('dm2\n', dm2)
 
         dm = DenMat.get_kron_prod_of_den_mats([dm1, dm2])
-
-        dm.add_const_to_diag_of_arr(1e-1)
+        const = 0
+        # const = 1
+        dm.add_const_to_diag_of_arr(const)
         dm.normalize_diag_of_arr()
+        print('kron evas\n', np.sort(ut.kron_prod([evas1, evas2])))
+        exact_evas = np.linalg.eigvalsh(dm.arr)
+        print('evas_of_dm\n', exact_evas)
 
-        pert = DenMatPertTheory.new_from_dm(dm)
+        pert = DenMatPertTheory.new_with_separable_dm0(dm, verbose=True)
 
-        num_steps = 1
-        print('evas_of_dm\n', ut.kron_prod([evas1, evas2]))
-        main_test(dm, pert, num_steps)
+        # print('evas of dm to 2nd order (after 1 step)\n',
+        #       np.sort(pert.evas_of_dm_to_2nd_order),
+        #       'sum=', np.sum(pert.evas_of_dm_to_2nd_order))
+        num_steps = 10
+        main_test(dm, exact_evas, pert, num_steps)
+
+    def main3():
+        print('--------------------main3')
+        num_bits = 4
+        num_up = 2
+        dm = DenMat(1 << num_bits, tuple([2]*num_bits))
+        st = SymNupState(num_up, num_bits)
+        st_vec = st.get_st_vec()
+        dm.set_arr_from_st_vec(st_vec)
+        # dm.depurify(.1)
+
+        exact_evas = np.linalg.eigvalsh(dm.arr)
+        print('evas_of_dm\n', exact_evas, 'sum=', np.sum(exact_evas))
+
+        pert = DenMatPertTheory.new_with_separable_dm0(dm, verbose=True)
+        num_steps = 80
+        main_test(dm, exact_evas, pert, num_steps)
 
     main1()
     main2()
+    main3()
 
 

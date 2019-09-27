@@ -99,6 +99,7 @@
 \newcommand{\cale}[0]{{\cal E}}
 \newcommand{\calh}[0]{{\cal H}}
 \newcommand{\cali}[0]{{\cal I}}
+\newcommand{\call}[0]{{\cal L}}
 \newcommand{\cals}[0]{{\cal S}}
 \newcommand{\calt}[0]{{\cal T}}
 
@@ -114,6 +115,7 @@
 \newcommand{\norm}[1]{\parallel #1 \parallel_2}
 \newcommand{\rvalp}[0]{{\ul{\alpha}}}
 \newcommand{\alp}[0]{{\alpha}}
+\newcommand{\alpk}[0]{{\alpha^{k}}}
 \newcommand{\brazo}{ \begin{array}{r}
  \bra{0^{n_0}}
  \\
@@ -130,14 +132,11 @@
 
 \begin{document}
 
-\title{Algorithms for\\
-Exact and Approximate Calculation\\
-of Squashed Entanglement}
+\title{A New  Algorithm for Calculating\\
+Squashed Entanglement and a \\Python Implementation Thereof}
 
 
 \author{Robert R. Tucci\\
-        P.O. Box 226\\
-        Bedford,  MA   01730\\
         tucci@ar-tiste.com}
 
 
@@ -150,20 +149,67 @@ of Squashed Entanglement}
 In this paper, we propose an algorithm
 for calculating the squashed entanglement
 of
-any pure or mixed quantum state $\rho$.
+any pure or mixed quantum state.
 Our algorithm is a generalization
 of the Arimoto-Blahut algorithm
  of classical
 information theory,
 where it is used to calculate channel capacities.
-If the dimension of $\rho$ isn't too large,
-one can calculate the squashed entanglement ``exactly"
-using standard methods from Linear Algebra.
-If the dimension of $\rho$ is large, then
-one can calculate the squashed entanglement ``approximately"
- using a method that we call
-  ``bootstrapped perturbation
-theory" that is described in this paper.
+The author of this paper
+published
+a previous paper proposing a previous algorithm
+for calculating squashed entanglement.
+Even though that previous algorithm was
+also based on the Arimoto-Blahut algorithm, the
+algorithm presented in this paper is
+substantially different and performs much better.
+This paper is being released at the same time that
+a Python software library called ``Entanglish"
+is being released at GitHub as open source.
+Entanglish implements the algorithm for
+calculating squashed entanglement proposed
+in this paper and also several other algorithms related
+to quantum entanglement.
+In order to test
+the values of squashed
+entanglement that our algorithm
+yields, we introduce
+a family of pure states of multiple qubits
+that we call the symmetrized N-up states.
+We give and prove an analytical formula
+for the squashed entanglement of this
+family of states.
+This paper also proposes a method for doing density matrix perturbation theory that we call
+  ``bootstrapped perturbation theory".
+
+
+
+
+
+
+
+
+\newpage
+\section{Introduction}
+
+In this paper, we propose an algorithm
+for calculating the squashed entanglement
+(Ref.\cite{sq-wiki}) of
+any pure or mixed quantum state.
+Our algorithm is a generalization
+of the Arimoto-Blahut algorithm (Ref.\cite{ab-algo})
+ of classical
+information theory,
+where it is used to calculate channel capacities.
+
+This paper is being released at the same time that
+a Python library called ``Entanglish"
+is being released at GitHub as open source.
+Entanglish implements the algorithm for
+calculating squashed entanglement proposed
+in this paper and many other algorithms related
+to quantum entanglement.
+
 In order to test
 the values of squashed
 entanglement that our algorithm
@@ -174,32 +220,20 @@ We give and prove an analytical formula
 for the squashed entanglement of this
 family of states.
 
-\newpage
-\section{Introduction}
-
-In this paper, we propose an algorithm
-for calculating the squashed entanglement
-(Ref.\cite{sq-wiki}) of
-any pure or mixed quantum state $\rho$.
-Our algorithm is a generalization
-of the Arimoto-Blahut algorithm (Ref.\cite{ab-algo})
- of classical
-information theory,
-where it is used to calculate channel capacities.
-
-Executing the algorithm requires
+One method of executing our algorithm for finding the
+squashed entanglement of a quantum state $\rho$ requires
 finding the eigen-decompositions of
 various Hermitian matrices
 of the same dimension
 as the matrix $\rho$.
 If the dimension of $\rho$
 is small, finding
-these eigen-decompositions,
+those eigen-decompositions,
 with acceptable
 speed and accuracy,
 is feasible
 using standard matrix
-diagonalization methods.
+digitalization methods.
 But
 for dimension of $\rho$
 bigger than a certain
@@ -210,19 +244,9 @@ that we call ``bootstrapped perturbation
 theory" which
 can handle better
 than the standard
-matrix diagonalization methods
+matrix digitalization methods
 those $\rho$'s
 with a large dimension.
-
-In order to test
-the values of squashed
-entanglement that our algorithm
-yields, we introduce
-a family of pure states of multiple qubits
-that we call the symmetrized N-up states.
-We give and prove an analytical formula
-for the squashed entanglement of this
-family of states.
 
 For a review of the history of squashed
 entanglement, see Ref.\cite{sq-wiki}.
@@ -237,17 +261,27 @@ proposed
 and some of its properties
 were first discovered by Tucci in a series of six papers
 Refs.\cite{Tuc99}-\cite{Tuc02}
-during the years 1999 to 2002.
+during the years 1999 to 2002.\footnote{
+In his original 6 papers, Tucci didn't give any particular name to
+his entanglement measure. The
+name ``squashed  entanglement" was given
+to it later by Christandl and Winter in Ref.\cite{Chr03}.
+Some people prefer to call it ``CMI entanglement". CMI, 
+pronounced ``see-me", stands for Conditional Mutual Information.)}
 One of those six papers, Ref.\cite{Tuc01a},
 proposed a method
 for calculating squashed
 entanglement that is different to the one
 proposed in this paper, but also takes inspiration
 from the Arimoto-Blahut algorithm.
+The algorithm for calculating squashed
+entanglement proposed in this paper
+is substantially better and performs much better than its
+predecessor.
 The first paper to study
 squashed entanglement
 post Tucci's work appears to be
-Ref.\cite{Chr03}, by Christiandl and Winter in 2003.
+Ref.\cite{Chr03}, by Christandl and Winter in 2003.
 They proved that squashed entanglement
 satisfies other interesting properties
 not touched upon in Tucci's work.
@@ -327,11 +361,11 @@ the matrix one obtains
 from the eigen-decomposition of $\rho$
  if one replaces
 each $\lam_j$ in the matrix $D$
-by $\theta(|\lam_j|>\epsilon)$ for some small number
+by $\lam_j\theta(|\lam_j|>\epsilon)$ for some small number
 $\epsilon>0$. Let $\pi_0(\rho)=1-\pi_1(\rho)$,
 so in $\pi_0(\rho)$, each $\lam_j$
 in $D$ is replaced
-by $\theta(|\lam_j|\leq \epsilon)$.
+by $\lam_j\theta(|\lam_j|\leq \epsilon)$.
 $\pi_1(\rho)$ (resp., $\pi_0(\rho)$)
 are the projectors onto the vector
 space of non-zero (resp., zero)
@@ -359,6 +393,19 @@ convention of using capital letters to represent them.
 For example $P_{\rvx, \rvy}(x, y)=P(\rvx=x,\rvy=y)=P(x,y)$
 will denote a joint distribution of the random variables
 $\rvx$ and $\rvy$.
+
+Let $\calh_\rvx$ denote a Hilbert (or vector) space
+with an orthonormal basis $\{\ket{x}|x=0,1,2,\ldots, n_\rvx-1\}$.
+We will refer to $n_\rvx$ as the size (or number of
+possible values, or number of possible states) of $\rvx$.
+Let $\call(\calh_\rvx)$ denote the set of all linear operators
+acting on $\calh_\rvx$.
+Let $\calh_{\rvx, \rvy}$ denote the tensor product of $\calh_\rvx$
+and $\calh_\rvy$. If $\rho_{\rvx, \rvy}\in \call(\calh_{\rvx, \rvy})$
+is a density matrix, then we define its partial traces as
+$\rho_\rvx=\tr_\rvy\rho_{\rvx, \rvy}\in\call(\calh_{\rvx})$
+and
+$\rho_\rvy=\tr_\rvx\rho_{\rvx, \rvy}\in\call(\calh_{\rvy})$.
 
 Next, we review a few standard definitions
 used in classical and quantum
@@ -433,6 +480,37 @@ S(\rvy| \rvalp)
 (The mutual information (MI) is the CMI without the $\rvalp$).
 
 
+A maximally entangled pure state with two parts $\rvx$ and $\rvy$
+is defined as a pure state whose density matrix $\rho_{\rvx,\rvy}\in \call({\calh_{\rvx, \rvy}})$
+satisfies
+
+\beq
+S(\rho_\rvx)=S(\rho_\rvy)= \log n_{min}
+\;,
+\eeq
+where $n_{min}=\min(n_\rvx, n_\rvy)$ and $n_\rvx, n_\rvy$
+are the sizes of spaces $\calh_\rvx, \calh_\rvy$, respectively.
+Let
+
+\beq
+\ket{\psi^{\rm max-entan}_{\rvx, \rvy}}=
+\sum_{n=0}^{n_{min}}\ket{n}_\rvx\ket{n}_\rvy
+\;,
+\eeq
+and
+
+\beq
+\rho^{\rm max-entan}_{\rvx, \rvy}=
+\ket{\psi^{\rm max-entan}_{\rvx, \rvy}}
+\bra{\psi^{\rm max-entan}_{\rvx, \rvy}}
+\;.
+\eeq
+Then it is easy to show that
+state $\rho^{\rm max-entan}_{\rvx, \rvy}$
+is a maximally entangled state
+with parts $\rvx$ and $\rvy$.
+
+
 
 
 
@@ -441,23 +519,11 @@ In this section, we will
 propose an algorithm for
 calculating the squashed entanglement
 of any pure or mixed state.
-A different algorithm for doing
-the same thing was proposed by Tucci
-in Ref.\cite{Tuc01a} in 2001.
-The algorithm presented below is significantly
-better and simpler than the 2001 one. Both algorithms
-are generalizations to the quantum regime
-of the famous
-Arimoto Blahut algorithm of classical information
-theory, where it is used, for example, to calculate
-channel capacities. See Ref.\cite{sq-wiki} for a
-quick review of squashed entanglement. The section
-of this paper entitled Introduction contains
-additional references about it.
+
 
 Consider a bipartite system
 consisting of two parts labelled
-by the random variable $\rvx$ and $\rvy$,
+by the random variables $\rvx$ and $\rvy$,
 and
 described by a density matrix $\rho_{\rvx, \rvy}$.
 The squashed entanglement of  such a system
@@ -469,9 +535,14 @@ E_{\rvx, \rvy}(\rho_{\rvx, \rvy}) =
 \min S(\rvx : \rvy|\rvalp)
 \;.
 \eeq
-The min()---or inf()
+The min()---or infimum()
 if one wishes to be more mathematically
-rigorous---is
+precise\footnote{The author
+of this paper is a physicist. He is
+often lax in Bourbaki style rigor, as most physicists are wont to be, 
+with good reason.  Physicists often
+ skip excessive rigor, because it's not the goal of physics,
+ as it is of mathematics, where it is essential.}--is
 over all density matrices $\rho_{\rvx, \rvy,\rvalp}$
 such that $\tr_\rvalp \; \rho_{\rvx, \rvy,\rvalp}=
 \rho_{\rvx, \rvy}$ with $\rho_{\rvx, \rvy}$ held fixed.
@@ -489,24 +560,22 @@ for all density matrices
 $\rho_{\rvx,\rvy, \rvz}$.
 See Ref.\cite{subadd-proof}
 for the first ever proof of $S(\rvx : \rvy|\rvalp)\geq 0$.
+The classical analogue $H(\rvx : \rvy|\rvalp)\geq 0$
+was known to be true long before Ref.\cite{subadd-proof}.
 
 \item
 If $\rho_{\rvx, \rvy}$ is pure (which is true iff
-$\tr( \rho_{\rvx, \rvy}^2 - \rho_{\rvx, \rvy}) = 0$) then\footnote{ The factor of 1/2 in
+$\tr( \rho_{\rvx, \rvy}^2 - \rho_{\rvx, \rvy}) = 0$), then, as
+Tucci pointed out in his very first paper on squashed entanglement 
+(this was one of his original motivations
+for defining squashed entanglement)\footnote{ The factor of 1/2 in
 the definition of squashed entanglement
 is necessary to make this true.
 Contrary to what Ref.\cite{sep-proof2} claims,
 this factor
 of 1/2 appears in all of Tucci's
  papers about squashed entanglement,
-from the very earliest.
-Doh, the fact that
-squashed entanglement reduces to
-the pure state entanglement
-definition, which was invented much earlier,
- was one of the
-original motivations for Tucci for defining
-squashed entanglement.}
+from the very earliest.}
 
 \beq
 E_{\rvx, \rvy} = S(\rvx) = S(\rvy)
@@ -536,13 +605,13 @@ where $w^\alp$ for all $\alp$
 is a probability distribution,
 and $\rho_\rvx^\alp, \rho_\rvy^\alp$
 are density matrices.
+This property is enunciated by some by saying that
+``squashed entanglement is faithful".
 In particular,
 this implies that squashed entanglement
 is zero
 in the classical case when
 $\rho_{\rvx,\rvy}$ is diagonal.
-This property is enunciated by some by saying that
-``squashed entanglement is faithful".
 
 
 \end{itemize}
@@ -570,147 +639,175 @@ w^\alp \rho_{\rvx, \rvy}^\alp
 \;.
 \eeq
 
-Below, we will use the symbols $K_{\rvx, \rvy}^\alp$,
-$K_{\rvx,\rvy}$ and
-$R_{\rvx, \rvy}^\alp$ to denote
-\beq
-K_{\rvx, \rvy}^\alp = w^\alp \rho_{\rvx, \rvy}^\alp
-\;,
-\eeq
+Define
+
 
 \beq
- K_{\rvx, \rvy} =
-\sum_\alp K_{\rvx, \rvy}^\alp =
- \rho_{\rvx, \rvy}
-\;,
+E^\alp_{\rvx, \rvy}=\frac{1}{2}\tr_{\rvx, \rvy}\left\{
+\rho^{\alp}_{\rvx,\rvy}[
+\log \rho^{\alp}_{\rvx,\rvy}
+-
+\log \rho^{\alp}_{\rvx}
+\rho^{\alp}_{\rvy}]
+\right\}
+\;
 \eeq
-and
+so that the squashed entanglement can be expressed as
+
 
 \beq
-R_{\rvx, \rvy}^\alp=
-\frac{K_{\rvx}^\alp K_{\rvy}^\alp}{w^\alp}
+E_{\rvx, \rvy}=\min
+\sum_\alp w^\alp
+E^\alp_{\rvx, \rvy}
+\;.
+\eeq
+Define the Lagrangian
+
+\beq
+{\cal L}=
+\sum_\alp w^\alp
+E^\alp_{\rvx, \rvy}
++ \mu(\sum_\alp w^\alp -1)
++\tr_{\rvx, \rvy}\left[
+\lam'_{\rvx, \rvy}(\sum_\alp w^\alp
+\rho^\alp_{\rvx, \rvy}-\rho_{\rvx,\rvy})
+\right]
+\;.
+\eeq
+To calculate $E_{\rvx, \rvy}$, we will set to zero
+the variation of $\call$ when we vary $w^\alp\in \RR$, $\rho^\alp_{\rvx,\rvy}
+\in \call(\calh_{\rvx, \rvy})$
+and the Lagrange multipliers $\mu\in \RR$, $\lam'_{\rvx, \rvy}\in\call(\calh_{\rvx, \rvy})$.
+
+The minimum over the probability distribution $w^\alp$
+is on the boundary of the region of allowed values but it is easy to
+infer. Since $E^\alp_{\rvx, \rvy}\geq 0$ for all $\alp$,
+the optimum probability distribution is 1 for one $\alp$,
+call it $\alp_{min}$, and zero for all other $\alp$
+
+
+\beq
+w^\alp=
+\left\{
+\begin{array}{ll}
+1&{\rm if}\;\; \alp=\alp_{min}\\
+0&{\rm otherwise}
+\end{array}
+\right.
+\;,
+\eeq
+where
+
+\beq
+\alp_{min} = {\rm argmin}\{E^\alp_{\rvx, \rvy}|\forall\alp\}
 \;.
 \eeq
 
-
-
-The algorithm for calculating
-squashed entanglement of either pure or mixed states
-consists of the two steps of Eqs.(\ref{eq-ab-algo})\footnote{The notation used in Eqs.(\ref{eq-ab-algo})
-is identical to that used in Ref.\cite{Tuc01a},
-except that in Eqs.(\ref{eq-ab-algo})
-we introduce
-a new operator $\cale^{(n)}_{\rvx, \rvy}$
-which is related to the operator
-$\Delta^{(n)}_{\rvx, \rvy}$ used in
-Ref.\cite{Tuc01a}
-by the following equation:
-$
-\cale^{(n)}_{\rvx, \rvy}=
-K_{\rvx, \rvy}\Delta^{(n)}_{\rvx, \rvy}
-$.}
-iterated for $n=0, 1, 2, \ldots, \nab-1$,
-where the number of Arimoto Blahut steps $\nab$
-can be fixed a priori
-or decided on the fly. If on the fly, one can
-stop when the change in $E_{\rvx, \rvy}$
-between  consecutive steps
-becomes smaller than a pre-decided constant $\epsilon>0$.
-
-\begin{subequations}
-\label{eq-ab-algo}
-\beq
-\cale^{(n)}_{\rvx, \rvy}=
-\sum_\alp
-K_{\rvx, \rvy}^{\alp (n)}
-\left(
-\log K_{\rvx, \rvy}^{\alp (n)}
-- \log R_{\rvx, \rvy}^{\alp (n)}
-\right)
-\;,
-\label{eq-ab-algo-a}
-\eeq
+To calculate the optimum $\rho^\alp_{\rvx,\rvy}$, note that
 
 \beq
-K_{\rvx, \rvy}^{\alp (n+1)}=
-\exp\left[
-{\rm pinv}(K_{\rvx, \rvy})
-\left(
-K_{\rvx, \rvy}
-\log K_{\rvx, \rvy}^{\alp (n)}
-- \cale_{\rvx, \rvy}^{(n)}
-\right)
-\pi_1(K_{\rvx, \rvy})
-\right]-\pi_0(K_{\rvx, \rvy})
-\;.
-\label{eq-ab-algo-b}
-\eeq
-\end{subequations}
-
-In the algorithm of Eqs.(\ref{eq-ab-algo}),
-the entanglement $E_{\rvx, \rvy}$ (which is a
-non-negative number)
-is computed as the limit
-of the trace of the
-entanglement operator $\cale^{(n)}_{\rvx, \rvy}$:
-
-\beq
-E_{\rvx, \rvy} = \lim_{n\rarrow \infty}
-\tr_{\rvx, \rvy} \cale^{(n)}_{\rvx, \rvy}
-\approx
-\tr_{\rvx, \rvy} \cale^{(\nab-1)}_{\rvx, \rvy}
-\;.
-\eeq
-
-Here is some intuition about the use of
-projectors $
-\pi_0(K_{\rvx, \rvy}), \pi_1(K_{\rvx, \rvy})$ in Eqs.(\ref{eq-ab-algo}).
-When $K_{\rvx, \rvy}$ has zero
-eigenvalues, its inverse doesn't exist, but its pseudo
-inverse does.
-The argument of the exp() in Eq.(\ref{eq-ab-algo-b})
-is sandwitched between
-two $\pi_1(K_{\rvx, \rvy})$.
-Each zero eigenvalue of
-$K_{\rvx, \rvy}$,
-when exponentiated becomes a 1 because $\exp(0)=1$,
-and each of those ones along the diagonal
-is cancelled by
-subtracting a $\pi_0(K_{\rvx, \rvy})$.
-The net effect of using
-the projectors $\pi_0(K_{\rvx, \rvy})$
-and $\pi_1(K_{\rvx, \rvy})$
-in Eq.(\ref{eq-ab-algo-b}) is to produce
- a $K_{\rvx, \rvy}^{\alp (n+1)}$
-that satisfies
-
-\beq
-\pi_0(K_{\rvx, \rvy})
-K_{\rvx, \rvy}^{\alp (n+1)}
-\pi_0(K_{\rvx, \rvy})
-=0
+\delta{\cal L}=
+\sum_\alp w^\alp\tr_{\rvx, \rvy}\left[\delta\rho^\alp_{\rvx,\rvy}
+(\log \rho^\alp_{\rvx,\rvy}+1
+-\log \rho^{\alp}_{\rvx}
+\rho^{\alp}_{\rvy}
++\lam'_{\rvx,\rvy})\right]
 \;,
 \eeq
-which, if one sums over $\alp$,
-guarantees that
+so
 
 \beq
-\pi_0(K_{\rvx, \rvy})
-K_{\rvx, \rvy}^{(n+1)}
-\pi_0(K_{\rvx, \rvy})
-=0
+\forall \alp,
+\lam_{\rvx, \rvy}=-\lam'_{\rvx, \rvy}-1
+=
+\log \rho^{\alp}_{\rvx,\rvy}
+-
+\log \rho^{\alp}_{\rvx}
+\rho^{\alp}_{\rvy}
 \;.
-\label{eq-constraint}
 \eeq
-Eq.(\ref{eq-constraint}) is a good constraint to impose because
-it must be satisfied as $n\rarrow\infty$.
+
+The above results suggest
+the following recursion to go from
+$\rho^{\alp}_{\rvx,\rvy}(k)$
+to $\rho^{\alp}_{\rvx,\rvy}(k+1)$ for $k=0,1,2,\ldots$.
 
 
-Of course, if $K_{\rvx, \rvy}$ doesn't have any
-zero eigenvalues (i.e., is non-singular),
-then the pseudo-inverse becomes the usual
-inverse, $\pi_0(K_{\rvx, \rvy})=0$,
-and $\pi_1(K_{\rvx, \rvy})=1$.
+For $k=0$, let
+
+
+\beq
+\rho^{\alp}_{\rvx,\rvy}(0)=
+\left\{
+\begin{array}{ll}
+\rho_{\rvx,\rvy}&{\rm if}\;\; \alp=0\\
+\rho^{\rm max-entan}_{\rvx,\rvy}&{\rm otherwise}
+\end{array}
+\right.
+\eeq
+
+
+
+For $k=0,1,2, ..$, given $\rho^{\alp}_{\rvx,\rvy}(k)$ for all $\alp$, let
+
+\beq
+\alp_{min}(k) ={\rm argmin}\{E^{\alp}_{\rvx, \rvy}(k)|\forall\alp\}
+\eeq
+
+\beq
+\lam_{\rvx, \rvy}(k)
+=
+\log \rho^{\alp_{min}(k)}_{\rvx,\rvy}(k)
+-
+\log \rho^{\alp_{min}(k)}_{\rvx}(k)
+\rho^{\alp_{min}(k)}_{\rvy}(k)
+\;
+\eeq
+
+\beq
+\rho^{\alp}_{\rvx,\rvy}(k+1)
+=
+\frac{\exp\left[
+\lam_{\rvx, \rvy}(k)
++
+\log \rho^{\alp}_{\rvx}(k)
+\rho^{\alp}_{\rvy}(k)
+\right]}{\tr_{\rvx, \rvy} \;\;numerator}
+\;.
+\eeq
+
+We claim but will not prove rigorously that
+
+\beq
+E_{\rvx, \rvy}^{\alp_{min}(k)}(k)\rightarrow
+E_{\rvx, \rvy}
+\;
+\eeq
+as $k\rightarrow \infty$.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -867,7 +964,7 @@ within that eigenspace.
 After that change of
 basis, for any $n,m$ with $n\neq m$,
 if $E_{nm}=0$ then $V_{nm}=0$ too.
-So now instead of getting expression
+So now instead of getting expressions
 that have a finite numerator and a zero
 denominator, the
 only problematic expressions that we get are
@@ -903,7 +1000,7 @@ It remains for us to define what is $\rho_0$.
 We want a $\rho_0$ that
 is easy to calculate
 from $\rho$,
-and such that esys($\rho_0$) is easy to
+and such that esys($\rho_0$) is also easy to
 calculate, much easier
 than calculating esys($\rho$).
 Next we define
@@ -945,6 +1042,7 @@ equivalent notations:
 \beq
 \rho= \rho(0, 1, 2, 3) =\rho_{\rvx_0, \rvx_1, \rvx_2, \rvx_3}=
 \rho^{j_0, j_1, j_2, j_3; j'_0, j'_1, j'_2, j'_3}
+=\rho^{J;K}
 \;
 \eeq
 
@@ -1130,30 +1228,7 @@ ${\rm esys}^\approx(\rho)$. Finding such an approximation
 we set out for ourselves at
 the beginning of this section.
 
-\section{Concluding Summary}
-We have presented an algorithm given by Eqs.(\ref{eq-ab-algo})
-for calculating the squashed
-entanglement of any pure or mixed state $\rho$.
-For pure states, however,  it is
-simpler and gives the same answer
-if one just evaluates the von Neumann entropy
-of $\rho$ traced over either of the two
-subsystems which characterize the bipartite
-entanglement. Whether one uses Eqs.(\ref{eq-ab-algo})
-or the von Neumann entropy
-of a partial trace of $\rho$,
-various eigen-systems of Hermitian matrices will
-have to be calculated along the way to
-obtain exp(), log(), pinv() etc. of
-various  matrices.
-If the dimension of $\rho$ isn't too large,
-one can calculate those
-eigen-systems ``exactly"
-using standard methods from Linear Algebra.
-If the dimension of $\rho$ is too large
-for that, then
-one can use the ``bootstrapped perturbation
-theory" method described in this paper.
+
 
 \appendix
 \section{Appendix: Symmetrized N-up States}
@@ -1414,7 +1489,7 @@ $\gamma^c = |\Gamma^c|$.
 Let
 
 \beq
-\rho^n_{n_1}= \rho^n_{n_1}(Z_{[1,n)})
+\rho^n_{n_1}= \rho^n_{n_1}(Z_{[0,n)})
 =
 \ket{\psi^n_{n_1}}
 \bra{\psi^n_{n_1}}
@@ -1572,13 +1647,13 @@ is easy to recognize as the hypergeometric
 probability distribution. In fact, under the
 replacements
 \beqa
-k&\rarrow&k
+k&\leftrightarrow&k
 \\
-K&\rarrow&n_0
+K&\leftrightarrow&n_0
 \\
-N&\rarrow&n
+N&\leftrightarrow&n
 \\
-n&\rarrow&\gamma^c
+n&\leftrightarrow&\gamma^c
 \;,
 \eeqa
 one gets
@@ -1601,7 +1676,7 @@ mutually orthogonal pure states.
 Hence, in the appropriate
 basis,  Eq.(\ref{eq-gamma-c-tres})
 is a diagonal matrix.
-The von Neuman entropy of
+The von Neumann entropy of
 a diagonal density matrix is
 just
 the classical entropy of
