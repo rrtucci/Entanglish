@@ -1,0 +1,473 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>graphviz.files &mdash; entanglish 0.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> entanglish
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+        
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Table of Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../classgraph.html">Class Graph</a></li>
+</ul>
+
+            
+          
+        <a href="py-modindex.html">Module Index</a>
+    
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">entanglish</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>graphviz.files</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for graphviz.files</h1><div class="highlight"><pre>
+<span></span><span class="c1"># files.py - save, render, view</span>
+
+<span class="sd">&quot;&quot;&quot;Save DOT code objects, render with Graphviz dot, and open in viewer.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">io</span>
+<span class="kn">import</span> <span class="nn">codecs</span>
+<span class="kn">import</span> <span class="nn">locale</span>
+
+<span class="kn">from</span> <span class="nn">._compat</span> <span class="k">import</span> <span class="n">text_type</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">backend</span><span class="p">,</span> <span class="n">tools</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;File&#39;</span><span class="p">,</span> <span class="s1">&#39;Source&#39;</span><span class="p">]</span>
+
+
+<span class="k">class</span> <span class="nc">Base</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="n">_format</span> <span class="o">=</span> <span class="s1">&#39;pdf&#39;</span>
+    <span class="n">_engine</span> <span class="o">=</span> <span class="s1">&#39;dot&#39;</span>
+    <span class="n">_encoding</span> <span class="o">=</span> <span class="s1">&#39;utf-8&#39;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">format</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The output format used for rendering (``&#39;pdf&#39;``, ``&#39;png&#39;``, ...).&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_format</span>
+
+    <span class="nd">@format</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">format</span><span class="p">):</span>
+        <span class="nb">format</span> <span class="o">=</span> <span class="nb">format</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">format</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">backend</span><span class="o">.</span><span class="n">FORMATS</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;unknown format: </span><span class="si">%r</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="nb">format</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_format</span> <span class="o">=</span> <span class="nb">format</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">engine</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The layout commmand used for rendering (``&#39;dot&#39;``, ``&#39;neato&#39;``, ...).&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_engine</span>
+
+    <span class="nd">@engine</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">engine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">engine</span><span class="p">):</span>
+        <span class="n">engine</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">engine</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">backend</span><span class="o">.</span><span class="n">ENGINES</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;unknown engine: </span><span class="si">%r</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">engine</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_engine</span> <span class="o">=</span> <span class="n">engine</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">encoding</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The encoding for the saved source file.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_encoding</span>
+
+    <span class="nd">@encoding</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">encoding</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">encoding</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">encoding</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">encoding</span> <span class="o">=</span> <span class="n">locale</span><span class="o">.</span><span class="n">getpreferredencoding</span><span class="p">()</span>
+        <span class="n">codecs</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="n">encoding</span><span class="p">)</span>  <span class="c1"># raise early</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_encoding</span> <span class="o">=</span> <span class="n">encoding</span>
+
+    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a copied instance of the object.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            An independent copy of the current object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_kwargs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">ns</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span>
+        <span class="n">attrs</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;_format&#39;</span><span class="p">,</span> <span class="s1">&#39;_engine&#39;</span><span class="p">,</span> <span class="s1">&#39;_encoding&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span> <span class="n">ns</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">attrs</span> <span class="k">if</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">ns</span><span class="p">}</span>
+
+
+<span class="k">class</span> <span class="nc">File</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+
+    <span class="n">directory</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+    <span class="n">_default_extension</span> <span class="o">=</span> <span class="s1">&#39;gv&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">directory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="nb">format</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="n">Base</span><span class="o">.</span><span class="n">_encoding</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">filename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_extension</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="n">filename</span>
+
+        <span class="k">if</span> <span class="n">directory</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">directory</span> <span class="o">=</span> <span class="n">directory</span>
+
+        <span class="k">if</span> <span class="nb">format</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="nb">format</span>
+
+        <span class="k">if</span> <span class="n">engine</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">engine</span> <span class="o">=</span> <span class="n">engine</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">encoding</span> <span class="o">=</span> <span class="n">encoding</span>
+
+    <span class="k">def</span> <span class="nf">_kwargs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">File</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_kwargs</span><span class="p">()</span>
+        <span class="n">result</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename</span>
+        <span class="k">if</span> <span class="s1">&#39;directory&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">:</span>
+            <span class="n">result</span><span class="p">[</span><span class="s1">&#39;directory&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">directory</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="k">def</span> <span class="nf">_repr_svg_</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pipe</span><span class="p">(</span><span class="nb">format</span><span class="o">=</span><span class="s1">&#39;svg&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_encoding</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">pipe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">renderer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">formatter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the source piped through the Graphviz layout command.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            format: The output format used for rendering (``&#39;pdf&#39;``, ``&#39;png&#39;``, etc.).</span>
+<span class="sd">            renderer: The output renderer used for rendering (``&#39;cairo&#39;``, ``&#39;gd&#39;``, ...).</span>
+<span class="sd">            formatter: The output formatter used for rendering (``&#39;cairo&#39;``, ``&#39;gd&#39;``, ...).</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Binary (encoded) stdout of the layout command.</span>
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If ``format``, ``renderer``, or ``formatter`` are not known.</span>
+<span class="sd">            graphviz.RequiredArgumentError: If ``formatter`` is given but ``renderer`` is None.</span>
+<span class="sd">            graphviz.ExecutableNotFound: If the Graphviz executable is not found.</span>
+<span class="sd">            subprocess.CalledProcessError: If the exit status is non-zero.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">format</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">format</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_format</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="n">text_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_encoding</span><span class="p">)</span>
+
+        <span class="n">out</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">pipe</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_engine</span><span class="p">,</span> <span class="nb">format</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">renderer</span><span class="p">,</span> <span class="n">formatter</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">out</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">filepath</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">directory</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Save the DOT source to file. Ensure the file ends with a newline.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filename: Filename for saving the source (defaults to ``name`` + ``&#39;.gv&#39;``)</span>
+<span class="sd">            directory: (Sub)directory for source saving and rendering.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            The (possibly relative) path of the saved source file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">filename</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="n">filename</span>
+        <span class="k">if</span> <span class="n">directory</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">directory</span> <span class="o">=</span> <span class="n">directory</span>
+
+        <span class="n">filepath</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filepath</span>
+        <span class="n">tools</span><span class="o">.</span><span class="n">mkdirs</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="n">text_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">encoding</span><span class="p">)</span> <span class="k">as</span> <span class="n">fd</span><span class="p">:</span>
+            <span class="n">fd</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="sa">u</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">):</span>
+                <span class="n">fd</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">u</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">filepath</span>
+
+    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">directory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">view</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">cleanup</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+               <span class="nb">format</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">renderer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">formatter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Save the source to file and render with the Graphviz engine.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filename: Filename for saving the source (defaults to ``name`` + ``&#39;.gv&#39;``)</span>
+<span class="sd">            directory: (Sub)directory for source saving and rendering.</span>
+<span class="sd">            view (bool): Open the rendered result with the default application.</span>
+<span class="sd">            cleanup (bool): Delete the source file after rendering.</span>
+<span class="sd">            format: The output format used for rendering (``&#39;pdf&#39;``, ``&#39;png&#39;``, etc.).</span>
+<span class="sd">            renderer: The output renderer used for rendering (``&#39;cairo&#39;``, ``&#39;gd&#39;``, ...).</span>
+<span class="sd">            formatter: The output formatter used for rendering (``&#39;cairo&#39;``, ``&#39;gd&#39;``, ...).</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            The (possibly relative) path of the rendered file.</span>
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If ``format``, ``renderer``, or ``formatter`` are not known.</span>
+<span class="sd">            graphviz.RequiredArgumentError: If ``formatter`` is given but ``renderer`` is None.</span>
+<span class="sd">            graphviz.ExecutableNotFound: If the Graphviz executable is not found.</span>
+<span class="sd">            subprocess.CalledProcessError: If the exit status is non-zero.</span>
+<span class="sd">            RuntimeError: If viewer opening is requested but not supported.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">filepath</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">directory</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">format</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">format</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_format</span>
+
+        <span class="n">rendered</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_engine</span><span class="p">,</span> <span class="nb">format</span><span class="p">,</span> <span class="n">filepath</span><span class="p">,</span> <span class="n">renderer</span><span class="p">,</span> <span class="n">formatter</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">cleanup</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">view</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_view</span><span class="p">(</span><span class="n">rendered</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_format</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">rendered</span>
+
+    <span class="k">def</span> <span class="nf">view</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">directory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cleanup</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Save the source to file, open the rendered result in a viewer.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filename: Filename for saving the source (defaults to ``name`` + ``&#39;.gv&#39;``)</span>
+<span class="sd">            directory: (Sub)directory for source saving and rendering.</span>
+<span class="sd">            cleanup (bool): Delete the source file after rendering.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            The (possibly relative) path of the rendered file.</span>
+<span class="sd">        Raises:</span>
+<span class="sd">            graphviz.ExecutableNotFound: If the Graphviz executable is not found.</span>
+<span class="sd">            subprocess.CalledProcessError: If the exit status is non-zero.</span>
+<span class="sd">            RuntimeError: If opening the viewer is not supported.</span>
+
+<span class="sd">        Short-cut method for calling :meth:`.render` with ``view=True``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span> <span class="n">directory</span><span class="o">=</span><span class="n">directory</span><span class="p">,</span> <span class="n">view</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                           <span class="n">cleanup</span><span class="o">=</span><span class="n">cleanup</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_view</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">,</span> <span class="nb">format</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Start the right viewer based on file format and platform.&quot;&quot;&quot;</span>
+        <span class="n">methodnames</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s1">&#39;_view_</span><span class="si">%s</span><span class="s1">_</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">format</span><span class="p">,</span> <span class="n">backend</span><span class="o">.</span><span class="n">PLATFORM</span><span class="p">),</span>
+            <span class="s1">&#39;_view_</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">backend</span><span class="o">.</span><span class="n">PLATFORM</span><span class="p">,</span>
+        <span class="p">]</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">methodnames</span><span class="p">:</span>
+            <span class="n">view_method</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">view_method</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">break</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%r</span><span class="s1"> has no built-in viewer support for </span><span class="si">%r</span><span class="s1"> &#39;</span>
+                <span class="s1">&#39;on </span><span class="si">%r</span><span class="s1"> platform&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="nb">format</span><span class="p">,</span> <span class="n">backend</span><span class="o">.</span><span class="n">PLATFORM</span><span class="p">))</span>
+        <span class="n">view_method</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
+
+    <span class="n">_view_darwin</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">backend</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">darwin</span><span class="p">)</span>
+    <span class="n">_view_freebsd</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">backend</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">freebsd</span><span class="p">)</span>
+    <span class="n">_view_linux</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">backend</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">linux</span><span class="p">)</span>
+    <span class="n">_view_windows</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">backend</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">windows</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">Source</span><span class="p">(</span><span class="n">File</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Verbatim DOT source code string to be rendered by Graphviz.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        source: The verbatim DOT source code string.</span>
+<span class="sd">        filename: Filename for saving the source (defaults to ``&#39;Source.gv&#39;``).</span>
+<span class="sd">        directory: (Sub)directory for source saving and rendering.</span>
+<span class="sd">        format: Rendering output format (``&#39;pdf&#39;``, ``&#39;png&#39;``, ...).</span>
+<span class="sd">        engine: Layout command used (``&#39;dot&#39;``, ``&#39;neato&#39;``, ...).</span>
+<span class="sd">        encoding: Encoding for saving the source.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        All parameters except ``source`` are optional. All of them can be changed</span>
+<span class="sd">        under their corresponding attribute name after instance creation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_file</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">directory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                  <span class="nb">format</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="n">File</span><span class="o">.</span><span class="n">_encoding</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return an instance with the source string read from the given file.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filename: Filename for loading/saving the source.</span>
+<span class="sd">            directory: (Sub)directory for source loading/saving and rendering.</span>
+<span class="sd">            format: Rendering output format (``&#39;pdf&#39;``, ``&#39;png&#39;``, ...).</span>
+<span class="sd">            engine: Layout command used (``&#39;dot&#39;``, ``&#39;neato&#39;``, ...).</span>
+<span class="sd">            encoding: Encoding for loading/saving the source.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">filepath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span> <span class="ow">or</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">encoding</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">encoding</span> <span class="o">=</span> <span class="n">locale</span><span class="o">.</span><span class="n">getpreferredencoding</span><span class="p">()</span>
+        <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="n">encoding</span><span class="p">)</span> <span class="k">as</span> <span class="n">fd</span><span class="p">:</span>
+            <span class="n">source</span> <span class="o">=</span> <span class="n">fd</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="nb">format</span><span class="p">,</span> <span class="n">engine</span><span class="p">,</span> <span class="n">encoding</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">directory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="nb">format</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="n">File</span><span class="o">.</span><span class="n">_encoding</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Source</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="nb">format</span><span class="p">,</span> <span class="n">engine</span><span class="p">,</span> <span class="n">encoding</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="n">source</span>  <span class="c1">#: The verbatim DOT source code string.</span>
+
+    <span class="k">def</span> <span class="nf">_kwargs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">Source</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_kwargs</span><span class="p">()</span>
+        <span class="n">result</span><span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">source</span>
+        <span class="k">return</span> <span class="n">result</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Robert R. Tucci &amp; Entanglish contributors
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

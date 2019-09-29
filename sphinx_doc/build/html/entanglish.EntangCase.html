@@ -1,0 +1,422 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>entanglish.EntangCase module &mdash; entanglish 0.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> entanglish
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+        
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Table of Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="classgraph.html">Class Graph</a></li>
+</ul>
+
+            
+          
+        <a href="py-modindex.html">Module Index</a>
+    
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">entanglish</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>entanglish.EntangCase module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/entanglish.EntangCase.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-entanglish.EntangCase">
+<span id="entanglish-entangcase-module"></span><h1>entanglish.EntangCase module<a class="headerlink" href="#module-entanglish.EntangCase" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="entanglish.EntangCase.EntangCase">
+<em class="property">class </em><code class="sig-prename descclassname">entanglish.EntangCase.</code><code class="sig-name descname">EntangCase</code><span class="sig-paren">(</span><em class="sig-param">num_row_axes</em>, <em class="sig-param">method='eigen'</em>, <em class="sig-param">num_bstrap_steps=1</em>, <em class="sig-param">verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/EntangCase.html#EntangCase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.EntangCase.EntangCase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This is an abstract class meant to be overridden. It is the parent class
+of classes PureStEnt and SquashedEnt, which calculate quantum
+entanglement for pure and mixed states using various methods. This class
+contains methods useful to all of its children. For example, it contains
+methods that construct an entanglement profile data structure and print
+it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>method</strong> (<em>str</em>) – method used to calculate the (natural) log of a density matrix that
+appears in the definition of the von Neumann entropy. This parameter
+can be either ‘eigen’, ‘pade’, ‘pert’.</p></li>
+<li><p><strong>num_bstrap_steps</strong> (<em>int</em>) – number bootstrap steps used in perturbation theory. Only used if
+method = ‘pert’</p></li>
+<li><p><strong>num_row_axes</strong> (<em>int</em>) – number of row axes, same as number of qudits, equal to len(
+row_shape) of a DenMat</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="entanglish.EntangCase.EntangCase.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">num_row_axes</em>, <em class="sig-param">method='eigen'</em>, <em class="sig-param">num_bstrap_steps=1</em>, <em class="sig-param">verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/EntangCase.html#EntangCase.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.EntangCase.EntangCase.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>num_row_axes</strong> (<em>int</em>) – </p></li>
+<li><p><strong>method</strong> (<em>str</em>) – </p></li>
+<li><p><strong>num_bstrap_steps</strong> (<em>int</em>) – </p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.EntangCase.EntangCase.check_max_entang_st">
+<em class="property">static </em><code class="sig-name descname">check_max_entang_st</code><span class="sig-paren">(</span><em class="sig-param">st</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/EntangCase.html#EntangCase.check_max_entang_st"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.EntangCase.EntangCase.check_max_entang_st" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method checks that the object st of class MaxEntangState does
+indeed carry maximal entanglement. The entanglement is calculated 3
+different ways (von Neumann entropy of 2 partial traces of density
+matrix, and from known value) and the 3 values are checked to agree.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>st</strong> (<a class="reference internal" href="entanglish.MaxEntangState.html#entanglish.MaxEntangState.MaxEntangState" title="entanglish.MaxEntangState.MaxEntangState"><em>MaxEntangState</em></a>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.EntangCase.EntangCase.exp">
+<code class="sig-name descname">exp</code><span class="sig-paren">(</span><em class="sig-param">dm</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/EntangCase.html#EntangCase.exp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.EntangCase.EntangCase.exp" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method is a simple wrapper for dm.exp() so that all usages
+inside the class utilize the same method self.method which is an
+attribute of the class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dm</strong> (<a class="reference internal" href="entanglish.DenMat.html#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat"><em>DenMat</em></a>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="entanglish.DenMat.html#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat">DenMat</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.EntangCase.EntangCase.get_entang">
+<code class="sig-name descname">get_entang</code><span class="sig-paren">(</span><em class="sig-param">axes_subset</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/EntangCase.html#EntangCase.get_entang"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.EntangCase.EntangCase.get_entang" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is an abstract method that should be overridden by the children
+of the class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>axes_subset</strong> (<em>set</em><em>[</em><em>int</em><em>]</em>) – the entanglement is calculate for parts axes_subset and its
+complement</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.EntangCase.EntangCase.get_entang_profile">
+<code class="sig-name descname">get_entang_profile</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/EntangCase.html#EntangCase.get_entang_profile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.EntangCase.EntangCase.get_entang_profile" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method constructs a dictionary that we call an entanglement
+profile. Given a state with num_row_axes qudits, this method
+calculates a (bipartite) entanglement for each possible bi-partition of
+range( num_row_axes). By a bi-partition we mean two nonempty disjoint
+subsets whose union is range(num_row_axes). An entanglement profile
+is a dictionary mapping bi-partition half-size to a dictionary that
+maps each bi-partition of that half-size to its entanglement.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict[int, dict[tuple[int], float]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.EntangCase.EntangCase.get_max_entag">
+<em class="property">static </em><code class="sig-name descname">get_max_entag</code><span class="sig-paren">(</span><em class="sig-param">row_shape</em>, <em class="sig-param">x_axes</em>, <em class="sig-param">y_axes</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/EntangCase.html#EntangCase.get_max_entag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.EntangCase.EntangCase.get_max_entag" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method returns the maximum possible entanglement with parts
+x_axes, y_axes. x_axes, y_axes give a bi-partition of range( len(
+row_shape)). If num_vals_min = min(num_vals_x, num_vals_y),
+then max-entang is the log of num_vals_min.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>row_shape</strong> (<em>tuple</em><em>[</em><em>int</em><em>]</em>) – </p></li>
+<li><p><strong>x_axes</strong> (<em>list{int</em><em>]</em>) – </p></li>
+<li><p><strong>y_axes</strong> (<em>list{int</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.EntangCase.EntangCase.log">
+<code class="sig-name descname">log</code><span class="sig-paren">(</span><em class="sig-param">dm</em>, <em class="sig-param">clipped=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/EntangCase.html#EntangCase.log"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.EntangCase.EntangCase.log" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method is a simple wrapper for dm.log() so that all usages
+inside the class utilize the same method self.method which an
+attribute of the class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dm</strong> (<a class="reference internal" href="entanglish.DenMat.html#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat"><em>DenMat</em></a>) – </p></li>
+<li><p><strong>clipped</strong> (<em>bool</em>) – clips logs (see ut.clipped_log_of_vec) iff this is True</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="entanglish.DenMat.html#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat">DenMat</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.EntangCase.EntangCase.mirror">
+<code class="sig-name descname">mirror</code><span class="sig-paren">(</span><em class="sig-param">x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/EntangCase.html#EntangCase.mirror"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.EntangCase.EntangCase.mirror" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given an element of the list range(self.num_row_axes), this method
+returns the mirror image of x with respect to the center of the list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>int</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.EntangCase.EntangCase.mirror_many">
+<code class="sig-name descname">mirror_many</code><span class="sig-paren">(</span><em class="sig-param">xx</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/EntangCase.html#EntangCase.mirror_many"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.EntangCase.EntangCase.mirror_many" title="Permalink to this definition">¶</a></dt>
+<dd><p>This applies the method self.mirror() to each element of a list,
+set, tuple</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>xx</strong> (<em>tuple</em><em>[</em><em>int</em><em>]</em><em>|set</em><em>[</em><em>int</em><em>]</em><em>|list</em><em>[</em><em>int</em><em>]</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple[int]|set[int]|list[int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.EntangCase.EntangCase.print_entang_profiles">
+<code class="sig-name descname">print_entang_profiles</code><span class="sig-paren">(</span><em class="sig-param">profile_list</em>, <em class="sig-param">row_shape=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/EntangCase.html#EntangCase.print_entang_profiles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.EntangCase.EntangCase.print_entang_profiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method takes as input a list of entanglement profiles. Each
+element of that list can be generated with the method
+get_entang_profile(). The method prints, side by side, all the
+entanglement profiles in the input profile list. If a row_shape is
+provided, the last column of the profile is the maximum entanglement.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>profile_list</strong> (<em>list</em><em>[</em><em>dict</em><em>[</em><em>int</em><em>, </em><em>dict</em><em>[</em><em>tuple</em><em>[</em><em>int</em><em>]</em><em>, </em><em>float</em><em>]</em><em>]</em><em>]</em>) – </p></li>
+<li><p><strong>row_shape</strong> (<em>tuple</em><em>[</em><em>int</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Robert R. Tucci &amp; Entanglish contributors
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

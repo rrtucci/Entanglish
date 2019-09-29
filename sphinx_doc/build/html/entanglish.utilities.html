@@ -1,0 +1,578 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>entanglish.utilities module &mdash; entanglish 0.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> entanglish
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+        
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Table of Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="classgraph.html">Class Graph</a></li>
+</ul>
+
+            
+          
+        <a href="py-modindex.html">Module Index</a>
+    
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">entanglish</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>entanglish.utilities module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/entanglish.utilities.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-entanglish.utilities">
+<span id="entanglish-utilities-module"></span><h1>entanglish.utilities module<a class="headerlink" href="#module-entanglish.utilities" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="entanglish.utilities.assert_is_prob_dist">
+<code class="sig-prename descclassname">entanglish.utilities.</code><code class="sig-name descname">assert_is_prob_dist</code><span class="sig-paren">(</span><em class="sig-param">prob_dist</em>, <em class="sig-param">halt=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/utilities.html#assert_is_prob_dist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.utilities.assert_is_prob_dist" title="Permalink to this definition">¶</a></dt>
+<dd><p>This checks that the elements of arr define a probability distribution.
+If this is not true, then it prints a message and when halt=True,
+halts execution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>prob_dist</strong> (<em>np.ndarray</em>) – </p></li>
+<li><p><strong>halt</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="entanglish.utilities.assert_nonnegative_arr">
+<code class="sig-prename descclassname">entanglish.utilities.</code><code class="sig-name descname">assert_nonnegative_arr</code><span class="sig-paren">(</span><em class="sig-param">arr</em>, <em class="sig-param">halt=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/utilities.html#assert_nonnegative_arr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.utilities.assert_nonnegative_arr" title="Permalink to this definition">¶</a></dt>
+<dd><p>This checks that all elements of arr are &gt; -1e-6. If this is not true,
+then it prints a message and when halt=True, halts execution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>arr</strong> (<em>np.ndarray</em>) – </p></li>
+<li><p><strong>halt</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="entanglish.utilities.assert_positive_arr">
+<code class="sig-prename descclassname">entanglish.utilities.</code><code class="sig-name descname">assert_positive_arr</code><span class="sig-paren">(</span><em class="sig-param">arr</em>, <em class="sig-param">halt=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/utilities.html#assert_positive_arr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.utilities.assert_positive_arr" title="Permalink to this definition">¶</a></dt>
+<dd><p>This checks that all elements of arr are &gt; 0. If this is not true,
+then it prints a message and when halt=True, halts execution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>arr</strong> (<em>np.ndarray</em>) – </p></li>
+<li><p><strong>halt</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="entanglish.utilities.clip">
+<code class="sig-prename descclassname">entanglish.utilities.</code><code class="sig-name descname">clip</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">limits</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/utilities.html#clip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.utilities.clip" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method clips x between limits[0] and limits[1]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>int|float</em>) – </p></li>
+<li><p><strong>limits</strong> (<em>list</em><em>[</em><em>int|float</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int|float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="entanglish.utilities.clipped_log_of_vec">
+<code class="sig-prename descclassname">entanglish.utilities.</code><code class="sig-name descname">clipped_log_of_vec</code><span class="sig-paren">(</span><em class="sig-param">vec</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/utilities.html#clipped_log_of_vec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.utilities.clipped_log_of_vec" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method takes as input a float or a 1D array of floats. It returns
+the log element-wise of that array, except when an element of the array
+is very close to zero or negative. In that exceptional case, the method
+“clips the log”, meaning that it returns a fixed negative value like
+log(1e-5).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>vec</strong> (<em>float|np.ndarray</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="entanglish.utilities.comb">
+<code class="sig-prename descclassname">entanglish.utilities.</code><code class="sig-name descname">comb</code><span class="sig-paren">(</span><em class="sig-param">n</em>, <em class="sig-param">k</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/utilities.html#comb"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.utilities.comb" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method returns the number of combinations of k picks (with return)
+out of n possible choices, “n choose k” = n!/[(n-k)! k!]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n</strong> (<em>int</em>) – </p></li>
+<li><p><strong>k</strong> (<em>int</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="entanglish.utilities.fun_of_herm_arr">
+<code class="sig-prename descclassname">entanglish.utilities.</code><code class="sig-name descname">fun_of_herm_arr</code><span class="sig-paren">(</span><em class="sig-param">fun_of_evas</em>, <em class="sig-param">herm_arr</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/utilities.html#fun_of_herm_arr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.utilities.fun_of_herm_arr" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method does the same as the method ut.fun_of_herm_arr_from_eigen(),
+except that it calculates evas and eigen_cols from the matrix herm_arr
+which it has as input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fun_of_evas</strong> (<em>function</em>) – np function acting on 1d array</p></li>
+<li><p><strong>herm_arr</strong> (<em>np.ndarray</em>) – Hermitian array</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="entanglish.utilities.fun_of_herm_arr_from_eigen_sys">
+<code class="sig-prename descclassname">entanglish.utilities.</code><code class="sig-name descname">fun_of_herm_arr_from_eigen_sys</code><span class="sig-paren">(</span><em class="sig-param">fun_of_evas</em>, <em class="sig-param">evas</em>, <em class="sig-param">evec_cols</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/utilities.html#fun_of_herm_arr_from_eigen_sys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.utilities.fun_of_herm_arr_from_eigen_sys" title="Permalink to this definition">¶</a></dt>
+<dd><p>eigen_sys= eigensystem= (eigenvalues, eigenvectors as columns)= (evas,
+evec_cols)</p>
+<p>This method returns a function fun of a Hermitian matrix mat. This is
+calculated as fun(mat) = U.D.U^dag, where U=evec_cols is a unitary
+matrix with the eigenvectors of mat as columns, U^dag is the Hermitian
+conjugate of U, D= diag(fun(evas)) is a diagonal matrix whose diagonal
+is obtained by applying element-wise the function fun=fun_of_evas  to
+the 1D array of eigenvalues evas.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fun_of_evas</strong> (<em>function</em>) – </p></li>
+<li><p><strong>evas</strong> (<em>np.ndarray</em>) – </p></li>
+<li><p><strong>evec_cols</strong> (<em>np.ndarray</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="entanglish.utilities.get_entropy_from_probs">
+<code class="sig-prename descclassname">entanglish.utilities.</code><code class="sig-name descname">get_entropy_from_probs</code><span class="sig-paren">(</span><em class="sig-param">probs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/utilities.html#get_entropy_from_probs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.utilities.get_entropy_from_probs" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method returns the classical entropy of the probability
+distribution probs. It checks that probs is a prob distribution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>probs</strong> (<em>np.ndarray</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="entanglish.utilities.get_equiv_classes">
+<code class="sig-prename descclassname">entanglish.utilities.</code><code class="sig-name descname">get_equiv_classes</code><span class="sig-paren">(</span><em class="sig-param">li</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/utilities.html#get_equiv_classes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.utilities.get_equiv_classes" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method is given as input a list li of floats, some of which may be
+equal within epsilon = 1e-6. The method then returns a list of
+equivalence classes, where each equivalence class is a list of the int
+positions in li of those floats that are equal to each other within
+epsilon.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>li</strong> (<em>list</em><em>[</em><em>float</em><em>]</em><em>|np.ndarray</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list[list[int]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="entanglish.utilities.is_unitary">
+<code class="sig-prename descclassname">entanglish.utilities.</code><code class="sig-name descname">is_unitary</code><span class="sig-paren">(</span><em class="sig-param">umat</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/utilities.html#is_unitary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.utilities.is_unitary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True iff umat is a unitary matrix</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>umat</strong> (<em>np.ndarray</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="entanglish.utilities.kron_prod">
+<code class="sig-prename descclassname">entanglish.utilities.</code><code class="sig-name descname">kron_prod</code><span class="sig-paren">(</span><em class="sig-param">mat_list</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/utilities.html#kron_prod"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.utilities.kron_prod" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method returns the Kronecker product of the list of matrices which
+is has as input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>mat_list</strong> (<em>list</em><em>[</em><em>np.ndarray</em><em>]</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="entanglish.utilities.mat_elem">
+<code class="sig-prename descclassname">entanglish.utilities.</code><code class="sig-name descname">mat_elem</code><span class="sig-paren">(</span><em class="sig-param">v1</em>, <em class="sig-param">a</em>, <em class="sig-param">v2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/utilities.html#mat_elem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.utilities.mat_elem" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method returns the matrix element &lt;v1|a|v2&gt;, where v1 and v2 are
+column vectors and ‘a’ a matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>v1</strong> (<em>np.ndarray</em>) – </p></li>
+<li><p><strong>a</strong> (<em>np.ndarray</em>) – </p></li>
+<li><p><strong>v2</strong> (<em>np.ndarray</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>complex</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="entanglish.utilities.prob_hypergeometric">
+<code class="sig-prename descclassname">entanglish.utilities.</code><code class="sig-name descname">prob_hypergeometric</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">xx</em>, <em class="sig-param">n</em>, <em class="sig-param">nn</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/utilities.html#prob_hypergeometric"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.utilities.prob_hypergeometric" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method returns</p>
+<p>P(x | xx, n, nn) = comb(xx, x)*comb(nn-xx, n-x)/comb(nn, n)</p>
+<p>where
+0 &lt;= x &lt;= xx
+0 &lt;= n-x &lt;= nn-xx
+0 &lt;= n &lt;= nn</p>
+<p>This P(x | ) defines the hypergeometric distribution</p>
+<p class="rubric">References</p>
+<ol class="arabic simple">
+<li><p><a class="reference external" href="https://en.wikipedia.org/wiki/Hypergeometric_distribution">https://en.wikipedia.org/wiki/Hypergeometric_distribution</a></p></li>
+</ol>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>int</em>) – </p></li>
+<li><p><strong>xx</strong> (<em>int</em>) – </p></li>
+<li><p><strong>n</strong> (<em>int</em>) – </p></li>
+<li><p><strong>nn</strong> (<em>int</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="entanglish.utilities.random_st_vec">
+<code class="sig-prename descclassname">entanglish.utilities.</code><code class="sig-name descname">random_st_vec</code><span class="sig-paren">(</span><em class="sig-param">dim</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/utilities.html#random_st_vec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.utilities.random_st_vec" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method returns a random complex 1D numpy array, normalized, of size
+dim.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dim</strong> (<em>int</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="entanglish.utilities.random_unitary">
+<code class="sig-prename descclassname">entanglish.utilities.</code><code class="sig-name descname">random_unitary</code><span class="sig-paren">(</span><em class="sig-param">dim</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/utilities.html#random_unitary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.utilities.random_unitary" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method returns a random unitary matrix of size dim x dim</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dim</strong> (<em>int</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="entanglish.utilities.scalar_prod">
+<code class="sig-prename descclassname">entanglish.utilities.</code><code class="sig-name descname">scalar_prod</code><span class="sig-paren">(</span><em class="sig-param">scalars_list</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/utilities.html#scalar_prod"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.utilities.scalar_prod" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method returns the product of the list of scalars which it has as
+input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>scalars_list</strong> (<em>list</em><em>[</em><em>int|float|complex</em><em>] </em><em>| tuple</em><em>[</em><em>int|float|complex</em><em>]</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>complex|float|int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="entanglish.utilities.switch_arr_basis">
+<code class="sig-prename descclassname">entanglish.utilities.</code><code class="sig-name descname">switch_arr_basis</code><span class="sig-paren">(</span><em class="sig-param">arr</em>, <em class="sig-param">umat</em>, <em class="sig-param">reverse=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/utilities.html#switch_arr_basis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.utilities.switch_arr_basis" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method takes as input a square array ‘arr’ and returns a new array
+which is a similarity transformation U^dag(arr)U of ‘arr’ that changes
+the basis of arr from inbasis to sbasis (or the reverse, U(arr)U^dag,
+from sbasis to inbasis if the input bool parameter ‘reverse’ is set to
+True.) U = umat , U^dag = Hermitian conjugate of U</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>arr</strong> (<em>np.ndarray</em>) – </p></li>
+<li><p><strong>umat</strong> (<em>np.ndarray</em>) – </p></li>
+<li><p><strong>reverse</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Robert R. Tucci &amp; Entanglish contributors
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,296 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>entanglish.SquashedEnt module &mdash; entanglish 0.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> entanglish
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+        
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Table of Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="classgraph.html">Class Graph</a></li>
+</ul>
+
+            
+          
+        <a href="py-modindex.html">Module Index</a>
+    
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">entanglish</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>entanglish.SquashedEnt module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/entanglish.SquashedEnt.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-entanglish.SquashedEnt">
+<span id="entanglish-squashedent-module"></span><h1>entanglish.SquashedEnt module<a class="headerlink" href="#module-entanglish.SquashedEnt" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="entanglish.SquashedEnt.SquashedEnt">
+<em class="property">class </em><code class="sig-prename descclassname">entanglish.SquashedEnt.</code><code class="sig-name descname">SquashedEnt</code><span class="sig-paren">(</span><em class="sig-param">den_mat</em>, <em class="sig-param">num_hidden_states</em>, <em class="sig-param">num_ab_steps</em>, <em class="sig-param">method='eigen'</em>, <em class="sig-param">verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/SquashedEnt.html#SquashedEnt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.SquashedEnt.SquashedEnt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="entanglish.EntangCase.html#entanglish.EntangCase.EntangCase" title="entanglish.EntangCase.EntangCase"><code class="xref py py-class docutils literal notranslate"><span class="pre">entanglish.EntangCase.EntangCase</span></code></a></p>
+<p>This class is a child of class EntangCase. It’s purpose is to calculate
+the (bipartite) quantum entanglement Exy of a mixed state density matrix
+Dxy with parts x and y. Exy is defined here as the squashed entanglement
+( see Wikipedia Ref. 1 for more detailed description and original
+references of squashed entanglement)</p>
+<p>Exy = (1/2)*min[S(x : y | h)]</p>
+<p>where S(x : y | h) is the conditional mutual information (CMI,
+pronounced “see me”) for a density matrix Dxyh. The minimum is over all
+Dxyh such that Dxy = trace_h Dxyh, where Dxy is given and fixed.</p>
+<p>The squashed entanglement reduces to (1/2)*[S(x) + S(y)] = S(x) = S(y)
+when Dxy is a pure state. This is precisely the definition of
+entanglement for pure states that we use in the class PureStEnt.</p>
+<p>To calculate squashed entanglement, this class uses an algo which is a
+generalization of the Arimoto Blahut (AB) algorithm of classical
+information theory, where it is used to calculate channel capacities.</p>
+<p>See Ref.2 for a more detailed explanation of the algos used in this class.</p>
+<p class="rubric">References</p>
+<ol class="arabic simple">
+<li><p><a class="reference external" href="https://en.wikipedia.org/wiki/Squashed_entanglement">https://en.wikipedia.org/wiki/Squashed_entanglement</a></p></li>
+</ol>
+<p>2. R.R. Tucci, “A New  Algorithm for Calculating Squashed Entanglement
+and a Python Implementation Thereof”</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Dxy</strong> (<a class="reference internal" href="entanglish.DenMat.html#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat"><em>DenMat</em></a>) – The input density matrix den_mat, after permuting its axes so that
+the axes are given in the precise order self.x_axes + self.y_axes.</p></li>
+<li><p><strong>den_mat</strong> (<a class="reference internal" href="entanglish.DenMat.html#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat"><em>DenMat</em></a>) – </p></li>
+<li><p><strong>num_ab_steps</strong> (<em>int</em>) – number of iterations of Arimoto Blahut algo</p></li>
+<li><p><strong>num_hidden_states</strong> (<em>int</em>) – number of hidden states indexed by alpha, so this is number of alphas.
+In the above class docstring, alpha is denoted by h, for hidden.</p></li>
+<li><p><strong>x_axes</strong> (<em>list</em><em>[</em><em>int</em><em>]</em>) – This class calculates entanglement for 2 parts: x_axes and y_axes.
+x_axes and y_axes are mutually disjoint lists whose union is range(
+len( den_mat.row_shape))</p></li>
+<li><p><strong>y_axes</strong> (<em>list</em><em>[</em><em>int</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="entanglish.SquashedEnt.SquashedEnt.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">den_mat</em>, <em class="sig-param">num_hidden_states</em>, <em class="sig-param">num_ab_steps</em>, <em class="sig-param">method='eigen'</em>, <em class="sig-param">verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/SquashedEnt.html#SquashedEnt.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.SquashedEnt.SquashedEnt.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>den_mat</strong> (<a class="reference internal" href="entanglish.DenMat.html#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat"><em>DenMat</em></a>) – </p></li>
+<li><p><strong>num_hidden_states</strong> (<em>int</em>) – number of states of h in the Dxyh defined in class doc string</p></li>
+<li><p><strong>num_ab_steps</strong> (<em>int</em>) – </p></li>
+<li><p><strong>method</strong> (<em>str</em>) – </p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.SquashedEnt.SquashedEnt.get_entang">
+<code class="sig-name descname">get_entang</code><span class="sig-paren">(</span><em class="sig-param">axes_subset</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/SquashedEnt.html#SquashedEnt.get_entang"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.SquashedEnt.SquashedEnt.get_entang" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method returns the squashed entanglement Exy, where x =
+axes_subset, and y is the set of all other axes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>axes_subset</strong> (<em>set</em><em>[</em><em>int</em><em>]</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.SquashedEnt.SquashedEnt.next_step">
+<code class="sig-name descname">next_step</code><span class="sig-paren">(</span><em class="sig-param">Dxy_a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/SquashedEnt.html#SquashedEnt.next_step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.SquashedEnt.SquashedEnt.next_step" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method is used self.num_ab_steps times, internally, in the
+method self.get_entang(). Given the current Dxy_a as input,
+it returns the next estimate of Exy and the next Dxy_a.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>Dxy_a</strong> (<em>list</em><em>[</em><a class="reference internal" href="entanglish.DenMat.html#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat"><em>DenMat</em></a><em>]</em>) – <p>a list of normalized density matrices Dxy_a[alp] such that</p>
+<p>sum_alp w_alp * Dxy_a[alp] = Dxy,</p>
+</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float, list[<a class="reference internal" href="entanglish.DenMat.html#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat">DenMat</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Robert R. Tucci &amp; Entanglish contributors
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

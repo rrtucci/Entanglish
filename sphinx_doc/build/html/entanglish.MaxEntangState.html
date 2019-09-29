@@ -1,0 +1,275 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>entanglish.MaxEntangState module &mdash; entanglish 0.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> entanglish
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+        
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Table of Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="classgraph.html">Class Graph</a></li>
+</ul>
+
+            
+          
+        <a href="py-modindex.html">Module Index</a>
+    
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">entanglish</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>entanglish.MaxEntangState module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/entanglish.MaxEntangState.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-entanglish.MaxEntangState">
+<span id="entanglish-maxentangstate-module"></span><h1>entanglish.MaxEntangState module<a class="headerlink" href="#module-entanglish.MaxEntangState" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="entanglish.MaxEntangState.MaxEntangState">
+<em class="property">class </em><code class="sig-prename descclassname">entanglish.MaxEntangState.</code><code class="sig-name descname">MaxEntangState</code><span class="sig-paren">(</span><em class="sig-param">num_rows</em>, <em class="sig-param">row_shape</em>, <em class="sig-param">x_axes</em>, <em class="sig-param">y_axes</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/MaxEntangState.html#MaxEntangState"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.MaxEntangState.MaxEntangState" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class is designed to perform tasks related to a maximally entangled
+pure state with parts x_axes, y_axes. x_axes, y_axes give a bi-partition
+of range( len(row_shape)).</p>
+<p>See Ref.1 for an explicit definition of the maximally entangled states
+that we use. The basic requirement for a density matrix Dxy to be
+maximally entangled is for its partial trace Dx to be a diagonal matrix
+with all terms in the diagonal equal to the same constant. The sum of
+the diagonal elements must of course be one. For example, Dx=diag(0.25,
+0.25,0.25,0.25) (If num_vals_x !=  num_vals_y, this assumes that
+num_vals_x is the smaller of the two.)</p>
+<p class="rubric">References</p>
+<p>1. R.R. Tucci, “A New  Algorithm for Calculating Squashed Entanglement
+and a Python Implementation Thereof”</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>num_rows</strong> (<em>int</em>) – equals product(row_shape)</p></li>
+<li><p><strong>num_vals_min</strong> (<em>int</em>) – equals min( num_vals_x, num_vals_y)</p></li>
+<li><p><strong>num_vals_x</strong> (<em>int</em>) – equals product(row_shape_x)</p></li>
+<li><p><strong>num_vals_y</strong> (<em>int</em>) – equals product(row_shape_y)</p></li>
+<li><p><strong>row_shape</strong> (<em>tuple</em><em>[</em><em>int</em><em>]</em>) – </p></li>
+<li><p><strong>row_shape_x</strong> (<em>tuple</em><em>[</em><em>int</em><em>]</em>) – subset of row_shape, only items indexed by x_axes</p></li>
+<li><p><strong>row_shape_y</strong> (<em>tuple</em><em>[</em><em>int</em><em>]</em>) – subset of row_shape, only items indexed by y_axes</p></li>
+<li><p><strong>x_axes</strong> (<em>list{int</em><em>]</em>) – </p></li>
+<li><p><strong>y_axes</strong> (<em>list{int</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="entanglish.MaxEntangState.MaxEntangState.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">num_rows</em>, <em class="sig-param">row_shape</em>, <em class="sig-param">x_axes</em>, <em class="sig-param">y_axes</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/MaxEntangState.html#MaxEntangState.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.MaxEntangState.MaxEntangState.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>num_rows</strong> (<em>int</em>) – </p></li>
+<li><p><strong>row_shape</strong> (<em>tuple</em><em>[</em><em>int</em><em>]</em>) – </p></li>
+<li><p><strong>x_axes</strong> (<em>list{int</em><em>]</em>) – </p></li>
+<li><p><strong>y_axes</strong> (<em>list{int</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.MaxEntangState.MaxEntangState.get_known_entang">
+<code class="sig-name descname">get_known_entang</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/MaxEntangState.html#MaxEntangState.get_known_entang"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.MaxEntangState.MaxEntangState.get_known_entang" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method returns the known entanglement of the state, i.e. log(
+self.num_vals_min)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.MaxEntangState.MaxEntangState.get_st_vec">
+<code class="sig-name descname">get_st_vec</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/MaxEntangState.html#MaxEntangState.get_st_vec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.MaxEntangState.MaxEntangState.get_st_vec" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method returns the state vector of the state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>shape=(self.num_rows,)</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Robert R. Tucci &amp; Entanglish contributors
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

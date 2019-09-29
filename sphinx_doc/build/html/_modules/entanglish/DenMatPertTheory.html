@@ -1,0 +1,748 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>entanglish.DenMatPertTheory &mdash; entanglish 0.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> entanglish
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+        
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Table of Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../classgraph.html">Class Graph</a></li>
+</ul>
+
+            
+          
+        <a href="py-modindex.html">Module Index</a>
+    
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">entanglish</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>entanglish.DenMatPertTheory</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for entanglish.DenMatPertTheory</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">entanglish.DenMat</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">copy</span> <span class="k">as</span> <span class="nn">cp</span>
+
+
+<div class="viewcode-block" id="DenMatPertTheory"><a class="viewcode-back" href="../../entanglish.DenMatPertTheory.html#entanglish.DenMatPertTheory.DenMatPertTheory">[docs]</a><span class="k">class</span> <span class="nc">DenMatPertTheory</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    DenMat, dm, den_mat all stand for density matrix.</span>
+
+<span class="sd">    This class performs operations associated with perturbation theory (</span>
+<span class="sd">    more precisely, second order, time-independent perturbation theory in</span>
+<span class="sd">    quantum mechanics) of the eigenvalues and eigenvectors of a density</span>
+<span class="sd">    matrix.</span>
+
+<span class="sd">    In quantum mechanics, such perturbation theory is used to approximate</span>
+<span class="sd">    the eigenvalues and eigenvectors of a Hamiltonian H</span>
+
+<span class="sd">    H = H0 + V,</span>
+
+<span class="sd">    when the evas and evecs of H0 are known exactly. Pert theory only</span>
+<span class="sd">    depends on the fact that H is Hermitian. Since a density matrix dm</span>
+
+<span class="sd">    dm = dm0 + del_dm</span>
+
+<span class="sd">    is Hermitian too, pert theory can be used for density matrices as well</span>
+<span class="sd">    as for Hamiltonians. The question is, what to use for dm0? The</span>
+<span class="sd">    constructor of this class (__init__) leaves that question unanswered.</span>
+<span class="sd">    However, the static function DenMatPertTheory.new_with_separable_dm0()</span>
+<span class="sd">    answers this question. It takes a density matrix dm as input,</span>
+<span class="sd">    and returns an object of this class, i.e., DenMatPertTheory, assuming</span>
+<span class="sd">    that dm0 equals the Kronecker product of the one-axis marginals of dm.</span>
+
+<span class="sd">    The marginals of a square array arr is defined as a list of partial</span>
+<span class="sd">    traces of arr. The n&#39;th item in the list of marginals is the partial</span>
+<span class="sd">    trace of arr, traced over all qudits except the n&#39;th. The Kronecker</span>
+<span class="sd">    product of the marginals of arr is a &quot;separable&quot; density matrix, in the</span>
+<span class="sd">    sense that there is no correlation among its qudits.</span>
+
+<span class="sd">    Each marginal is the density matrix of a qudit, so it is a d x d matrix,</span>
+<span class="sd">    where d is the number of states of the qudit. If d is small for all the</span>
+<span class="sd">    marginals, it is much easier to diagonalize every marginal than to</span>
+<span class="sd">    diagonalize the whole density matrix dm. So it is reasonable to assume</span>
+<span class="sd">    that the evas and evecs of dm0 can be calculated easily exactly. We wish</span>
+<span class="sd">    to use those evas and evecs to approximate perturbatively the evas and</span>
+<span class="sd">    evecs of dm.</span>
+
+<span class="sd">    We will call an eigensystem of a density matrix: a tuple, whose first</span>
+<span class="sd">    item is a 1D numpy array, call it evas, with the eigenvalues of the</span>
+<span class="sd">    density matrix, and the second item is a 2D numpy array, call it</span>
+<span class="sd">    eigen_cols, whose i&#39;th columns is an eigenvector for the i&#39;th eigenvalue</span>
+<span class="sd">    (i.e., evas[i]) of the density matrix.</span>
+
+<span class="sd">    See Ref.1 for a more detailed explanation of the algos used in this class.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    1. R.R. Tucci, &quot;A New  Algorithm for Calculating Squashed Entanglement</span>
+<span class="sd">    and a Python Implementation Thereof&quot;</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    del_dm : DenMat</span>
+<span class="sd">        defined above</span>
+<span class="sd">    del_dm_in_sbasis: DenMat</span>
+<span class="sd">        del_dm is in inbasis. It is convenient to change it to sbasis (</span>
+<span class="sd">        separable basis) so that if v1 = dm0_eigen_sys[1][n1] and v2 =</span>
+<span class="sd">        dm0_eigen_sys[1][n2] then del_dm_in_sbasis[n1, n2] = &lt;v1| del_dm |v2&gt;</span>
+<span class="sd">    dm0_eigen_sys : tuple[np.ndarray, np.ndarray]</span>
+<span class="sd">        eigensystem of density matrix dm0.</span>
+<span class="sd">    evas_of_dm_to_2nd_order : np.ndarray</span>
+<span class="sd">        1D array of floats. Eigenvalues of dm to second order.</span>
+<span class="sd">    evec_cols_of_dm_to_2nd_order : np.ndarray</span>
+<span class="sd">        This is a unitary matrix with (a second order approx of) the</span>
+<span class="sd">        eigenvectors of dm as columns. If this matrix is U, the dm \approx</span>
+<span class="sd">        UDU^dag, where D is diagonal and U^dag is the Hermitian conjugate of</span>
+<span class="sd">        U.</span>
+<span class="sd">    verbose : bool</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="DenMatPertTheory.__init__"><a class="viewcode-back" href="../../entanglish.DenMatPertTheory.html#entanglish.DenMatPertTheory.DenMatPertTheory.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dm0_eigen_sys</span><span class="p">,</span> <span class="n">del_dm</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        dm0_eigen_sys : tuple[np.ndarray, np.ndarray]</span>
+<span class="sd">        del_dm : DenMat</span>
+<span class="sd">        verbose : bool</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dm0_eigen_sys</span> <span class="o">=</span> <span class="n">dm0_eigen_sys</span>
+        <span class="c1"># will not assume trace is one</span>
+        <span class="c1"># ut.assert_is_prob_dist(np.array(dm0_eigen_sys[0]), halt=True)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">del_dm</span> <span class="o">=</span> <span class="n">del_dm</span>
+        <span class="c1"># even if dm and dm0 don&#39;t have unit trace,</span>
+        <span class="c1"># assume their traces are equal</span>
+        <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">del_dm</span><span class="o">.</span><span class="n">trace</span><span class="p">())</span> <span class="o">&lt;</span> <span class="mf">1e-5</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">del_dm</span><span class="o">.</span><span class="n">trace</span><span class="p">())</span>
+        <span class="c1"># print(&#39;aaaaaaaa1&#39;, np.linalg.norm(del_dm.arr))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">del_dm_in_sbasis</span> <span class="o">=</span> <span class="n">del_dm</span><span class="o">.</span><span class="n">switch_arr_basis</span><span class="p">(</span><span class="n">dm0_eigen_sys</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="c1"># print(&#39;aaaaaaaa2&#39;, np.linalg.norm(self.del_dm_in_sbasis.arr))</span>
+        <span class="c1"># print(&#39;aaaaaaa2-zero-if-esys-unitary&#39;, np.linalg.norm(np.dot(</span>
+        <span class="c1">#    dm0_eigen_sys[1].conj().T, dm0_eigen_sys[1])-</span>
+        <span class="c1">#       np.eye(del_dm.num_rows)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">diagonalize_del_dm_in_sbasis_in_degenerate_spaces</span><span class="p">()</span>
+        <span class="c1"># print(&#39;aaaaaaaa3&#39;, np.linalg.norm(self.del_dm_in_sbasis.arr))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">evas_of_dm_to_2nd_order</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">evec_cols_of_dm_to_2nd_order</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_evas_of_dm_to_2nd_order</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_evec_cols_of_dm_to_2nd_order</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="DenMatPertTheory.new_with_separable_dm0"><a class="viewcode-back" href="../../entanglish.DenMatPertTheory.html#entanglish.DenMatPertTheory.DenMatPertTheory.new_with_separable_dm0">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">new_with_separable_dm0</span><span class="p">(</span><span class="n">dm</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method returns a DenMatPertTheory built from a density matrix</span>
+<span class="sd">        dm, assuming that dm0 is the Kronecker product of the marginals of dm.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        dm : DenMat</span>
+<span class="sd">        verbose : bool</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        DenMatPertTheory</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">dm</span><span class="o">.</span><span class="n">marginals</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">dm</span><span class="o">.</span><span class="n">set_marginals</span><span class="p">()</span>
+        <span class="n">esys</span> <span class="o">=</span> <span class="n">dm</span><span class="o">.</span><span class="n">get_eigen_sys_of_marginals</span><span class="p">()</span>
+        <span class="n">dm0_eigen_sys</span> <span class="o">=</span> <span class="p">(</span><span class="n">ut</span><span class="o">.</span><span class="n">kron_prod</span><span class="p">(</span><span class="n">esys</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">ut</span><span class="o">.</span><span class="n">kron_prod</span><span class="p">(</span><span class="n">esys</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="n">arr</span> <span class="o">=</span> <span class="n">ut</span><span class="o">.</span><span class="n">kron_prod</span><span class="p">([</span><span class="n">marg</span><span class="o">.</span><span class="n">arr</span> <span class="k">for</span> <span class="n">marg</span> <span class="ow">in</span> <span class="n">dm</span><span class="o">.</span><span class="n">marginals</span><span class="p">])</span>
+        <span class="n">dm0</span> <span class="o">=</span> <span class="n">DenMat</span><span class="p">(</span><span class="n">dm</span><span class="o">.</span><span class="n">num_rows</span><span class="p">,</span> <span class="n">dm</span><span class="o">.</span><span class="n">row_shape</span><span class="p">,</span> <span class="n">arr</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">DenMatPertTheory</span><span class="p">(</span><span class="n">dm0_eigen_sys</span><span class="p">,</span> <span class="n">dm</span> <span class="o">-</span> <span class="n">dm0</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DenMatPertTheory.get_dm0"><a class="viewcode-back" href="../../entanglish.DenMatPertTheory.html#entanglish.DenMatPertTheory.DenMatPertTheory.get_dm0">[docs]</a>    <span class="k">def</span> <span class="nf">get_dm0</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method returns the unperturbed density matrix dm0. We define</span>
+<span class="sd">        this method so as to avoid storing dm0.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        DenMat</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">evas</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dm0_eigen_sys</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">evec_cols</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dm0_eigen_sys</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">arr</span> <span class="o">=</span> <span class="n">ut</span><span class="o">.</span><span class="n">fun_of_herm_arr_from_eigen_sys</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="n">evas</span><span class="p">,</span> <span class="n">evec_cols</span><span class="p">)</span>
+        <span class="n">num_rows</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">del_dm</span><span class="o">.</span><span class="n">num_rows</span>
+        <span class="n">row_shape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">del_dm</span><span class="o">.</span><span class="n">row_shape</span>
+        <span class="k">return</span> <span class="n">DenMat</span><span class="p">(</span><span class="n">num_rows</span><span class="p">,</span> <span class="n">row_shape</span><span class="p">,</span> <span class="n">arr</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DenMatPertTheory.diagonalize_del_dm_in_sbasis_in_degenerate_spaces"><a class="viewcode-back" href="../../entanglish.DenMatPertTheory.html#entanglish.DenMatPertTheory.DenMatPertTheory.diagonalize_del_dm_in_sbasis_in_degenerate_spaces">[docs]</a>    <span class="k">def</span> <span class="nf">diagonalize_del_dm_in_sbasis_in_degenerate_spaces</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function performs a similarity transformation on</span>
+<span class="sd">        del_dm_in_sbasis so that it is diagonal on the subspaces of</span>
+<span class="sd">        eigenvectors with degerate eigenvalues of dm0. After this</span>
+<span class="sd">        transformation, if j != k and evas[j] = evas[k] then</span>
+<span class="sd">        del_dm_in_sbasis[j, k] = 0, where evas are the eigenvalues of dm0.</span>
+<span class="sd">        This is called degenerate 2nd order perturbation theory.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">classes</span> <span class="o">=</span> <span class="n">ut</span><span class="o">.</span><span class="n">get_equiv_classes</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dm0_eigen_sys</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="n">umat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">del_dm</span><span class="o">.</span><span class="n">num_rows</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">complex</span><span class="p">)</span>
+        <span class="c1"># eq = equivalence</span>
+        <span class="k">for</span> <span class="n">eq_class</span> <span class="ow">in</span> <span class="n">classes</span><span class="p">:</span>
+            <span class="n">dim</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">eq_class</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">dim</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;non-trivial eq class&quot;</span><span class="p">,</span> <span class="n">eq_class</span><span class="p">)</span>
+                <span class="n">eq_class</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">eq_class</span><span class="p">)</span>
+                <span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">dim</span><span class="p">,</span> <span class="n">dim</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">complex</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">k1</span><span class="p">,</span> <span class="n">kk1</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">eq_class</span><span class="p">):</span>
+                    <span class="k">for</span> <span class="n">k2</span><span class="p">,</span> <span class="n">kk2</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">eq_class</span><span class="p">):</span>
+                        <span class="n">arr</span><span class="p">[</span><span class="n">k1</span><span class="p">,</span> <span class="n">k2</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">del_dm_in_sbasis</span><span class="p">[</span><span class="n">kk1</span><span class="p">,</span> <span class="n">kk2</span><span class="p">]</span>
+                <span class="n">norm_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
+                <span class="c1"># print(&#39;norm arr&#39;, norm_arr)</span>
+                <span class="k">if</span> <span class="n">norm_arr</span> <span class="o">&gt;</span> <span class="mf">1e-4</span><span class="p">:</span>
+                    <span class="n">_</span><span class="p">,</span> <span class="n">evec_cols</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigh</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
+                    <span class="k">assert</span> <span class="n">ut</span><span class="o">.</span><span class="n">is_unitary</span><span class="p">(</span><span class="n">evec_cols</span><span class="p">)</span>
+                    <span class="c1"># print(&#39;bbbbbbbb&#39;, np.around(np.dot(np.dot(</span>
+                    <span class="c1">#         evec_cols.conj().T,</span>
+                    <span class="c1">#               arr), evec_cols).real,4))</span>
+                    <span class="k">for</span> <span class="n">k1</span><span class="p">,</span> <span class="n">kk1</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">eq_class</span><span class="p">):</span>
+                        <span class="k">for</span> <span class="n">k2</span><span class="p">,</span> <span class="n">kk2</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">eq_class</span><span class="p">):</span>
+                            <span class="n">umat</span><span class="p">[</span><span class="n">kk1</span><span class="p">,</span> <span class="n">kk2</span><span class="p">]</span> <span class="o">=</span> <span class="n">evec_cols</span><span class="p">[</span><span class="n">k1</span><span class="p">,</span> <span class="n">k2</span><span class="p">]</span>
+        <span class="k">assert</span> <span class="n">ut</span><span class="o">.</span><span class="n">is_unitary</span><span class="p">(</span><span class="n">umat</span><span class="p">)</span>
+        <span class="c1"># print(&#39;ccccccccnorm of rotated_del_dm&#39;, np.linalg.norm(</span>
+        <span class="c1"># self.del_dm_in_sbasis.arr))</span>
+        <span class="n">rotated_del_dm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">umat</span><span class="o">.</span><span class="n">conj</span><span class="p">()</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">del_dm_in_sbasis</span><span class="o">.</span><span class="n">arr</span><span class="p">),</span> <span class="n">umat</span><span class="p">)</span>
+        <span class="c1"># print(&#39;norm of rotated_del_dm&#39;, np.linalg.norm(rotated_del_dm))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">del_dm_in_sbasis</span><span class="o">.</span><span class="n">arr</span> <span class="o">=</span> <span class="n">rotated_del_dm</span></div>
+
+<div class="viewcode-block" id="DenMatPertTheory.set_evas_of_dm_to_2nd_order"><a class="viewcode-back" href="../../entanglish.DenMatPertTheory.html#entanglish.DenMatPertTheory.DenMatPertTheory.set_evas_of_dm_to_2nd_order">[docs]</a>    <span class="k">def</span> <span class="nf">set_evas_of_dm_to_2nd_order</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function sets the class attribute evas_of_dm_to_2nd_order (the</span>
+<span class="sd">        eigenvalues of dm, to second order in pert theory). Actually,</span>
+<span class="sd">        since it&#39;s not that difficult to go from 2nd to 3rd order</span>
+<span class="sd">        perturbation for eigenvalues (for the eigenvectors it is more</span>
+<span class="sd">        difficult), we calculate the 3rd order approx for evas.</span>
+
+<span class="sd">        Formulas used here come from the Wikipedia article Ref.1. That</span>
+<span class="sd">        article has a figure containing the eigenvalues and eigenvectors to</span>
+<span class="sd">        fifth order in perturbation theory!</span>
+
+<span class="sd">        References</span>
+<span class="sd">        ----------</span>
+<span class="sd">        1. https://en.wikipedia.org/wiki/Perturbation_theory_(</span>
+<span class="sd">        quantum_mechanics)</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">num_evas</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dm0_eigen_sys</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">evas_to_2nd_order</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">use_3rd_order</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_evas</span><span class="p">):</span>
+            <span class="n">eva</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dm0_eigen_sys</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">n</span><span class="p">]</span>
+            <span class="c1"># print(&#39;...../&#39;, eva, self.del_dm.arr)</span>
+            <span class="n">eva</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">del_dm_in_sbasis</span><span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">]</span><span class="o">.</span><span class="n">real</span>
+            <span class="k">for</span> <span class="n">k1</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_evas</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">k1</span> <span class="o">!=</span> <span class="n">n</span><span class="p">:</span>
+                    <span class="n">me_n_k1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">del_dm_in_sbasis</span><span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="n">k1</span><span class="p">]</span>
+                    <span class="n">me_k1_n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">del_dm_in_sbasis</span><span class="p">[</span><span class="n">k1</span><span class="p">,</span> <span class="n">n</span><span class="p">]</span>
+                    <span class="n">me_n_n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">del_dm_in_sbasis</span><span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">]</span>
+                    <span class="n">lam_n_k1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dm0_eigen_sys</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">n</span><span class="p">]</span> <span class="o">-</span>\
+                               <span class="bp">self</span><span class="o">.</span><span class="n">dm0_eigen_sys</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">k1</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">lam_n_k1</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1e-5</span><span class="p">:</span>
+                        <span class="n">eva</span> <span class="o">+=</span> <span class="p">(</span><span class="n">me_n_k1</span><span class="o">*</span><span class="n">me_k1_n</span><span class="p">)</span><span class="o">.</span><span class="n">real</span><span class="o">/</span><span class="n">lam_n_k1</span>
+                        <span class="k">if</span> <span class="n">use_3rd_order</span><span class="p">:</span>
+                            <span class="n">eva</span> <span class="o">+=</span> <span class="o">-</span><span class="p">(</span><span class="n">me_n_n</span><span class="o">*</span><span class="n">me_n_k1</span><span class="o">*</span><span class="n">me_k1_n</span><span class="p">)</span><span class="o">.</span><span class="n">real</span><span class="o">/</span><span class="n">lam_n_k1</span><span class="o">**</span><span class="mi">2</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="c1"># if denominator is zero, numerator should be too.</span>
+                        <span class="c1"># if it isn&#39;t, del_dm must be diagonalized</span>
+                        <span class="c1">#  over the degenerate eigenspace so that the</span>
+                        <span class="c1"># numerator becomes zero. This is called degenerate</span>
+                        <span class="c1"># 2nd order perturbation theory</span>
+
+                        <span class="c1"># assert abs(me_n_k1) &lt; 1e-5, str(me_n_k1) + \</span>
+                        <span class="c1">#                         &#39; / &#39; + str(abs(lam_n_k1))</span>
+                        <span class="k">pass</span>
+                    <span class="k">if</span> <span class="n">use_3rd_order</span><span class="p">:</span>
+                        <span class="k">for</span> <span class="n">k2</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_evas</span><span class="p">):</span>
+                            <span class="k">if</span> <span class="n">k2</span> <span class="o">!=</span> <span class="n">n</span><span class="p">:</span>
+                                <span class="n">me_k2_k1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">del_dm_in_sbasis</span><span class="p">[</span><span class="n">k2</span><span class="p">,</span> <span class="n">k1</span><span class="p">]</span>
+                                <span class="n">me_n_k2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">del_dm_in_sbasis</span><span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="n">k2</span><span class="p">]</span>
+                                <span class="n">lam_n_k2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dm0_eigen_sys</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">n</span><span class="p">]</span> \
+                                           <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">dm0_eigen_sys</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">k2</span><span class="p">]</span>
+                                <span class="n">numer</span> <span class="o">=</span> <span class="p">(</span><span class="n">me_n_k2</span><span class="o">*</span><span class="n">me_k2_k1</span><span class="o">*</span><span class="n">me_k1_n</span><span class="p">)</span><span class="o">.</span><span class="n">real</span>
+                                <span class="n">denom</span> <span class="o">=</span> <span class="n">lam_n_k1</span><span class="o">*</span><span class="n">lam_n_k2</span>
+                                <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">denom</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1e-6</span><span class="p">:</span>
+                                    <span class="c1"># print(&#39;.....//&#39;,</span>
+                                    <span class="c1"># n, k1, k2, lam_n_k1, lam_n_k2)</span>
+                                    <span class="n">eva</span> <span class="o">+=</span> <span class="n">numer</span><span class="o">/</span><span class="n">denom</span>
+                                    <span class="c1"># print(&#39;;;;&#39;, eva)</span>
+                                <span class="k">else</span><span class="p">:</span>
+                                    <span class="k">pass</span>
+                                    <span class="c1"># assert abs(numer) &lt; 1e-5, str(numer)</span>
+
+            <span class="n">evas_to_2nd_order</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">eva</span><span class="p">)</span>
+
+        <span class="n">evas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">evas_to_2nd_order</span><span class="p">)</span>
+
+        <span class="n">fix</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="n">fix</span><span class="p">:</span>
+            <span class="n">evas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">ut</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">evas</span><span class="p">])</span>
+            <span class="n">evas</span> <span class="o">=</span> <span class="n">evas</span><span class="o">/</span><span class="nb">sum</span><span class="p">(</span><span class="n">evas</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">evas_of_dm_to_2nd_order</span> <span class="o">=</span> <span class="n">evas</span></div>
+        <span class="c1"># print(&quot;===&quot;, evas_to_2nd_order)</span>
+
+<div class="viewcode-block" id="DenMatPertTheory.set_evec_cols_of_dm_to_2nd_order"><a class="viewcode-back" href="../../entanglish.DenMatPertTheory.html#entanglish.DenMatPertTheory.DenMatPertTheory.set_evec_cols_of_dm_to_2nd_order">[docs]</a>    <span class="k">def</span> <span class="nf">set_evec_cols_of_dm_to_2nd_order</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function sets the class attribute evec_cols_of_dm_to_2nd_order</span>
+<span class="sd">        (a matrix with the eigenvectors, as columns, of dm, to second order</span>
+<span class="sd">        in pert theory).</span>
+
+<span class="sd">        Formulas used here come from the Wikipedia article Ref.1. That</span>
+<span class="sd">        article has a figure containing the eigenvalues and eigenvectors to</span>
+<span class="sd">        fifth order in perturbation theory!</span>
+
+<span class="sd">        References</span>
+<span class="sd">        ----------</span>
+<span class="sd">        1. https://en.wikipedia.org/wiki/Perturbation_theory_(</span>
+<span class="sd">        quantum_mechanics)</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">num_evas</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dm0_eigen_sys</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">coef_n</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">num_evas</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">complex</span><span class="p">)</span>
+        <span class="n">coef_n_k1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">num_evas</span><span class="p">,</span> <span class="n">num_evas</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">complex</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_evas</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">k1</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_evas</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">k1</span> <span class="o">!=</span> <span class="n">n</span><span class="p">:</span>
+                    <span class="c1"># me = matrix element, lam = eigenvalue lambda</span>
+                    <span class="n">me_k1_n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">del_dm_in_sbasis</span><span class="p">[</span><span class="n">k1</span><span class="p">,</span> <span class="n">n</span><span class="p">]</span>
+                    <span class="n">me_n_k1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">del_dm_in_sbasis</span><span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="n">k1</span><span class="p">]</span>
+                    <span class="n">me_n_n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">del_dm_in_sbasis</span><span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">]</span>
+                    <span class="n">lam_n_k1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dm0_eigen_sys</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">n</span><span class="p">]</span> <span class="o">-</span> \
+                               <span class="bp">self</span><span class="o">.</span><span class="n">dm0_eigen_sys</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">k1</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">lam_n_k1</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1e-6</span><span class="p">:</span>
+                        <span class="n">coef_n_k1</span><span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="n">k1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">me_k1_n</span><span class="o">/</span><span class="n">lam_n_k1</span>\
+                            <span class="o">-</span> <span class="n">me_n_n</span><span class="o">*</span><span class="n">me_k1_n</span><span class="o">/</span><span class="n">lam_n_k1</span><span class="o">**</span><span class="mi">2</span>
+                        <span class="n">coef_n</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">+=</span> <span class="o">-</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">me_n_k1</span><span class="o">*</span><span class="n">me_k1_n</span><span class="o">/</span><span class="n">lam_n_k1</span><span class="o">**</span><span class="mi">2</span>
+                        <span class="k">for</span> <span class="n">k2</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_evas</span><span class="p">):</span>
+                            <span class="k">if</span> <span class="n">k2</span> <span class="o">!=</span> <span class="n">n</span><span class="p">:</span>
+                                <span class="n">me_k1_k2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">del_dm_in_sbasis</span><span class="p">[</span><span class="n">k1</span><span class="p">,</span> <span class="n">k2</span><span class="p">]</span>
+                                <span class="n">me_k2_n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">del_dm_in_sbasis</span><span class="p">[</span><span class="n">k2</span><span class="p">,</span> <span class="n">n</span><span class="p">]</span>
+                                <span class="n">lam_n_k2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dm0_eigen_sys</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">n</span><span class="p">]</span> <span class="o">-</span> \
+                                           <span class="bp">self</span><span class="o">.</span><span class="n">dm0_eigen_sys</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">k2</span><span class="p">]</span>
+                                <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">lam_n_k2</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1e-6</span><span class="p">:</span>
+                                    <span class="n">coef_n_k1</span><span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="n">k1</span><span class="p">]</span> <span class="o">+=</span> \
+                                        <span class="n">me_k1_k2</span><span class="o">*</span><span class="n">me_k2_n</span><span class="o">/</span><span class="p">(</span><span class="n">lam_n_k1</span><span class="o">*</span><span class="n">lam_n_k2</span><span class="p">)</span>
+                                <span class="k">else</span><span class="p">:</span>
+                                    <span class="c1"># assert abs(me_k2_n) &lt; 1e-</span>
+                                    <span class="k">pass</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="c1"># if denominator is zero, numerator should be too.</span>
+                        <span class="c1"># if it isn&#39;t, del_dm must be diagonalized</span>
+                        <span class="c1">#  over the degenerate eigenspace so that the</span>
+                        <span class="c1"># numerator becomes zero. This is called degenerate</span>
+                        <span class="c1"># 2nd order perturbation theory</span>
+
+                        <span class="c1"># assert abs(me_k1_n) &lt; 1e-6</span>
+                        <span class="k">pass</span>
+        <span class="c1"># umat = unitary matrix</span>
+        <span class="c1"># umat0 contains evecs as cols of separable den mat to 0th order</span>
+        <span class="n">umat0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dm0_eigen_sys</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">umat</span> <span class="o">=</span> <span class="n">cp</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">umat0</span><span class="p">)</span>
+        <span class="c1"># print(&#39;---------..,,xx&#39;, num_evas, umat.shape)</span>
+        <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_evas</span><span class="p">):</span>
+            <span class="n">umat</span><span class="p">[:,</span> <span class="n">n</span><span class="p">]</span> <span class="o">+=</span> <span class="n">coef_n</span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="o">*</span><span class="n">umat0</span><span class="p">[:,</span> <span class="n">n</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">k1</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_evas</span><span class="p">):</span>
+                <span class="n">umat</span><span class="p">[:,</span> <span class="n">n</span><span class="p">]</span> <span class="o">+=</span> <span class="n">coef_n_k1</span><span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="n">k1</span><span class="p">]</span><span class="o">*</span><span class="n">umat0</span><span class="p">[:,</span> <span class="n">k1</span><span class="p">]</span>
+
+        <span class="n">fix</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="n">fix</span><span class="p">:</span>
+            <span class="c1"># this use of the qr decomposition replaces umat by a matrix</span>
+            <span class="c1"># which is close to it, but repaired to fix any</span>
+            <span class="c1"># deviation from unitarity</span>
+            <span class="n">umat</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">qr</span><span class="p">(</span><span class="n">umat</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">evec_cols_of_dm_to_2nd_order</span> <span class="o">=</span> <span class="n">umat</span></div>
+
+<div class="viewcode-block" id="DenMatPertTheory.do_bstrap"><a class="viewcode-back" href="../../entanglish.DenMatPertTheory.html#entanglish.DenMatPertTheory.DenMatPertTheory.do_bstrap">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">do_bstrap</span><span class="p">(</span><span class="n">dm0_eigen_sys</span><span class="p">,</span> <span class="n">del_dm</span><span class="p">,</span> <span class="n">num_steps</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        If we define sub_del_dm = del_dm/num_steps, then this method</span>
+<span class="sd">        calculates an eigensystem for dm0 + sub_del_dm*(k+1) from the</span>
+<span class="sd">        eigensystem for dm0 + sub_del_dm*k for k = 0, 1, 2, ...,</span>
+<span class="sd">        num_steps-1. This produces a &quot;bootstrap sequence of eigensystems&quot;</span>
+<span class="sd">        that is num_steps steps long. This method returns the final</span>
+<span class="sd">        eigensystem of that bootstrap sequence.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        dm0_eigen_sys : tuple[np.ndarray, np.ndarray]</span>
+<span class="sd">        del_dm : DenMat</span>
+<span class="sd">        num_steps : int</span>
+<span class="sd">        verbose : bool</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        tuple[np.ndaray, np.ndarray]</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">sub_del_dm</span> <span class="o">=</span> <span class="n">del_dm</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">num_steps</span><span class="p">)</span>
+        <span class="c1"># print(&#39;xxxxxxxxxxxxxx-sub-del-dm\n&#39;, sub_del_dm)</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;------------------beginning of step&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="n">num_steps</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;bstrap input evas</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">dm0_eigen_sys</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+                  <span class="s1">&#39;sum=&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dm0_eigen_sys</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="n">cur_pert</span> <span class="o">=</span> <span class="n">DenMatPertTheory</span><span class="p">(</span><span class="n">dm0_eigen_sys</span><span class="p">,</span> <span class="n">sub_del_dm</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_steps</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;------------------beginning of step&#39;</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="n">num_steps</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;bstrap input evas</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span>
+                    <span class="n">cur_pert</span><span class="o">.</span><span class="n">evas_of_dm_to_2nd_order</span><span class="p">),</span>
+                    <span class="s1">&#39;sum=&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">cur_pert</span><span class="o">.</span><span class="n">evas_of_dm_to_2nd_order</span><span class="p">))</span>
+            <span class="n">cur_dm0_eigen_sys</span> <span class="o">=</span> <span class="p">(</span><span class="n">cur_pert</span><span class="o">.</span><span class="n">evas_of_dm_to_2nd_order</span><span class="p">,</span>
+                                 <span class="n">cur_pert</span><span class="o">.</span><span class="n">evec_cols_of_dm_to_2nd_order</span><span class="p">)</span>
+            <span class="n">cur_pert</span> <span class="o">=</span> <span class="n">DenMatPertTheory</span><span class="p">(</span><span class="n">cur_dm0_eigen_sys</span><span class="p">,</span> <span class="n">sub_del_dm</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+        <span class="n">evas</span> <span class="o">=</span> <span class="n">cur_pert</span><span class="o">.</span><span class="n">evas_of_dm_to_2nd_order</span>
+        <span class="n">evec_cols</span> <span class="o">=</span> <span class="n">cur_pert</span><span class="o">.</span><span class="n">evec_cols_of_dm_to_2nd_order</span>
+        <span class="k">return</span> <span class="n">evas</span><span class="p">,</span> <span class="n">evec_cols</span></div>
+
+<div class="viewcode-block" id="DenMatPertTheory.do_bstrap_with_separable_dm0"><a class="viewcode-back" href="../../entanglish.DenMatPertTheory.html#entanglish.DenMatPertTheory.DenMatPertTheory.do_bstrap_with_separable_dm0">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">do_bstrap_with_separable_dm0</span><span class="p">(</span><span class="n">dm</span><span class="p">,</span> <span class="n">num_steps</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method returns the same thing as the method (found in its</span>
+<span class="sd">        parent class) DenMatPertTheory.do_bstrap( ). However, their names</span>
+<span class="sd">        differ by a &#39;_with_separable_dm0&#39; at the end and their inputs are</span>
+<span class="sd">        different. This one takes as input a density matrix dm and</span>
+<span class="sd">        calculates dm0_eigen_sys and del_dm from that, assuming that dm0 is</span>
+<span class="sd">        the Kronecker product of the marginals of dm.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        dm : DenMat</span>
+<span class="sd">        num_steps : int</span>
+<span class="sd">        verbose : bool</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        tuple[np.ndaray, np.ndarray]</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">dm</span><span class="o">.</span><span class="n">marginals</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">dm</span><span class="o">.</span><span class="n">set_marginals</span><span class="p">()</span>
+        <span class="n">esys</span> <span class="o">=</span> <span class="n">dm</span><span class="o">.</span><span class="n">get_eigen_sys_of_marginals</span><span class="p">()</span>
+        <span class="n">dm0_eigen_sys</span> <span class="o">=</span> <span class="p">(</span><span class="n">ut</span><span class="o">.</span><span class="n">kron_prod</span><span class="p">(</span><span class="n">esys</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+                         <span class="n">ut</span><span class="o">.</span><span class="n">kron_prod</span><span class="p">(</span><span class="n">esys</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="n">arr</span> <span class="o">=</span> <span class="n">ut</span><span class="o">.</span><span class="n">kron_prod</span><span class="p">([</span><span class="n">marg</span><span class="o">.</span><span class="n">arr</span> <span class="k">for</span> <span class="n">marg</span> <span class="ow">in</span> <span class="n">dm</span><span class="o">.</span><span class="n">marginals</span><span class="p">])</span>
+        <span class="n">dm0</span> <span class="o">=</span> <span class="n">DenMat</span><span class="p">(</span><span class="n">dm</span><span class="o">.</span><span class="n">num_rows</span><span class="p">,</span> <span class="n">dm</span><span class="o">.</span><span class="n">row_shape</span><span class="p">,</span> <span class="n">arr</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">DenMatPertTheory</span><span class="o">.</span><span class="n">do_bstrap</span><span class="p">(</span>
+            <span class="n">dm0_eigen_sys</span><span class="p">,</span> <span class="n">dm</span><span class="o">-</span><span class="n">dm0</span><span class="p">,</span> <span class="n">num_steps</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span></div></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">entanglish.SymNupState</span> <span class="k">import</span> <span class="o">*</span>
+
+    <span class="k">def</span> <span class="nf">main_test</span><span class="p">(</span><span class="n">dm</span><span class="p">,</span> <span class="n">exact_evas</span><span class="p">,</span> <span class="n">pert</span><span class="p">,</span> <span class="n">num_steps</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        dm : DenMat</span>
+<span class="sd">        exact_evas : np.ndarray</span>
+<span class="sd">        pert : DenMatPertTheory</span>
+<span class="sd">        num_steps : int</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># print(&#39;******do &#39;, num_steps, &#39; steps:&#39;)</span>
+        <span class="n">fin_esys</span> <span class="o">=</span> <span class="n">DenMatPertTheory</span><span class="o">.</span><span class="n">do_bstrap</span><span class="p">(</span>
+            <span class="n">pert</span><span class="o">.</span><span class="n">dm0_eigen_sys</span><span class="p">,</span> <span class="n">pert</span><span class="o">.</span><span class="n">del_dm</span><span class="p">,</span> <span class="n">num_steps</span><span class="p">,</span> <span class="n">pert</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;final evas of dm to 2nd order</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">fin_esys</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+              <span class="s1">&#39;sum=&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">fin_esys</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;evas_of_dm</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">exact_evas</span><span class="p">),</span> <span class="s1">&#39;sum=&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">exact_evas</span><span class="p">))</span>
+
+        <span class="n">dm_2nd_order</span> <span class="o">=</span> <span class="n">DenMat</span><span class="o">.</span><span class="n">get_fun_of_dm_from_eigen_sys</span><span class="p">(</span>
+            <span class="n">dm</span><span class="o">.</span><span class="n">num_rows</span><span class="p">,</span> <span class="n">dm</span><span class="o">.</span><span class="n">row_shape</span><span class="p">,</span> <span class="n">fin_esys</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">)</span>
+        <span class="c1"># print(&#39;dm_to_2nd_order\n&#39;, dm_2nd_order)</span>
+        <span class="n">diff_arr</span> <span class="o">=</span> <span class="n">dm_2nd_order</span><span class="o">.</span><span class="n">arr</span> <span class="o">-</span> <span class="n">dm</span><span class="o">.</span><span class="n">arr</span>
+        <span class="c1"># print(&#39;dm_to_2nd_order - dm\n&#39;, diff_arr)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;distance(dm_to_2nd_order, dm)</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">diff_arr</span><span class="p">))</span>
+
+        <span class="n">true_exp</span> <span class="o">=</span> <span class="n">dm</span><span class="o">.</span><span class="n">exp</span><span class="p">()</span>
+        <span class="n">approx_exp</span> <span class="o">=</span> <span class="n">DenMat</span><span class="o">.</span><span class="n">get_fun_of_dm_from_eigen_sys</span><span class="p">(</span>
+            <span class="n">dm</span><span class="o">.</span><span class="n">num_rows</span><span class="p">,</span> <span class="n">dm</span><span class="o">.</span><span class="n">row_shape</span><span class="p">,</span> <span class="n">fin_esys</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;distance(approx_exp, true_exp)</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span>
+              <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">approx_exp</span><span class="o">.</span><span class="n">arr</span> <span class="o">-</span> <span class="n">true_exp</span><span class="o">.</span><span class="n">arr</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">main1</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;--------------------main1&#39;</span><span class="p">)</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+        <span class="n">dm</span> <span class="o">=</span> <span class="n">DenMat</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">exact_evas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">.</span><span class="mi">1</span><span class="p">,</span> <span class="o">.</span><span class="mi">3</span><span class="p">,</span> <span class="o">.</span><span class="mi">3</span><span class="p">,</span> <span class="o">.</span><span class="mi">1</span><span class="p">,</span> <span class="o">.</span><span class="mi">2</span><span class="p">,</span> <span class="o">.</span><span class="mi">1</span><span class="p">,</span> <span class="o">.</span><span class="mi">6</span><span class="p">,</span> <span class="o">.</span><span class="mi">7</span><span class="p">])</span>
+        <span class="n">exact_evas</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">exact_evas</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;evas of dm</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">exact_evas</span><span class="p">))</span>
+        <span class="n">dm</span><span class="o">.</span><span class="n">set_arr_to_rand_den_mat</span><span class="p">(</span><span class="n">exact_evas</span><span class="p">)</span>
+
+        <span class="n">pert</span> <span class="o">=</span> <span class="n">DenMatPertTheory</span><span class="o">.</span><span class="n">new_with_separable_dm0</span><span class="p">(</span><span class="n">dm</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="c1"># print(&#39;evas of dm to 2nd order (after 1 step)\n&#39;,</span>
+        <span class="c1">#       np.sort(pert.evas_of_dm_to_2nd_order),</span>
+        <span class="c1">#       &#39;sum=&#39;, np.sum(pert.evas_of_dm_to_2nd_order))</span>
+        <span class="c1"># print(&#39;evas of dm\n&#39;, np.sort(evas))</span>
+
+        <span class="c1"># print(&#39;evas_of_dm0\n&#39;, pert.dm0_eigen_sys[0])</span>
+        <span class="c1">#</span>
+        <span class="c1"># print(&#39;diag of del_dm in sbasis\n&#39;,</span>
+        <span class="c1">#       np.diag(pert.del_dm_in_sbasis.arr.real))</span>
+
+        <span class="c1"># print(&#39;del_dm\n&#39;, pert.del_dm)</span>
+        <span class="c1"># dm0 = pert.get_dm0()</span>
+        <span class="c1"># print(&#39;dm0\n&#39;, dm0)</span>
+
+        <span class="n">num_steps</span> <span class="o">=</span> <span class="mi">40</span>
+        <span class="c1"># print(&#39;evas_of_dm\n&#39;, evas)</span>
+        <span class="n">main_test</span><span class="p">(</span><span class="n">dm</span><span class="p">,</span> <span class="n">exact_evas</span><span class="p">,</span> <span class="n">pert</span><span class="p">,</span> <span class="n">num_steps</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">main2</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;--------------------main2&#39;</span><span class="p">)</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+
+        <span class="n">dm1</span> <span class="o">=</span> <span class="n">DenMat</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,))</span>
+        <span class="n">evas1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">.</span><span class="mi">1</span><span class="p">,</span> <span class="o">.</span><span class="mi">1</span><span class="p">,</span> <span class="o">.</span><span class="mi">4</span><span class="p">])</span>
+        <span class="n">evas1</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">evas1</span><span class="p">)</span>
+        <span class="n">dm1</span><span class="o">.</span><span class="n">set_arr_to_rand_den_mat</span><span class="p">(</span><span class="n">evas1</span><span class="p">)</span>
+        <span class="c1"># print(&#39;dm1\n&#39;, dm1)</span>
+
+        <span class="n">dm2</span> <span class="o">=</span> <span class="n">DenMat</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,))</span>
+        <span class="n">evas2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">.</span><span class="mi">8</span><span class="p">,</span> <span class="o">.</span><span class="mi">3</span><span class="p">])</span>
+        <span class="n">evas2</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">evas2</span><span class="p">)</span>
+        <span class="n">dm2</span><span class="o">.</span><span class="n">set_arr_to_rand_den_mat</span><span class="p">(</span><span class="n">evas2</span><span class="p">)</span>
+        <span class="c1"># print(&#39;dm2\n&#39;, dm2)</span>
+
+        <span class="n">dm</span> <span class="o">=</span> <span class="n">DenMat</span><span class="o">.</span><span class="n">get_kron_prod_of_den_mats</span><span class="p">([</span><span class="n">dm1</span><span class="p">,</span> <span class="n">dm2</span><span class="p">])</span>
+        <span class="n">const</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># const = 1</span>
+        <span class="n">dm</span><span class="o">.</span><span class="n">add_const_to_diag_of_arr</span><span class="p">(</span><span class="n">const</span><span class="p">)</span>
+        <span class="n">dm</span><span class="o">.</span><span class="n">normalize_diag_of_arr</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;kron evas</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">ut</span><span class="o">.</span><span class="n">kron_prod</span><span class="p">([</span><span class="n">evas1</span><span class="p">,</span> <span class="n">evas2</span><span class="p">])))</span>
+        <span class="n">exact_evas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigvalsh</span><span class="p">(</span><span class="n">dm</span><span class="o">.</span><span class="n">arr</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;evas_of_dm</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">exact_evas</span><span class="p">)</span>
+
+        <span class="n">pert</span> <span class="o">=</span> <span class="n">DenMatPertTheory</span><span class="o">.</span><span class="n">new_with_separable_dm0</span><span class="p">(</span><span class="n">dm</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># print(&#39;evas of dm to 2nd order (after 1 step)\n&#39;,</span>
+        <span class="c1">#       np.sort(pert.evas_of_dm_to_2nd_order),</span>
+        <span class="c1">#       &#39;sum=&#39;, np.sum(pert.evas_of_dm_to_2nd_order))</span>
+        <span class="n">num_steps</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="n">main_test</span><span class="p">(</span><span class="n">dm</span><span class="p">,</span> <span class="n">exact_evas</span><span class="p">,</span> <span class="n">pert</span><span class="p">,</span> <span class="n">num_steps</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">main3</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;--------------------main3&#39;</span><span class="p">)</span>
+        <span class="n">num_bits</span> <span class="o">=</span> <span class="mi">4</span>
+        <span class="n">num_up</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="n">dm</span> <span class="o">=</span> <span class="n">DenMat</span><span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="n">num_bits</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">([</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">num_bits</span><span class="p">))</span>
+        <span class="n">st</span> <span class="o">=</span> <span class="n">SymNupState</span><span class="p">(</span><span class="n">num_up</span><span class="p">,</span> <span class="n">num_bits</span><span class="p">)</span>
+        <span class="n">st_vec</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">get_st_vec</span><span class="p">()</span>
+        <span class="n">dm</span><span class="o">.</span><span class="n">set_arr_from_st_vec</span><span class="p">(</span><span class="n">st_vec</span><span class="p">)</span>
+        <span class="c1"># dm.depurify(.1)</span>
+
+        <span class="n">exact_evas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigvalsh</span><span class="p">(</span><span class="n">dm</span><span class="o">.</span><span class="n">arr</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;evas_of_dm</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">exact_evas</span><span class="p">,</span> <span class="s1">&#39;sum=&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">exact_evas</span><span class="p">))</span>
+
+        <span class="n">pert</span> <span class="o">=</span> <span class="n">DenMatPertTheory</span><span class="o">.</span><span class="n">new_with_separable_dm0</span><span class="p">(</span><span class="n">dm</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">num_steps</span> <span class="o">=</span> <span class="mi">80</span>
+        <span class="n">main_test</span><span class="p">(</span><span class="n">dm</span><span class="p">,</span> <span class="n">exact_evas</span><span class="p">,</span> <span class="n">pert</span><span class="p">,</span> <span class="n">num_steps</span><span class="p">)</span>
+
+    <span class="n">main1</span><span class="p">()</span>
+    <span class="n">main2</span><span class="p">()</span>
+    <span class="n">main3</span><span class="p">()</span>
+
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Robert R. Tucci &amp; Entanglish contributors
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,1065 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>entanglish.DenMat module &mdash; entanglish 0.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> entanglish
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+        
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Table of Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="classgraph.html">Class Graph</a></li>
+</ul>
+
+            
+          
+        <a href="py-modindex.html">Module Index</a>
+    
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">entanglish</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>entanglish.DenMat module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/entanglish.DenMat.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-entanglish.DenMat">
+<span id="entanglish-denmat-module"></span><h1>entanglish.DenMat module<a class="headerlink" href="#module-entanglish.DenMat" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="entanglish.DenMat.DenMat">
+<em class="property">class </em><code class="sig-prename descclassname">entanglish.DenMat.</code><code class="sig-name descname">DenMat</code><span class="sig-paren">(</span><em class="sig-param">num_rows</em>, <em class="sig-param">row_shape</em>, <em class="sig-param">arr=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class specifies a quantum mechanical Density Matrix. The class also
+performs a large number of operations on the density matrix self.</p>
+<p>Normally, a density matrix is a Hermitian matrix whose eigenvalues
+define a probability distribution (i.e., the eigenvalues are real
+numbers between zero and one and they sum to 1.) This class does not
+automatically check that self is Hermitian, although you can do it
+yourself with the method is_hermitian(). The class doesn’t check that
+the trace is one either, although you can do it yourself with the method
+trace(). It is often useful to use this class to hold an “un-normalized”
+density matrix whose trace is not 1. So trace=1 is seldom assumed by the
+functions of this class. On the other hand, many of the functions in
+this class, especially the ones that involve finding eigenvalues,
+do assume that self is Hermitian.</p>
+<p>The attribute arr holds a numpy array of shape (num_rows, num_rows),
+where num_rows is also an attribute. Another attribute is row_shape,
+which is a tuple of integers whose product is num_rows. At any time,
+arr can be reshaped from (num_rows, num_rows) to row_shape*2.</p>
+<p>For example, suppose row_shape = (3, 4, 2). Then this density matrix
+will be taken to represent a mixed state of 3 qudits with d=3, d=4 and
+d=2 in that order. When we take a partial trace over the second (d=4)
+qudit, we contract the second row index with the second column index.</p>
+<p>To use this class in conjunction with Qubiter, replace self.arr in this
+class with the output of Qubiter.StateVec.get_den_mat()</p>
+<p>The marginals of self is defined as a list of partial traces of self.
+The n’th item in the list of marginals is the partial trace of self,
+traced over all qudits except the n’th. The Kronecker product of the
+marginals of self is a “separable” density matrix, in the sense that
+there is no correlation among its qudits.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>arr</strong> (<em>np.ndarray</em>) – numpy array of shape (num_rows, num_rows) which contains entries of
+a density matrix</p></li>
+<li><p><strong>marginals</strong> (<em>list</em><em>[</em><a class="reference internal" href="#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat"><em>DenMat</em></a><em>]</em>) – </p></li>
+<li><p><strong>num_rows</strong> (<em>int</em>) – </p></li>
+<li><p><strong>row_shape</strong> (<em>tuple</em><em>[</em><em>int</em><em>]</em>) – tuple of integers whose product is num_rows</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="entanglish.DenMat.DenMat.__add__">
+<code class="sig-name descname">__add__</code><span class="sig-paren">(</span><em class="sig-param">right</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat.__add__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat.__add__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines ‘+’ between self and another DenMat, the input ‘right’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>right</strong> (<a class="reference internal" href="#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat"><em>DenMat</em></a>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat">DenMat</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.DenMat.DenMat.__getitem__">
+<code class="sig-name descname">__getitem__</code><span class="sig-paren">(</span><em class="sig-param">key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat.__getitem__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat.__getitem__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines self[int1, int2] to be same as self.arr[int1, int2]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>key</strong> (<em>tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>complex</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.DenMat.DenMat.__iadd__">
+<code class="sig-name descname">__iadd__</code><span class="sig-paren">(</span><em class="sig-param">right</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat.__iadd__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat.__iadd__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines ‘+=’ between self and another DenMat, the input ‘right’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>right</strong> (<a class="reference internal" href="#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat"><em>DenMat</em></a>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat">DenMat</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.DenMat.DenMat.__imul__">
+<code class="sig-name descname">__imul__</code><span class="sig-paren">(</span><em class="sig-param">right</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat.__imul__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat.__imul__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines ‘<a href="#id1"><span class="problematic" id="id2">*</span></a>=’ as inplace matrix multiplication between self and
+another DenMat or a scalar (either int, float or complex), the input
+‘right’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>right</strong> (<em>DenMat|complex|float|int</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat">DenMat</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.DenMat.DenMat.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">num_rows</em>, <em class="sig-param">row_shape</em>, <em class="sig-param">arr=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>num_rows</strong> (<em>int</em>) – </p></li>
+<li><p><strong>row_shape</strong> (<em>tuple</em><em>[</em><em>int</em><em>]</em>) – </p></li>
+<li><p><strong>arr</strong> (<em>np.ndarray</em>) – shape=(num_rows, num_rows)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.DenMat.DenMat.__isub__">
+<code class="sig-name descname">__isub__</code><span class="sig-paren">(</span><em class="sig-param">right</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat.__isub__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat.__isub__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines ‘-=’ between self and another DenMat, the input ‘right’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>right</strong> (<a class="reference internal" href="#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat"><em>DenMat</em></a>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat">DenMat</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.DenMat.DenMat.__mul__">
+<code class="sig-name descname">__mul__</code><span class="sig-paren">(</span><em class="sig-param">right</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat.__mul__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat.__mul__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines ‘*’ as np.dot() between self and another DenMat or a scalar
+(either int, float or complex), the input ‘right’. Multiplication by
+a scalar is defined only if scalar is on the right side of self.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>right</strong> (<em>DenMat|complex|float|int</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat">DenMat</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.DenMat.DenMat.__repr__">
+<code class="sig-name descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat.__repr__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat.__repr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns str(self.arr).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.DenMat.DenMat.__setitem__">
+<code class="sig-name descname">__setitem__</code><span class="sig-paren">(</span><em class="sig-param">key</em>, <em class="sig-param">item</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat.__setitem__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat.__setitem__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines assignment <cite>self[int1, int2] = item</cite> to be same as
+<cite>self.arr[int1, int2] = item</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> (<em>tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em>) – </p></li>
+<li><p><strong>item</strong> (<em>complex|float|int</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.DenMat.DenMat.__str__">
+<code class="sig-name descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat.__str__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat.__str__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns str(self.arr).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.DenMat.DenMat.__sub__">
+<code class="sig-name descname">__sub__</code><span class="sig-paren">(</span><em class="sig-param">right</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat.__sub__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat.__sub__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines ‘-‘ between self and another DenMat, the input ‘right’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>right</strong> (<a class="reference internal" href="#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat"><em>DenMat</em></a>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat">DenMat</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.DenMat.DenMat.add_const_to_diag_of_arr">
+<code class="sig-name descname">add_const_to_diag_of_arr</code><span class="sig-paren">(</span><em class="sig-param">const</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat.add_const_to_diag_of_arr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat.add_const_to_diag_of_arr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds constant <cite>const</cite> to diagonal of self.arr.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>const</strong> (<em>complex|float|int</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.DenMat.DenMat.add_vec_to_diag_of_arr">
+<code class="sig-name descname">add_vec_to_diag_of_arr</code><span class="sig-paren">(</span><em class="sig-param">vec_arr</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat.add_vec_to_diag_of_arr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat.add_vec_to_diag_of_arr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds vector <cite>vec_arr</cite> to diagonal of self.arr</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>vec_arr</strong> (<em>np.ndarray</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.DenMat.DenMat.copy">
+<code class="sig-name descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method returns a copy of self.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat">DenMat</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.DenMat.DenMat.depurify">
+<code class="sig-name descname">depurify</code><span class="sig-paren">(</span><em class="sig-param">eps</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat.depurify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat.depurify" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method replaces self for a pure state by a nearby density mat
+that is mixed</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>eps</strong> (<em>float</em>) – small positive number</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.DenMat.DenMat.dm_iop">
+<code class="sig-name descname">dm_iop</code><span class="sig-paren">(</span><em class="sig-param">right</em>, <em class="sig-param">arr_iop</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat.dm_iop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat.dm_iop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Internal method used in magic methods __iadd__, __isub__, __imul__,
+which define in-place binary operations between self and another
+DenMat.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>right</strong> (<a class="reference internal" href="#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat"><em>DenMat</em></a>) – </p></li>
+<li><p><strong>arr_iop</strong> (<em>wrapper_descriptor</em>) – This is going to be either
+np.ndarray.[__iadd__, __isub__], np.dot</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>returns self</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat">DenMat</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.DenMat.DenMat.dm_op">
+<code class="sig-name descname">dm_op</code><span class="sig-paren">(</span><em class="sig-param">right</em>, <em class="sig-param">arr_op</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat.dm_op"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat.dm_op" title="Permalink to this definition">¶</a></dt>
+<dd><p>Internal method used in magic methods __add__, __sub__, __mul__,
+which define binary operations between self and another DenMat.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>right</strong> (<a class="reference internal" href="#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat"><em>DenMat</em></a>) – </p></li>
+<li><p><strong>arr_op</strong> (<em>wrapper_descriptor</em>) – This is going to be either
+np.ndarray.[__add__, __sub__], np.dot</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat">DenMat</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.DenMat.DenMat.exp">
+<code class="sig-name descname">exp</code><span class="sig-paren">(</span><em class="sig-param">method='eigen'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat.exp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat.exp" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method returns a DenMat which is the matrix exponential of self.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>method</strong> (<em>str</em>) – method used to calculate exp. Either ‘eigen’ or ‘pade’.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat">DenMat</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.DenMat.DenMat.get_eigen_sys_of_marginals">
+<code class="sig-name descname">get_eigen_sys_of_marginals</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat.get_eigen_sys_of_marginals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat.get_eigen_sys_of_marginals" title="Permalink to this definition">¶</a></dt>
+<dd><p>eva = eigenvalue, evec = eigenvector, sep = separable.</p>
+<p>This method assumes self is Hermitian.</p>
+<p>We will call an ‘eigensystem’ of a density matrix: a tuple, whose
+first item is a 1D numpy array, call it evas, that carries the
+eigenvalues of the density matrix, and the second item is a 2D numpy
+array, call it eigen_cols, whose i’th columns is an eigenvector for
+the i’th eigenvalue (i.e., evas[i]) of the density matrix.</p>
+<p>This method returns a tuple of two lists. The first list contains
+the first part (eigenvalues) of the eigensystem of each marginal of
+self. The second list contains the second part (eigenvectors) of the
+eigensystem of each marginal of self.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>tuple[list[np.ndarray], list[np.ndarray]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.DenMat.DenMat.get_eigenvalue_proj_ops">
+<code class="sig-name descname">get_eigenvalue_proj_ops</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat.get_eigenvalue_proj_ops"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat.get_eigenvalue_proj_ops" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method returns a tuple of 2 DenMat that carry Hermitian
+projection operators:</p>
+<p>proj_0 projects out the space of zero eigenvalues. It is obtained by
+replacing in the eigen decomposition of self.arr, zero eigenvalues
+by 1 and non-zero ones by 0.</p>
+<p>proj_1 projects out the space of non-zero eigenvalues. It is
+obtained by replacing in the eigen decomposition of self.arr,
+zero eigenvalues by 0 and non-zero ones by 1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat">DenMat</a>, <a class="reference internal" href="#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat">DenMat</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.DenMat.DenMat.get_entropy">
+<code class="sig-name descname">get_entropy</code><span class="sig-paren">(</span><em class="sig-param">method='eigen'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat.get_entropy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat.get_entropy" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method returns an exact entropy of density matrix self. Uses
+natural log for entropy. Assumes eigenvalues of self are
+non-negative and sum to 1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>method</strong> (<em>str</em>) – method used to calculate log of array. Either ‘eigen’ or ‘pade’</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.DenMat.DenMat.get_fun_of_dm_from_eigen_sys">
+<em class="property">static </em><code class="sig-name descname">get_fun_of_dm_from_eigen_sys</code><span class="sig-paren">(</span><em class="sig-param">num_rows</em>, <em class="sig-param">row_shape</em>, <em class="sig-param">eigen_sys</em>, <em class="sig-param">fun_of_scalars</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat.get_fun_of_dm_from_eigen_sys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat.get_fun_of_dm_from_eigen_sys" title="Permalink to this definition">¶</a></dt>
+<dd><p>If (evas, U) = eigen_sys and fun = fun_of_scalars, then this method
+returns U.fun(evas).U^dag, where U^dag is the Hermitian conjugate of
+the unitary matrix U.</p>
+<p>The function calculated (for example, np.exp, np.log, etc.) is
+passed in as the input ‘fun_of_scalars’. To get just an approx to dm
+instead of an approx to fun of dm, use fun_of_scalars = lambda x: x</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>num_rows</strong> (<em>int</em>) – </p></li>
+<li><p><strong>row_shape</strong> (<em>tuple</em><em>[</em><em>int</em><em>]</em>) – </p></li>
+<li><p><strong>eigen_sys</strong> (<em>tuple</em><em>[</em><em>np.ndarray</em><em>, </em><em>np.ndarray</em><em>]</em>) – </p></li>
+<li><p><strong>fun_of_scalars</strong> – function that can act on scalars or numpy arrays element-wise</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat">DenMat</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.DenMat.DenMat.get_kron_prod_of_den_mats">
+<em class="property">static </em><code class="sig-name descname">get_kron_prod_of_den_mats</code><span class="sig-paren">(</span><em class="sig-param">den_mat_list</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat.get_kron_prod_of_den_mats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat.get_kron_prod_of_den_mats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes as input a list of DenMat’s and returns a DenMat which is the
+Kronecker product of the items in the input list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>den_mat_list</strong> (<em>list</em><em>[</em><a class="reference internal" href="#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat"><em>DenMat</em></a><em>]</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat">DenMat</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.DenMat.DenMat.get_mutual_info">
+<code class="sig-name descname">get_mutual_info</code><span class="sig-paren">(</span><em class="sig-param">traced_axes_set</em>, <em class="sig-param">method='eigen'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat.get_mutual_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat.get_mutual_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method returns the mutual information for x_axes = list(
+traced_axes_set) and y_axes = row axes not in x_axes. Uses natural
+log for entropy. Assumes eigenvalues of self are non-negative and
+sum to 1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>traced_axes_set</strong> (<em>set</em><em>[</em><em>int</em><em>]</em>) – </p></li>
+<li><p><strong>method</strong> (<em>str</em>) – method used to calculate log of array. Either ‘eigen’ or ‘pade’</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.DenMat.DenMat.get_partial_tr">
+<code class="sig-name descname">get_partial_tr</code><span class="sig-paren">(</span><em class="sig-param">traced_axes_set</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat.get_partial_tr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat.get_partial_tr" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method returns the partial trace of a density matrix den_mat.
+It traces over the indices (a.k.a. axes) in the non-empty set
+traced_axes_set. To get a full trace, just do den_mat.trace()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>traced_axes_set</strong> (<em>set</em><em>[</em><em>int</em><em>]</em>) – Set of axes being traced over</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat">DenMat</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.DenMat.DenMat.get_rho_xy">
+<code class="sig-name descname">get_rho_xy</code><span class="sig-paren">(</span><em class="sig-param">x_axes</em>, <em class="sig-param">y_axes</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat.get_rho_xy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat.get_rho_xy" title="Permalink to this definition">¶</a></dt>
+<dd><p>The inputs ‘x_axes’ and ‘y_axes’ must be mutually exclusive lists
+whose union, after sorting, is range(len(self.row_shape)),
+which equals [0, 1, 2, …, number of row axes -1]. The output is a
+DenMat in which the rows (and columns) of self.arr have been
+permuted to the order x_axes + y_axes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x_axes</strong> (<em>list</em><em>[</em><em>int</em><em>]</em>) – </p></li>
+<li><p><strong>y_axes</strong> (<em>list</em><em>[</em><em>int</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat">DenMat</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.DenMat.DenMat.get_set_of_all_other_axes">
+<code class="sig-name descname">get_set_of_all_other_axes</code><span class="sig-paren">(</span><em class="sig-param">axes_set</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat.get_set_of_all_other_axes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat.get_set_of_all_other_axes" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method returns the complement set wrt range(len(self.row_shape))
+of the set of axes axes_set</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>axes_set</strong> (<em>set</em><em>[</em><em>int</em><em>]</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>set[int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.DenMat.DenMat.herm">
+<code class="sig-name descname">herm</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat.herm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat.herm" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method returns a DenMat which is the Hermitian conjugate of self.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat">DenMat</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.DenMat.DenMat.inv">
+<code class="sig-name descname">inv</code><span class="sig-paren">(</span><em class="sig-param">regulator=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat.inv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat.inv" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method returns a DenMat which is the inverse matrix of self.</p>
+<p>logs, exponentials and sqrt’s of matrices are calculated by various
+methods. Inverses of matrices, on the other hand, are calculated a
+single way.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>regulator</strong> (<em>float</em>) – this constant is added to diagonal of copy of self.arr before
+taking the inverse of copy</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat">DenMat</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.DenMat.DenMat.is_hermitian">
+<code class="sig-name descname">is_hermitian</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat.is_hermitian"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat.is_hermitian" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method returns a bool which answers the question whether self
+is a Hermitian matrix or not.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.DenMat.DenMat.is_pure_state">
+<code class="sig-name descname">is_pure_state</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat.is_pure_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat.is_pure_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method returns a bool which answers the question whether self
+is a pure state or not.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.DenMat.DenMat.log">
+<code class="sig-name descname">log</code><span class="sig-paren">(</span><em class="sig-param">method='eigen'</em>, <em class="sig-param">clipped=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat.log"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat.log" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method returns a DenMat which is the matrix natural log of self.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>method</strong> (<em>str</em>) – method used to calculate the natural log. Either ‘eigen’ or ‘pade’.</p></li>
+<li><p><strong>clipped</strong> (<em>bool</em>) – clips logs (see ut.clipped_log_of_vec) iff this is True</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat">DenMat</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.DenMat.DenMat.new_const_den_mat">
+<em class="property">static </em><code class="sig-name descname">new_const_den_mat</code><span class="sig-paren">(</span><em class="sig-param">num_rows</em>, <em class="sig-param">row_shape</em>, <em class="sig-param">const</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat.new_const_den_mat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat.new_const_den_mat" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method returns a DenMat object with an arr which is a diagonal
+matrix with ‘const’ in its diagonal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>num_rows</strong> (<em>int</em>) – </p></li>
+<li><p><strong>row_shape</strong> (<em>tuple</em><em>[</em><em>int</em><em>]</em>) – </p></li>
+<li><p><strong>const</strong> (<em>int|float|complex</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat">DenMat</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.DenMat.DenMat.new_with_permuted_qudits">
+<em class="property">static </em><code class="sig-name descname">new_with_permuted_qudits</code><span class="sig-paren">(</span><em class="sig-param">dm</em>, <em class="sig-param">perm</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat.new_with_permuted_qudits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat.new_with_permuted_qudits" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method returns a DenMat in which the rows (and columns) of
+dm.arr have been permuted according to perm.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dm</strong> (<a class="reference internal" href="#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat"><em>DenMat</em></a>) – </p></li>
+<li><p><strong>perm</strong> (<em>list</em><em>[</em><em>int}</em>) – perm is a permutation of range(len(self.row_shape))</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat">DenMat</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.DenMat.DenMat.normalize_diag_of_arr">
+<code class="sig-name descname">normalize_diag_of_arr</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat.normalize_diag_of_arr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat.normalize_diag_of_arr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Divides the diagonal of self.arr by the trace of self.arr.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.DenMat.DenMat.normalize_entire_arr">
+<code class="sig-name descname">normalize_entire_arr</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat.normalize_entire_arr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat.normalize_entire_arr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Divides all of self.arr by the trace of self.arr.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.DenMat.DenMat.pseudo_inv">
+<code class="sig-name descname">pseudo_inv</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat.pseudo_inv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat.pseudo_inv" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method returns a DenMat which is the Penrose pseudo inverse
+matrix of self. By pseudo inverse, we mean that it takes the inverse
+of non-zero eigenvalues only, but keeps the zero ones the same.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat">DenMat</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.DenMat.DenMat.replace_diag_of_arr">
+<code class="sig-name descname">replace_diag_of_arr</code><span class="sig-paren">(</span><em class="sig-param">new_diag</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat.replace_diag_of_arr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat.replace_diag_of_arr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Replaces diagonal of self.arr by new_diag.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>new_diag</strong> (<em>np.ndarray</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.DenMat.DenMat.set_arr_from_st_vec">
+<code class="sig-name descname">set_arr_from_st_vec</code><span class="sig-paren">(</span><em class="sig-param">st_vec</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat.set_arr_from_st_vec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat.set_arr_from_st_vec" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets self.arr to st_vec*set_vec^dag where st_vec is a column vector
+of shape (num_rows, ). For qubits, st_vec should be a traditional
+state vector, meaning that when reshaped to [2]*num_bits,
+the components are .. <a href="#id3"><span class="problematic" id="id4">|</span></a>s_2&gt;|s_1&gt;|s_0&gt; where s_i = 0, 1 corresponds
+to the i’th qubit. s_0 is last so ZL (Zero Last) convention.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>st_vec</strong> (<em>np.ndarray</em>) – shape=(self.num_rows,)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.DenMat.DenMat.set_arr_to_rand_den_mat">
+<code class="sig-name descname">set_arr_to_rand_den_mat</code><span class="sig-paren">(</span><em class="sig-param">evas</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat.set_arr_to_rand_den_mat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat.set_arr_to_rand_den_mat" title="Permalink to this definition">¶</a></dt>
+<dd><p>evas = eigenvalues.</p>
+<p>This method sets self.arr to a random density matrix UDU^dag,
+where U is a random unitary matrix, D is a non-random diagonal
+matrix with diagonal equal to the input 1D array ‘evas’, and U^dag
+is the Hermitian conjugate of U. This method checks that evas is a
+probability distribution. The DenMat returned by this method is
+useful for testing purposes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>evas</strong> (<em>np.ndarray</em>) – evas stands for eigenvalues. 1D array of floats, of shape (
+self.num_rows, )</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.DenMat.DenMat.set_arr_to_zero">
+<code class="sig-name descname">set_arr_to_zero</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat.set_arr_to_zero"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat.set_arr_to_zero" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets self.arr to zero matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.DenMat.DenMat.set_marginals">
+<code class="sig-name descname">set_marginals</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat.set_marginals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat.set_marginals" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method calculates the single-axis marginals of self and stores
+them in self.marginals.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.DenMat.DenMat.sqrt">
+<code class="sig-name descname">sqrt</code><span class="sig-paren">(</span><em class="sig-param">method='eigen'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat.sqrt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat.sqrt" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method returns a DenMat which is the matrix square root of self.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>method</strong> (<em>str</em>) – method used to calculate sqrt. Either ‘eigen’ or ‘pade’.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat">DenMat</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.DenMat.DenMat.switch_arr_basis">
+<code class="sig-name descname">switch_arr_basis</code><span class="sig-paren">(</span><em class="sig-param">umat</em>, <em class="sig-param">reverse=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat.switch_arr_basis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat.switch_arr_basis" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method returns a new DenMat whose arr is U^dag(self.arr)U (or
+the reverse, U(self.arr)U^dag, if the input bool parameter ‘reverse’
+is set to True.) U = umat , U^dag = Hermitian conjugate of U</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>umat</strong> (<em>np.ndarray</em>) – </p></li>
+<li><p><strong>reverse</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat">DenMat</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.DenMat.DenMat.trace">
+<code class="sig-name descname">trace</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat.trace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat.trace" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method returns the real part of the full trace of self.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Robert R. Tucci &amp; Entanglish contributors
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

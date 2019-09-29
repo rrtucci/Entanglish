@@ -1,0 +1,427 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>entanglish.DenMatPertTheory module &mdash; entanglish 0.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> entanglish
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+        
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Table of Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="classgraph.html">Class Graph</a></li>
+</ul>
+
+            
+          
+        <a href="py-modindex.html">Module Index</a>
+    
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">entanglish</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>entanglish.DenMatPertTheory module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/entanglish.DenMatPertTheory.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-entanglish.DenMatPertTheory">
+<span id="entanglish-denmatperttheory-module"></span><h1>entanglish.DenMatPertTheory module<a class="headerlink" href="#module-entanglish.DenMatPertTheory" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="entanglish.DenMatPertTheory.DenMatPertTheory">
+<em class="property">class </em><code class="sig-prename descclassname">entanglish.DenMatPertTheory.</code><code class="sig-name descname">DenMatPertTheory</code><span class="sig-paren">(</span><em class="sig-param">dm0_eigen_sys</em>, <em class="sig-param">del_dm</em>, <em class="sig-param">verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMatPertTheory.html#DenMatPertTheory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMatPertTheory.DenMatPertTheory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>DenMat, dm, den_mat all stand for density matrix.</p>
+<p>This class performs operations associated with perturbation theory (
+more precisely, second order, time-independent perturbation theory in
+quantum mechanics) of the eigenvalues and eigenvectors of a density
+matrix.</p>
+<p>In quantum mechanics, such perturbation theory is used to approximate
+the eigenvalues and eigenvectors of a Hamiltonian H</p>
+<p>H = H0 + V,</p>
+<p>when the evas and evecs of H0 are known exactly. Pert theory only
+depends on the fact that H is Hermitian. Since a density matrix dm</p>
+<p>dm = dm0 + del_dm</p>
+<p>is Hermitian too, pert theory can be used for density matrices as well
+as for Hamiltonians. The question is, what to use for dm0? The
+constructor of this class (__init__) leaves that question unanswered.
+However, the static function DenMatPertTheory.new_with_separable_dm0()
+answers this question. It takes a density matrix dm as input,
+and returns an object of this class, i.e., DenMatPertTheory, assuming
+that dm0 equals the Kronecker product of the one-axis marginals of dm.</p>
+<p>The marginals of a square array arr is defined as a list of partial
+traces of arr. The n’th item in the list of marginals is the partial
+trace of arr, traced over all qudits except the n’th. The Kronecker
+product of the marginals of arr is a “separable” density matrix, in the
+sense that there is no correlation among its qudits.</p>
+<p>Each marginal is the density matrix of a qudit, so it is a d x d matrix,
+where d is the number of states of the qudit. If d is small for all the
+marginals, it is much easier to diagonalize every marginal than to
+diagonalize the whole density matrix dm. So it is reasonable to assume
+that the evas and evecs of dm0 can be calculated easily exactly. We wish
+to use those evas and evecs to approximate perturbatively the evas and
+evecs of dm.</p>
+<p>We will call an eigensystem of a density matrix: a tuple, whose first
+item is a 1D numpy array, call it evas, with the eigenvalues of the
+density matrix, and the second item is a 2D numpy array, call it
+eigen_cols, whose i’th columns is an eigenvector for the i’th eigenvalue
+(i.e., evas[i]) of the density matrix.</p>
+<p>See Ref.1 for a more detailed explanation of the algos used in this class.</p>
+<p class="rubric">References</p>
+<p>1. R.R. Tucci, “A New  Algorithm for Calculating Squashed Entanglement
+and a Python Implementation Thereof”</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>del_dm</strong> (<a class="reference internal" href="entanglish.DenMat.html#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat"><em>DenMat</em></a>) – defined above</p></li>
+<li><p><strong>del_dm_in_sbasis</strong> (<a class="reference internal" href="entanglish.DenMat.html#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat"><em>DenMat</em></a>) – del_dm is in inbasis. It is convenient to change it to sbasis (
+separable basis) so that if v1 = dm0_eigen_sys[1][n1] and v2 =
+dm0_eigen_sys[1][n2] then del_dm_in_sbasis[n1, n2] = &lt;v1| del_dm <a href="#id1"><span class="problematic" id="id2">|</span></a>v2&gt;</p></li>
+<li><p><strong>dm0_eigen_sys</strong> (<em>tuple</em><em>[</em><em>np.ndarray</em><em>, </em><em>np.ndarray</em><em>]</em>) – eigensystem of density matrix dm0.</p></li>
+<li><p><strong>evas_of_dm_to_2nd_order</strong> (<em>np.ndarray</em>) – 1D array of floats. Eigenvalues of dm to second order.</p></li>
+<li><p><strong>evec_cols_of_dm_to_2nd_order</strong> (<em>np.ndarray</em>) – This is a unitary matrix with (a second order approx of) the
+eigenvectors of dm as columns. If this matrix is U, the dm pprox
+UDU^dag, where D is diagonal and U^dag is the Hermitian conjugate of
+U.</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="entanglish.DenMatPertTheory.DenMatPertTheory.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">dm0_eigen_sys</em>, <em class="sig-param">del_dm</em>, <em class="sig-param">verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMatPertTheory.html#DenMatPertTheory.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMatPertTheory.DenMatPertTheory.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dm0_eigen_sys</strong> (<em>tuple</em><em>[</em><em>np.ndarray</em><em>, </em><em>np.ndarray</em><em>]</em>) – </p></li>
+<li><p><strong>del_dm</strong> (<a class="reference internal" href="entanglish.DenMat.html#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat"><em>DenMat</em></a>) – </p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.DenMatPertTheory.DenMatPertTheory.diagonalize_del_dm_in_sbasis_in_degenerate_spaces">
+<code class="sig-name descname">diagonalize_del_dm_in_sbasis_in_degenerate_spaces</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMatPertTheory.html#DenMatPertTheory.diagonalize_del_dm_in_sbasis_in_degenerate_spaces"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMatPertTheory.DenMatPertTheory.diagonalize_del_dm_in_sbasis_in_degenerate_spaces" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function performs a similarity transformation on
+del_dm_in_sbasis so that it is diagonal on the subspaces of
+eigenvectors with degerate eigenvalues of dm0. After this
+transformation, if j != k and evas[j] = evas[k] then
+del_dm_in_sbasis[j, k] = 0, where evas are the eigenvalues of dm0.
+This is called degenerate 2nd order perturbation theory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.DenMatPertTheory.DenMatPertTheory.do_bstrap">
+<em class="property">static </em><code class="sig-name descname">do_bstrap</code><span class="sig-paren">(</span><em class="sig-param">dm0_eigen_sys</em>, <em class="sig-param">del_dm</em>, <em class="sig-param">num_steps=1</em>, <em class="sig-param">verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMatPertTheory.html#DenMatPertTheory.do_bstrap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMatPertTheory.DenMatPertTheory.do_bstrap" title="Permalink to this definition">¶</a></dt>
+<dd><p>If we define sub_del_dm = del_dm/num_steps, then this method
+calculates an eigensystem for dm0 + sub_del_dm*(k+1) from the
+eigensystem for dm0 + sub_del_dm*k for k = 0, 1, 2, …,
+num_steps-1. This produces a “bootstrap sequence of eigensystems”
+that is num_steps steps long. This method returns the final
+eigensystem of that bootstrap sequence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dm0_eigen_sys</strong> (<em>tuple</em><em>[</em><em>np.ndarray</em><em>, </em><em>np.ndarray</em><em>]</em>) – </p></li>
+<li><p><strong>del_dm</strong> (<a class="reference internal" href="entanglish.DenMat.html#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat"><em>DenMat</em></a>) – </p></li>
+<li><p><strong>num_steps</strong> (<em>int</em>) – </p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple[np.ndaray, np.ndarray]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.DenMatPertTheory.DenMatPertTheory.do_bstrap_with_separable_dm0">
+<em class="property">static </em><code class="sig-name descname">do_bstrap_with_separable_dm0</code><span class="sig-paren">(</span><em class="sig-param">dm</em>, <em class="sig-param">num_steps=1</em>, <em class="sig-param">verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMatPertTheory.html#DenMatPertTheory.do_bstrap_with_separable_dm0"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMatPertTheory.DenMatPertTheory.do_bstrap_with_separable_dm0" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method returns the same thing as the method (found in its
+parent class) DenMatPertTheory.do_bstrap( ). However, their names
+differ by a ‘_with_separable_dm0’ at the end and their inputs are
+different. This one takes as input a density matrix dm and
+calculates dm0_eigen_sys and del_dm from that, assuming that dm0 is
+the Kronecker product of the marginals of dm.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dm</strong> (<a class="reference internal" href="entanglish.DenMat.html#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat"><em>DenMat</em></a>) – </p></li>
+<li><p><strong>num_steps</strong> (<em>int</em>) – </p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple[np.ndaray, np.ndarray]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.DenMatPertTheory.DenMatPertTheory.get_dm0">
+<code class="sig-name descname">get_dm0</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMatPertTheory.html#DenMatPertTheory.get_dm0"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMatPertTheory.DenMatPertTheory.get_dm0" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method returns the unperturbed density matrix dm0. We define
+this method so as to avoid storing dm0.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="entanglish.DenMat.html#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat">DenMat</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.DenMatPertTheory.DenMatPertTheory.new_with_separable_dm0">
+<em class="property">static </em><code class="sig-name descname">new_with_separable_dm0</code><span class="sig-paren">(</span><em class="sig-param">dm</em>, <em class="sig-param">verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMatPertTheory.html#DenMatPertTheory.new_with_separable_dm0"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMatPertTheory.DenMatPertTheory.new_with_separable_dm0" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method returns a DenMatPertTheory built from a density matrix
+dm, assuming that dm0 is the Kronecker product of the marginals of dm.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dm</strong> (<a class="reference internal" href="entanglish.DenMat.html#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat"><em>DenMat</em></a>) – </p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#entanglish.DenMatPertTheory.DenMatPertTheory" title="entanglish.DenMatPertTheory.DenMatPertTheory">DenMatPertTheory</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.DenMatPertTheory.DenMatPertTheory.set_evas_of_dm_to_2nd_order">
+<code class="sig-name descname">set_evas_of_dm_to_2nd_order</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMatPertTheory.html#DenMatPertTheory.set_evas_of_dm_to_2nd_order"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMatPertTheory.DenMatPertTheory.set_evas_of_dm_to_2nd_order" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function sets the class attribute evas_of_dm_to_2nd_order (the
+eigenvalues of dm, to second order in pert theory). Actually,
+since it’s not that difficult to go from 2nd to 3rd order
+perturbation for eigenvalues (for the eigenvectors it is more
+difficult), we calculate the 3rd order approx for evas.</p>
+<p>Formulas used here come from the Wikipedia article Ref.1. That
+article has a figure containing the eigenvalues and eigenvectors to
+fifth order in perturbation theory!</p>
+<p class="rubric">References</p>
+<p>1. <a class="reference external" href="https://en.wikipedia.org/wiki">https://en.wikipedia.org/wiki</a>/Perturbation_theory_(
+quantum_mechanics)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.DenMatPertTheory.DenMatPertTheory.set_evec_cols_of_dm_to_2nd_order">
+<code class="sig-name descname">set_evec_cols_of_dm_to_2nd_order</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMatPertTheory.html#DenMatPertTheory.set_evec_cols_of_dm_to_2nd_order"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMatPertTheory.DenMatPertTheory.set_evec_cols_of_dm_to_2nd_order" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function sets the class attribute evec_cols_of_dm_to_2nd_order
+(a matrix with the eigenvectors, as columns, of dm, to second order
+in pert theory).</p>
+<p>Formulas used here come from the Wikipedia article Ref.1. That
+article has a figure containing the eigenvalues and eigenvectors to
+fifth order in perturbation theory!</p>
+<p class="rubric">References</p>
+<p>1. <a class="reference external" href="https://en.wikipedia.org/wiki">https://en.wikipedia.org/wiki</a>/Perturbation_theory_(
+quantum_mechanics)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Robert R. Tucci &amp; Entanglish contributors
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

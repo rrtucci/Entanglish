@@ -1,0 +1,692 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>entanglish.utilities &mdash; entanglish 0.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> entanglish
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+        
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Table of Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../classgraph.html">Class Graph</a></li>
+</ul>
+
+            
+          
+        <a href="py-modindex.html">Module Index</a>
+    
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">entanglish</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>entanglish.utilities</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for entanglish.utilities</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">reduce</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">copy</span> <span class="k">as</span> <span class="nn">cp</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="n">factorial</span>
+
+
+<div class="viewcode-block" id="scalar_prod"><a class="viewcode-back" href="../../entanglish.utilities.html#entanglish.utilities.scalar_prod">[docs]</a><span class="k">def</span> <span class="nf">scalar_prod</span><span class="p">(</span><span class="n">scalars_list</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This method returns the product of the list of scalars which it has as</span>
+<span class="sd">    input.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    scalars_list : list[int|float|complex] | tuple[int|float|complex]</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    complex|float|int</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">scalars_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">scalars_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">x</span><span class="o">*</span><span class="n">y</span><span class="p">,</span> <span class="n">scalars_list</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="kron_prod"><a class="viewcode-back" href="../../entanglish.utilities.html#entanglish.utilities.kron_prod">[docs]</a><span class="k">def</span> <span class="nf">kron_prod</span><span class="p">(</span><span class="n">mat_list</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This method returns the Kronecker product of the list of matrices which</span>
+<span class="sd">    is has as input.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mat_list : list[np.ndarray]</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    np.ndarray</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">num_mats</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">mat_list</span><span class="p">)</span>
+    <span class="n">prod</span> <span class="o">=</span> <span class="n">mat_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_mats</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">prod</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">kron</span><span class="p">(</span><span class="n">prod</span><span class="p">,</span> <span class="n">mat_list</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">prod</span></div>
+
+
+<div class="viewcode-block" id="mat_elem"><a class="viewcode-back" href="../../entanglish.utilities.html#entanglish.utilities.mat_elem">[docs]</a><span class="k">def</span> <span class="nf">mat_elem</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">v2</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This method returns the matrix element &lt;v1|a|v2&gt;, where v1 and v2 are</span>
+<span class="sd">    column vectors and &#39;a&#39; a matrix.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    v1 : np.ndarray</span>
+<span class="sd">    a : np.ndarray</span>
+<span class="sd">    v2 : np.ndarray</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    complex</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">v1</span><span class="o">.</span><span class="n">conj</span><span class="p">()</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">a</span><span class="p">),</span> <span class="n">v2</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="switch_arr_basis"><a class="viewcode-back" href="../../entanglish.utilities.html#entanglish.utilities.switch_arr_basis">[docs]</a><span class="k">def</span> <span class="nf">switch_arr_basis</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">umat</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This method takes as input a square array &#39;arr&#39; and returns a new array</span>
+<span class="sd">    which is a similarity transformation U^dag(arr)U of &#39;arr&#39; that changes</span>
+<span class="sd">    the basis of arr from inbasis to sbasis (or the reverse, U(arr)U^dag,</span>
+<span class="sd">    from sbasis to inbasis if the input bool parameter &#39;reverse&#39; is set to</span>
+<span class="sd">    True.) U = umat , U^dag = Hermitian conjugate of U</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    arr : np.ndarray</span>
+<span class="sd">    umat : np.ndarray</span>
+<span class="sd">    reverse : bool</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    np.ndarray</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">umat_H</span> <span class="o">=</span> <span class="n">umat</span><span class="o">.</span><span class="n">conj</span><span class="p">()</span><span class="o">.</span><span class="n">T</span>
+    <span class="k">assert</span> <span class="n">arr</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="n">umat</span><span class="o">.</span><span class="n">shape</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">reverse</span><span class="p">:</span>
+        <span class="n">new_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">umat_H</span><span class="p">,</span> <span class="n">arr</span><span class="p">),</span> <span class="n">umat</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">new_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">umat</span><span class="p">,</span> <span class="n">arr</span><span class="p">),</span> <span class="n">umat_H</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">new_arr</span></div>
+
+
+<div class="viewcode-block" id="clip"><a class="viewcode-back" href="../../entanglish.utilities.html#entanglish.utilities.clip">[docs]</a><span class="k">def</span> <span class="nf">clip</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">limits</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This method clips x between limits[0] and limits[1]</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x : int|float</span>
+<span class="sd">    limits : list[int|float]</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    int|float</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">limits</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">),</span> <span class="n">limits</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="clipped_log_of_vec"><a class="viewcode-back" href="../../entanglish.utilities.html#entanglish.utilities.clipped_log_of_vec">[docs]</a><span class="k">def</span> <span class="nf">clipped_log_of_vec</span><span class="p">(</span><span class="n">vec</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This method takes as input a float or a 1D array of floats. It returns</span>
+<span class="sd">    the log element-wise of that array, except when an element of the array</span>
+<span class="sd">    is very close to zero or negative. In that exceptional case, the method</span>
+<span class="sd">    &quot;clips the log&quot;, meaning that it returns a fixed negative value like</span>
+<span class="sd">    log(1e-5).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    vec : float|np.ndarray</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    np.ndarray</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">vec1</span> <span class="o">=</span> <span class="n">vec</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">vec</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="n">vec1</span> <span class="o">=</span> <span class="p">[</span><span class="n">vec</span><span class="p">]</span>
+    <span class="n">li</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">vec1</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mf">1e-4</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mf">1e-5</span><span class="p">:</span>
+                <span class="n">li</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">1e-5</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">li</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;can&#39;t take log of &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">li</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="fun_of_herm_arr_from_eigen_sys"><a class="viewcode-back" href="../../entanglish.utilities.html#entanglish.utilities.fun_of_herm_arr_from_eigen_sys">[docs]</a><span class="k">def</span> <span class="nf">fun_of_herm_arr_from_eigen_sys</span><span class="p">(</span><span class="n">fun_of_evas</span><span class="p">,</span> <span class="n">evas</span><span class="p">,</span> <span class="n">evec_cols</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    eigen_sys= eigensystem= (eigenvalues, eigenvectors as columns)= (evas,</span>
+<span class="sd">    evec_cols)</span>
+
+<span class="sd">    This method returns a function fun of a Hermitian matrix mat. This is</span>
+<span class="sd">    calculated as fun(mat) = U.D.U^dag, where U=evec_cols is a unitary</span>
+<span class="sd">    matrix with the eigenvectors of mat as columns, U^dag is the Hermitian</span>
+<span class="sd">    conjugate of U, D= diag(fun(evas)) is a diagonal matrix whose diagonal</span>
+<span class="sd">    is obtained by applying element-wise the function fun=fun_of_evas  to</span>
+<span class="sd">    the 1D array of eigenvalues evas.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    fun_of_evas : function</span>
+<span class="sd">    evas : np.ndarray</span>
+<span class="sd">    evec_cols : np.ndarray</span>
+
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    np.ndarray</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># evas contains eigenvalues</span>
+    <span class="c1"># evec_cols contains eigenvectors as columns</span>
+
+    <span class="n">umat</span> <span class="o">=</span> <span class="n">cp</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">evec_cols</span><span class="p">)</span>
+    <span class="n">umat_H</span> <span class="o">=</span> <span class="n">evec_cols</span><span class="o">.</span><span class="n">conj</span><span class="p">()</span><span class="o">.</span><span class="n">T</span>
+    <span class="c1"># print(&#39;,,.&#39;, umat_H)</span>
+    <span class="c1"># print(&#39;,,.,&#39;, umat)</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">evas</span><span class="p">)):</span>
+        <span class="c1"># multiply each col of evec_cols by corresponding eigenvalue</span>
+        <span class="n">umat</span><span class="p">[:,</span> <span class="n">k</span><span class="p">]</span> <span class="o">*=</span> <span class="n">fun_of_evas</span><span class="p">(</span><span class="n">evas</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+    <span class="c1"># print(&#39;,,&#39;, evec_cols)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">umat</span><span class="p">,</span> <span class="n">umat_H</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="fun_of_herm_arr"><a class="viewcode-back" href="../../entanglish.utilities.html#entanglish.utilities.fun_of_herm_arr">[docs]</a><span class="k">def</span> <span class="nf">fun_of_herm_arr</span><span class="p">(</span><span class="n">fun_of_evas</span><span class="p">,</span> <span class="n">herm_arr</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This method does the same as the method ut.fun_of_herm_arr_from_eigen(),</span>
+<span class="sd">    except that it calculates evas and eigen_cols from the matrix herm_arr</span>
+<span class="sd">    which it has as input.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    fun_of_evas : function</span>
+<span class="sd">        np function acting on 1d array</span>
+<span class="sd">    herm_arr : np.ndarray</span>
+<span class="sd">        Hermitian array</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    np.ndarray</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">evas</span><span class="p">,</span> <span class="n">evec_cols</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigh</span><span class="p">(</span><span class="n">herm_arr</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fun_of_herm_arr_from_eigen_sys</span><span class="p">(</span>
+        <span class="n">fun_of_evas</span><span class="p">,</span> <span class="n">evas</span><span class="p">,</span> <span class="n">evec_cols</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_equiv_classes"><a class="viewcode-back" href="../../entanglish.utilities.html#entanglish.utilities.get_equiv_classes">[docs]</a><span class="k">def</span> <span class="nf">get_equiv_classes</span><span class="p">(</span><span class="n">li</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This method is given as input a list li of floats, some of which may be</span>
+<span class="sd">    equal within epsilon = 1e-6. The method then returns a list of</span>
+<span class="sd">    equivalence classes, where each equivalence class is a list of the int</span>
+<span class="sd">    positions in li of those floats that are equal to each other within</span>
+<span class="sd">    epsilon.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    li : list[float]|np.ndarray</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list[list[int]]</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">classes</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">li</span><span class="p">):</span>
+        <span class="n">found_twin</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="c1"># eq_class = equivalence class</span>
+        <span class="k">for</span> <span class="n">eq_class</span> <span class="ow">in</span> <span class="n">classes</span><span class="p">:</span>
+            <span class="n">diff</span> <span class="o">=</span> <span class="n">val</span><span class="o">-</span><span class="n">li</span><span class="p">[</span><span class="n">eq_class</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">diff</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-4</span><span class="p">:</span>
+                <span class="n">eq_class</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+                <span class="n">found_twin</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">break</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">found_twin</span><span class="p">:</span>
+            <span class="n">classes</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">k</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">classes</span></div>
+
+
+<div class="viewcode-block" id="is_unitary"><a class="viewcode-back" href="../../entanglish.utilities.html#entanglish.utilities.is_unitary">[docs]</a><span class="k">def</span> <span class="nf">is_unitary</span><span class="p">(</span><span class="n">umat</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns True iff umat is a unitary matrix</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    umat : np.ndarray</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    bool</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">umat</span><span class="o">.</span><span class="n">conj</span><span class="p">()</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">umat</span><span class="p">)</span>
+                          <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">umat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span> <span class="o">&lt;</span> <span class="mf">1e-5</span></div>
+
+
+<div class="viewcode-block" id="assert_positive_arr"><a class="viewcode-back" href="../../entanglish.utilities.html#entanglish.utilities.assert_positive_arr">[docs]</a><span class="k">def</span> <span class="nf">assert_positive_arr</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">halt</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This checks that all elements of arr are &gt; 0. If this is not true,</span>
+<span class="sd">    then it prints a message and when halt=True, halts execution.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    arr : np.ndarray</span>
+<span class="sd">    halt : bool</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">arr</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;some negative neg or zero entries in &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">arr</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">halt</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="assert_nonnegative_arr"><a class="viewcode-back" href="../../entanglish.utilities.html#entanglish.utilities.assert_nonnegative_arr">[docs]</a><span class="k">def</span> <span class="nf">assert_nonnegative_arr</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">halt</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This checks that all elements of arr are &gt; -1e-6. If this is not true,</span>
+<span class="sd">    then it prints a message and when halt=True, halts execution.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    arr : np.ndarray</span>
+<span class="sd">    halt : bool</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">arr</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mf">1e-6</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;some negative entries in &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">arr</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">halt</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="assert_is_prob_dist"><a class="viewcode-back" href="../../entanglish.utilities.html#entanglish.utilities.assert_is_prob_dist">[docs]</a><span class="k">def</span> <span class="nf">assert_is_prob_dist</span><span class="p">(</span><span class="n">prob_dist</span><span class="p">,</span> <span class="n">halt</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This checks that the elements of arr define a probability distribution.</span>
+<span class="sd">    If this is not true, then it prints a message and when halt=True,</span>
+<span class="sd">    halts execution.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    prob_dist : np.ndarray</span>
+<span class="sd">    halt : bool</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">error</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">suma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">prob_dist</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">prob_dist</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mf">1e-6</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;some negative probs&#39;</span><span class="p">)</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">abs</span><span class="p">(</span><span class="n">suma</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-3</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;probs don&#39;t sum to one&quot;</span><span class="p">)</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">if</span> <span class="n">error</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;prob dist=</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">prob_dist</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;sum=&#39;</span><span class="p">,</span> <span class="n">suma</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">error</span> <span class="ow">and</span> <span class="n">halt</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="get_entropy_from_probs"><a class="viewcode-back" href="../../entanglish.utilities.html#entanglish.utilities.get_entropy_from_probs">[docs]</a><span class="k">def</span> <span class="nf">get_entropy_from_probs</span><span class="p">(</span><span class="n">probs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This method returns the classical entropy of the probability</span>
+<span class="sd">    distribution probs. It checks that probs is a prob distribution.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    probs : np.ndarray</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">assert_is_prob_dist</span><span class="p">(</span><span class="n">probs</span><span class="p">)</span>
+    <span class="c1"># print(&#39;bbbnnnnn evas&#39;, probs)</span>
+    <span class="n">ent</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">probs</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">val</span> <span class="o">&gt;</span> <span class="mf">1e-6</span><span class="p">:</span>
+            <span class="n">ent</span> <span class="o">+=</span> <span class="o">-</span> <span class="n">val</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ent</span></div>
+
+
+<div class="viewcode-block" id="random_unitary"><a class="viewcode-back" href="../../entanglish.utilities.html#entanglish.utilities.random_unitary">[docs]</a><span class="k">def</span> <span class="nf">random_unitary</span><span class="p">(</span><span class="n">dim</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This method returns a random unitary matrix of size dim x dim</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dim : int</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    np.ndarray</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">rmat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">dim</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">dim</span><span class="p">)</span>
+    <span class="n">Q</span><span class="p">,</span> <span class="n">R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">qr</span><span class="p">(</span><span class="n">rmat</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">Q</span></div>
+
+
+<div class="viewcode-block" id="random_st_vec"><a class="viewcode-back" href="../../entanglish.utilities.html#entanglish.utilities.random_st_vec">[docs]</a><span class="k">def</span> <span class="nf">random_st_vec</span><span class="p">(</span><span class="n">dim</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This method returns a random complex 1D numpy array, normalized, of size</span>
+<span class="sd">    dim.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dim : int</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    np.ndarray</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">st_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
+    <span class="n">st_vec</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">st_vec</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">st_vec</span></div>
+
+
+<div class="viewcode-block" id="comb"><a class="viewcode-back" href="../../entanglish.utilities.html#entanglish.utilities.comb">[docs]</a><span class="k">def</span> <span class="nf">comb</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This method returns the number of combinations of k picks (with return)</span>
+<span class="sd">    out of n possible choices, &quot;n choose k&quot; = n!/[(n-k)! k!]</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n : int</span>
+<span class="sd">    k : int</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    int</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">k</span> <span class="o">&lt;=</span> <span class="n">n</span>
+    <span class="n">ans</span> <span class="o">=</span> <span class="n">factorial</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">//</span> <span class="n">factorial</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="o">//</span> <span class="n">factorial</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="n">k</span><span class="p">)</span>
+    <span class="c1"># print(&quot;...&quot;, ans)</span>
+    <span class="k">return</span> <span class="n">ans</span></div>
+
+
+<div class="viewcode-block" id="prob_hypergeometric"><a class="viewcode-back" href="../../entanglish.utilities.html#entanglish.utilities.prob_hypergeometric">[docs]</a><span class="k">def</span> <span class="nf">prob_hypergeometric</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">xx</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">nn</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This method returns</span>
+
+<span class="sd">    P(x | xx, n, nn) = comb(xx, x)*comb(nn-xx, n-x)/comb(nn, n)</span>
+
+<span class="sd">    where</span>
+<span class="sd">    0 &lt;= x &lt;= xx</span>
+<span class="sd">    0 &lt;= n-x &lt;= nn-xx</span>
+<span class="sd">    0 &lt;= n &lt;= nn</span>
+
+<span class="sd">    This P(x | ) defines the hypergeometric distribution</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    1. https://en.wikipedia.org/wiki/Hypergeometric_distribution</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x : int</span>
+<span class="sd">    xx : int</span>
+<span class="sd">    n : int</span>
+<span class="sd">    nn : int</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">any</span><span class="p">([</span><span class="n">k</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">[</span><span class="n">xx</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">nn</span><span class="o">-</span><span class="n">xx</span><span class="p">,</span> <span class="n">n</span><span class="o">-</span><span class="n">x</span><span class="p">,</span> <span class="n">nn</span><span class="p">,</span> <span class="n">n</span><span class="p">]]):</span>
+        <span class="k">return</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="n">xx</span> <span class="o">&lt;</span> <span class="n">x</span> <span class="ow">or</span> <span class="n">nn</span><span class="o">-</span><span class="n">xx</span> <span class="o">&lt;</span> <span class="n">n</span><span class="o">-</span><span class="n">x</span> <span class="ow">or</span> <span class="n">nn</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">0</span>
+
+    <span class="k">return</span> <span class="n">comb</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span><span class="o">*</span><span class="n">comb</span><span class="p">(</span><span class="n">nn</span><span class="o">-</span><span class="n">xx</span><span class="p">,</span> <span class="n">n</span><span class="o">-</span><span class="n">x</span><span class="p">)</span><span class="o">/</span><span class="n">comb</span><span class="p">(</span><span class="n">nn</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span></div>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">In[3]: import numpy as np</span>
+<span class="sd">In[4]: a = np.array([[1,2], [3,4]])</span>
+<span class="sd">In[5]: a.flatten()</span>
+<span class="sd">Out[5]: array([1, 2, 3, 4])</span>
+<span class="sd">In[6]: a.reshape((4,))</span>
+<span class="sd">Out[6]: array([1, 2, 3, 4])</span>
+
+<span class="sd">In[10]: a = np.kron(np.array([1, 1, 1]), np.array([1, 2]))</span>
+<span class="sd">In[11]: a</span>
+<span class="sd">Out[11]: array([1, 2, 1, 2, 1, 2])</span>
+<span class="sd">In[12]: a.reshape((3, 2))</span>
+<span class="sd">Out[12]:</span>
+<span class="sd">array([[1, 2],</span>
+<span class="sd">       [1, 2],</span>
+<span class="sd">       [1, 2]])</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+        <span class="n">fprod</span> <span class="o">=</span> <span class="n">scalar_prod</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="mf">6.1</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;scalar_prod=&#39;</span><span class="p">,</span> <span class="n">fprod</span><span class="p">)</span>
+
+        <span class="n">h</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
+        <span class="n">h2</span> <span class="o">=</span> <span class="n">kron_prod</span><span class="p">([</span><span class="n">h</span><span class="p">,</span> <span class="n">h</span><span class="p">])</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;h2=</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">h2</span><span class="p">)</span>
+        <span class="n">h3</span> <span class="o">=</span> <span class="n">kron_prod</span><span class="p">([</span><span class="n">h</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">h</span><span class="p">])</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;h3=</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">h3</span><span class="p">)</span>
+
+        <span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mf">3.1</span><span class="p">])</span>
+        <span class="n">me</span> <span class="o">=</span> <span class="n">mat_elem</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;me=&#39;</span><span class="p">,</span> <span class="n">me</span><span class="p">)</span>
+
+        <span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mf">1e-6</span><span class="p">,</span> <span class="o">-</span><span class="mf">1e-6</span><span class="p">])</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;v=&#39;</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">log(v)=&#39;</span><span class="p">,</span> <span class="n">clipped_log_of_vec</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;exp_h2=</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">fun_of_herm_arr</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">,</span> <span class="n">h2</span><span class="p">))</span>
+
+        <span class="n">li</span> <span class="o">=</span> <span class="p">[</span><span class="o">.</span><span class="mi">3</span><span class="p">,</span> <span class="o">.</span><span class="mi">1</span><span class="p">,</span> <span class="o">.</span><span class="mi">2</span><span class="p">,</span> <span class="o">.</span><span class="mi">1</span><span class="p">,</span> <span class="o">.</span><span class="mi">3</span><span class="p">,</span> <span class="o">.</span><span class="mi">3</span><span class="p">]</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;li=&#39;</span><span class="p">,</span> <span class="n">li</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;equiv classes of li=&#39;</span><span class="p">,</span> <span class="n">get_equiv_classes</span><span class="p">(</span><span class="n">li</span><span class="p">))</span>
+
+        <span class="n">probs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">li</span><span class="p">)</span>
+        <span class="n">probs</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">probs</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;entropy=&#39;</span><span class="p">,</span> <span class="n">get_entropy_from_probs</span><span class="p">(</span><span class="n">probs</span><span class="p">))</span>
+
+        <span class="n">rmat</span> <span class="o">=</span> <span class="n">random_unitary</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;random unitary</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">rmat</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;hypergeo=&#39;</span><span class="p">,</span> <span class="n">prob_hypergeometric</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+
+    <span class="n">main</span><span class="p">()</span>
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Robert R. Tucci &amp; Entanglish contributors
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

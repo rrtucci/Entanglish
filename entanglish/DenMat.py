@@ -846,7 +846,7 @@ class DenMat:
         matrix of self. By pseudo inverse, we mean that it takes the inverse
         of non-zero eigenvalues only, but keeps the zero ones the same.
 
-        Re turns
+        Returns
         -------
         DenMat
 
