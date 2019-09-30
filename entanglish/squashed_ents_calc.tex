@@ -266,8 +266,8 @@ In his original 6 papers, Tucci didn't give any particular name to
 his entanglement measure. The
 name ``squashed  entanglement" was given
 to it later by Christandl and Winter in Ref.\cite{Chr03}.
-Some people prefer to call it ``CMI entanglement". CMI, 
-pronounced ``see-me", stands for Conditional Mutual Information.)}
+Some people prefer to call it ``CMI entanglement". CMI,
+pronounced ``see-me", stands for Conditional Mutual Information.}
 One of those six papers, Ref.\cite{Tuc01a},
 proposed a method
 for calculating squashed
@@ -539,7 +539,7 @@ The min()---or infimum()
 if one wishes to be more mathematically
 precise\footnote{The author
 of this paper is a physicist. He is
-often lax in Bourbaki style rigor, as most physicists are wont to be, 
+often lax in Bourbaki style rigor, as most physicists are wont to be,
 with good reason.  Physicists often
  skip excessive rigor, because it's not the goal of physics,
  as it is of mathematics, where it is essential.}--is
@@ -566,7 +566,7 @@ was known to be true long before Ref.\cite{subadd-proof}.
 \item
 If $\rho_{\rvx, \rvy}$ is pure (which is true iff
 $\tr( \rho_{\rvx, \rvy}^2 - \rho_{\rvx, \rvy}) = 0$), then, as
-Tucci pointed out in his very first paper on squashed entanglement 
+Tucci pointed out in his very first paper on squashed entanglement
 (this was one of his original motivations
 for defining squashed entanglement)\footnote{ The factor of 1/2 in
 the definition of squashed entanglement
@@ -585,12 +585,12 @@ E_{\rvx, \rvy} = S(\rvx) = S(\rvy)
 \item
 $E_{\rvy, \rvx}(\rho_{\rvx, \rvy})= 0$ iff
 $\rho_{\rvx, \rvy}$
-is stochastically separable,
+is conditionally separable,
 by which we mean that $\rho_{\rvx, \rvy}$
 can be expressed as\footnote{
 It is more conventional in the literature to call
 property Eq.(\ref{eq-stoch-sep})
-simply ``separability" instead of stochastic
+simply ``separability" instead of conditional
 separability, but I prefer to use the word
 ``separable" to refer to case that
 $\rho_{\rvx,\rvy} = \rho_\rvx \rho_\rvy$.}
@@ -608,10 +608,25 @@ are density matrices.
 This property is enunciated by some by saying that
 ``squashed entanglement is faithful".
 In particular,
-this implies that squashed entanglement
-is zero
+this implies
 in the classical case when
-$\rho_{\rvx,\rvy}$ is diagonal.
+$\rho_{\rvx,\rvy}$ is diagonal with diagonal
+$P(x, y)$, that squashed entanglement is zero iff
+$P(x,y)$ is expressible as
+
+\beq
+P(x,y)=\sum_{\alp}P(\alp)P(x|\alp)P(y|\alp)
+\;.
+\eeq
+This last equation expresses conditional separabilty
+in the classical case and is equivalent to the classical Bayesian
+network $\rvx\leftarrow\rvalp\rightarrow\rvy$.\footnote{This fact, which can be enunciated 
+by saying that squashed
+entanglement is faithful in the classical case, was
+first pointed out in Tucci's original 6 papers on squashed entanglement
+and was one of his original motivations for defining 
+squashed entanglement.}
+
 
 
 \end{itemize}
