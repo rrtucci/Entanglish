@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Python Module Index &mdash; entanglish 0.0.0 documentation</title>
+  <title>entanglish.OtherStates module &mdash; entanglish 0.0.0 documentation</title>
   
 
   
@@ -35,10 +35,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
- 
-
-
+    <link rel="search" title="Search" href="search.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -133,10 +130,14 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Python Module Index</li>
+      <li>entanglish.OtherStates module</li>
     
     
       <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/entanglish.OtherStates.rst.txt" rel="nofollow"> View page source</a>
+          
         
       </li>
     
@@ -148,79 +149,57 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
+  <div class="section" id="module-entanglish.OtherStates">
+<span id="entanglish-otherstates-module"></span><h1>entanglish.OtherStates module<a class="headerlink" href="#module-entanglish.OtherStates" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="entanglish.OtherStates.OtherStates">
+<em class="property">class </em><code class="sig-prename descclassname">entanglish.OtherStates.</code><code class="sig-name descname">OtherStates</code><a class="reference internal" href="_modules/entanglish/OtherStates.html#OtherStates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.OtherStates.OtherStates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class has no constructor. It contains only static methods. Its
+methods return various quantum states which we decided were too simple
+to merit their own individual class.</p>
+<dl class="method">
+<dt id="entanglish.OtherStates.OtherStates.get_bell_basis_st_vec">
+<em class="property">static </em><code class="sig-name descname">get_bell_basis_st_vec</code><span class="sig-paren">(</span><em class="sig-param">bits_are_equals</em>, <em class="sig-param">mid_sign</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/OtherStates.html#OtherStates.get_bell_basis_st_vec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.OtherStates.OtherStates.get_bell_basis_st_vec" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method returns one Bell Basis state out of 4 possible ones. The
+4 Bell Basis states are maximally entangled 2 qubit states.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bits_are_equals</strong> (<em>bool</em>) – </p></li>
+<li><p><strong>mid_sign</strong> (<em>str</em>) – either ‘+’ or ‘-‘</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>shape = (4,)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
 
-   <h1>Python Module Index</h1>
+<dl class="method">
+<dt id="entanglish.OtherStates.OtherStates.get_den_mat_with_bound_entang">
+<em class="property">static </em><code class="sig-name descname">get_den_mat_with_bound_entang</code><span class="sig-paren">(</span><em class="sig-param">p</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/OtherStates.html#OtherStates.get_den_mat_with_bound_entang"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.OtherStates.OtherStates.get_den_mat_with_bound_entang" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method returns a DenMat with num_rows = 8 and row_shape = (2,
+4) that is known to have bound entanglement.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>p</strong> (<em>float</em>) – a probability, 0 &lt; p &lt; 1</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="entanglish.DenMat.html#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat">DenMat</a></p>
+</dd>
+</dl>
+</dd></dl>
 
-   <div class="modindex-jumpbox">
-   <a href="#cap-e"><strong>e</strong></a>
-   </div>
+</dd></dl>
 
-   <table class="indextable modindextable">
-     <tr class="pcap"><td></td><td>&#160;</td><td></td></tr>
-     <tr class="cap" id="cap-e"><td></td><td>
-       <strong>e</strong></td><td></td></tr>
-     <tr>
-       <td><img src="_static/minus.png" class="toggler"
-              id="toggle-1" style="display: none" alt="-" /></td>
-       <td>
-       <a href="entanglish.html#module-entanglish"><code class="xref">entanglish</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="entanglish.classgraph.html#module-entanglish.classgraph"><code class="xref">entanglish.classgraph</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="entanglish.DenMat.html#module-entanglish.DenMat"><code class="xref">entanglish.DenMat</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="entanglish.DenMatPertTheory.html#module-entanglish.DenMatPertTheory"><code class="xref">entanglish.DenMatPertTheory</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="entanglish.EntangCase.html#module-entanglish.EntangCase"><code class="xref">entanglish.EntangCase</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="entanglish.MaxEntangState.html#module-entanglish.MaxEntangState"><code class="xref">entanglish.MaxEntangState</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="entanglish.OtherStates.html#module-entanglish.OtherStates"><code class="xref">entanglish.OtherStates</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="entanglish.PureStEnt.html#module-entanglish.PureStEnt"><code class="xref">entanglish.PureStEnt</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="entanglish.run_all_py.html#module-entanglish.run_all_py"><code class="xref">entanglish.run_all_py</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="entanglish.SquashedEnt.html#module-entanglish.SquashedEnt"><code class="xref">entanglish.SquashedEnt</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="entanglish.SymNupState.html#module-entanglish.SymNupState"><code class="xref">entanglish.SymNupState</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="entanglish.utilities.html#module-entanglish.utilities"><code class="xref">entanglish.utilities</code></a></td><td>
-       <em></em></td></tr>
-   </table>
+</div>
 
 
            </div>

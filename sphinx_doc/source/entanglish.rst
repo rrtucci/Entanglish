@@ -10,6 +10,7 @@ Submodules
    entanglish.DenMatPertTheory
    entanglish.EntangCase
    entanglish.MaxEntangState
+   entanglish.OtherStates
    entanglish.PureStEnt
    entanglish.SquashedEnt
    entanglish.SymNupState
