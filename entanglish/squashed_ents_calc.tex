@@ -620,11 +620,11 @@ P(x,y)=\sum_{\alp}P(\alp)P(x|\alp)P(y|\alp)
 \eeq
 This last equation expresses conditional separabilty
 in the classical case and is equivalent to the classical Bayesian
-network $\rvx\leftarrow\rvalp\rightarrow\rvy$.\footnote{This fact, which can be enunciated 
+network $\rvx\leftarrow\rvalp\rightarrow\rvy$.\footnote{This fact, which can be enunciated
 by saying that squashed
 entanglement is faithful in the classical case, was
 first pointed out in Tucci's original 6 papers on squashed entanglement
-and was one of his original motivations for defining 
+and was one of his original motivations for defining
 squashed entanglement.}
 
 
@@ -684,7 +684,7 @@ Define the Lagrangian
 E^\alp_{\rvx, \rvy}
 + \mu(\sum_\alp w^\alp -1)
 +\tr_{\rvx, \rvy}\left[
-\lam'_{\rvx, \rvy}(\sum_\alp w^\alp
+\frac{\lam'_{\rvx, \rvy}}{2}(\sum_\alp w^\alp
 \rho^\alp_{\rvx, \rvy}-\rho_{\rvx,\rvy})
 \right]
 \;.
@@ -722,7 +722,7 @@ To calculate the optimum $\rho^\alp_{\rvx,\rvy}$, note that
 
 \beq
 \delta{\cal L}=
-\sum_\alp w^\alp\tr_{\rvx, \rvy}\left[\delta\rho^\alp_{\rvx,\rvy}
+\sum_\alp \frac{w^\alp}{2}\tr_{\rvx, \rvy}\left[\delta\rho^\alp_{\rvx,\rvy}
 (\log \rho^\alp_{\rvx,\rvy}+1
 -\log \rho^{\alp}_{\rvx}
 \rho^{\alp}_{\rvy}
