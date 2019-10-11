@@ -794,6 +794,20 @@ class DenMat:
             assert False, 'unsupported method'
         return DenMat(self.num_rows, self.row_shape, logm_arr)
 
+    def positive_part(self):
+        """
+        This method returns a DenMat in which negative eigenvalues of
+        self.arr are replaced by zero.
+
+        Returns
+        -------
+        DenMat
+
+        """
+        fun = ut.positive_part_of_vec
+        pos_arr = ut.fun_of_herm_arr(fun, self.arr)
+        return DenMat(self.num_rows, self.row_shape, pos_arr)
+
     def sqrt(self, method='eigen'):
         """
         This method returns a DenMat which is the matrix square root of self.

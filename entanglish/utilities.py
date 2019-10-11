@@ -112,15 +112,14 @@ def clip(x, limits):
 
 def clipped_log_of_vec(vec):
     """
-    This method takes as input a float or a 1D array of floats. It returns
-    the log element-wise of that array, except when an element of the array
-    is very close to zero or negative. In that exceptional case, the method
-    "clips the log", meaning that it returns a fixed negative value like
-    log(1e-5).
+    This method takes as input a int|float or a 1D array of floats. It
+    returns the log element-wise of that array, except when an element of
+    the array is < 1e-5. In that exceptional case, the method "clips the
+    log", meaning that it returns a fixed negative value like log(1e-5).
 
     Parameters
     ----------
-    vec : float|np.ndarray
+    vec : int|float|np.ndarray
 
     Returns
     -------
@@ -128,17 +127,51 @@ def clipped_log_of_vec(vec):
 
     """
     vec1 = vec
-    if isinstance(vec, float):
+    if isinstance(vec, (int, float)):
         vec1 = [vec]
     li = []
     for x in vec1:
-        if x > -1e-4:
-            if x < 1e-5:
-                li.append(np.log(1e-5))
-            else:
-                li.append(np.log(x))
+        if x < 1e-6:
+            li.append(np.log(1e-6))
         else:
-            assert False, "can't take log of " + str(x)
+            li.append(np.log(x))
+    return np.array(li)
+
+
+def positive_part(x):
+    """
+    This method returns max(0, x)
+
+    Parameters
+    ----------
+    x : int|float
+
+    Returns
+    -------
+    int|float
+
+    """
+    return max([0, x])
+
+
+def positive_part_of_vec(vec):
+    """
+    This method takes as input a int|float or a 1D array of floats. It
+    returns the array, with negative items replaced by zero
+
+    Parameters
+    ----------
+    vec : int|float|np.ndarray
+
+    Returns
+    -------
+    np.ndarray
+
+    """
+    vec1 = vec
+    if isinstance(vec, (int, float)):
+        vec1 = [vec]
+    li = [max(0, x) for x in vec1]
     return np.array(li)
 
 

@@ -638,7 +638,7 @@ is of the form
 \sum_\alp w^\alp \ket{\alp}\bra{\alp} \rho_{\rvx, \rvy}^\alp
 \;,
 \eeq
-where $w_\alp$ for $\alp\in Z_{[0, n_\alp)}$
+where $w_\alp$ for $\alp\in Z_{[0, n_\rvalp)}$
 is a probability distribution
 , where $\rho^\alp_{\rvx, \rvy}$
 for each $\alp$ is a density matrix,
@@ -722,7 +722,7 @@ Define the Lagrangian
 E^\alp_{\rvx, \rvy}
 + \mu(\sum_\alp w^\alp -1)
 +\tr_{\rvx, \rvy}\left[
-\frac{\lam'_{\rvx, \rvy}}{2}(\sum_\alp w^\alp
+\frac{\lam_{\rvx, \rvy}}{2}(\sum_\alp w^\alp
 \rho^\alp_{\rvx, \rvy}-\rho_{\rvx,\rvy})
 \right]
 \;.
@@ -730,7 +730,7 @@ E^\alp_{\rvx, \rvy}
 To calculate $E_{\rvx, \rvy}$, we will set to zero
 the variation of $\call$ when we vary $w^\alp\in \RR$, $\rho^\alp_{\rvx,\rvy}
 \in \call(\calh_{\rvx, \rvy})$
-and the Lagrange multipliers $\mu\in \RR$, $\lam'_{\rvx, \rvy}\in\call(\calh_{\rvx, \rvy})$.
+and the Lagrange multipliers $\mu\in \RR$, $\lam_{\rvx, \rvy}\in\call(\calh_{\rvx, \rvy})$.
 
 
 To calculate the optimum $\rho^\alp_{\rvx,\rvy}$, note that
@@ -742,11 +742,11 @@ To calculate the optimum $\rho^\alp_{\rvx,\rvy}$, note that
 (\log \rho^\alp_{\rvx,\rvy}+1
 -\log \rho^{\alp}_{\rvx}
 \rho^{\alp}_{\rvy}
-+\lam'_{\rvx,\rvy})\right]\\
++\lam_{\rvx,\rvy})\right]\\
 +\sum_\alp\delta w^\alp\left[
 E^\alp_{\rvx,\rvy}
 +\tr_{\rvx, \rvy}
-\frac{\lam'_{\rvx,\rvy}}{2}
+\frac{\lam_{\rvx,\rvy}}{2}
 \rho^\alp_{\rvx,\rvy}
 +\mu\right]
 \end{array}
@@ -760,7 +760,7 @@ and $w^\alp$ are zero iff
 \left\{
 \begin{array}{l}
 \forall \alp,
-\lam_{\rvx, \rvy}=-\lam'_{\rvx, \rvy}-1
+\Delta_{\rvx, \rvy}=-\lam_{\rvx, \rvy}-1
 =
 \log \rho^{\alp}_{\rvx,\rvy}
 -
@@ -774,11 +774,11 @@ and $w^\alp$ are zero iff
 \eeq
 
 The above results suggest
-the following recursion to go from
-$K^{\alp}_{\rvx,\rvy}(k)$
-to $K^{\alp}_{\rvx,\rvy}(k+1)$ for $k=0,1,2,\ldots$.
+the following recursion relation to go from
+$K^{\alp}_{\rvx,\rvy}(n)$
+to $K^{\alp}_{\rvx,\rvy}(n+1)$ for $n=0,1,2,\ldots$.
 
-For $k=0$, define\footnote{Defining $K^{\alp}_{\rvx,\rvy}(0)=
+For $n=0$, define\footnote{Defining $K^{\alp}_{\rvx,\rvy}(0)=
 \frac{1}{n_\rvalp}\rho_{\rvx,\rvy}$ for all $\alp$, does not work because 
 this is a stationary point of the recursion. Try it.}
 
@@ -795,44 +795,44 @@ where $\rho^{\rm diag.part}_{\rvx,\rvy}$ is obtained from
 $\rho_{\rvx,\rvy}$ by replacing its non-diagonal elements by zero.
 
 
-For $k=0,1,2, ..$, given $K^{\alp}_{\rvx,\rvy}(k)$ for all $\alp$, 
-choose $K^{\alp}_{\rvx,\rvy}(k+1)$ for all $\alp$ as follows.
+For $n=0,1,2, ..$, given $K^{\alp}_{\rvx,\rvy}(n)$ for all $\alp$, 
+choose $K^{\alp}_{\rvx,\rvy}(n+1)$ for all $\alp$ as follows.
 Let
-$\alp_{rand}(k)$ be a value of $\rvalp$ chosen uniformly  at random from all
+$\alp_{rand}(n)$ be a value of $\rvalp$ chosen uniformly  at random from all
 possible values of $\rvalp$. Set
 
 \beq
-\lam_{\rvx, \rvy}(k)
+\Delta_{\rvx, \rvy}(n)
 =
-\log \rho^{\alp_{rand}(k)}_{\rvx,\rvy}(k)
+\log \rho^{\alp_{rand}(n)}_{\rvx,\rvy}(n)
 -
-\log \rho^{\alp_{rand}(k)}_{\rvx}(k)
-\rho^{\alp_{rand}(k)}_{\rvy}(k)
+\log \rho^{\alp_{rand}(n)}_{\rvx}(n)
+\rho^{\alp_{rand}(n)}_{\rvy}(n)
 \;,
 \eeq
 
 \beq
-M^\alp_{\rvx, \rvy}(k)=
+M^\alp_{\rvx, \rvy}(n)=
 \exp\left[
-\lam_{\rvx, \rvy}(k)
+\Delta_{\rvx, \rvy}(n)
 +
-\log \rho^{\alp}_{\rvx}(k)
-\rho^{\alp}_{\rvy}(k)
+\log \rho^{\alp}_{\rvx}(n)
+\rho^{\alp}_{\rvy}(n)
 \right]w^\alp
 \;,
 \eeq
 
 
 \beq
-K^{\alp}_{\rvx,\rvy}(k+1)
+K^{\alp}_{\rvx,\rvy}(n+1)
 =
-{\rm regulate}\left(\frac{1}{2}\rho_{\rvx, \rvy}[\sum_\alp M^\alp_{\rvx, \rvy}(k)]^{-1}
-M^\alp_{\rvx, \rvy}(k) + h.c.\right)
+{\rm regulate}\left(\frac{1}{2}\rho_{\rvx, \rvy}[\sum_\alp M^\alp_{\rvx, \rvy}(n)]^{-1}
+M^\alp_{\rvx, \rvy}(n) + h.c.\right)
 \;,
 \eeq
 
 \beq
-E_{\rvx, \rvy}(k) = \frac{1}{2}\tr_{\rvx, \rvy} \left[\rho_{\rvx, \rvy}\lam_{\rvx, \rvy}(k)\right]
+E_{\rvx, \rvy}(n) = \frac{1}{2}\tr_{\rvx, \rvy} \left[\rho_{\rvx, \rvy}\Delta_{\rvx, \rvy}(n)\right]
 \;.
 \eeq
 
@@ -840,11 +840,11 @@ E_{\rvx, \rvy}(k) = \frac{1}{2}\tr_{\rvx, \rvy} \left[\rho_{\rvx, \rvy}\lam_{\rv
 We claim but will not prove rigorously that
 
 \beq
-E_{\rvx, \rvy}(k)\rightarrow
+E_{\rvx, \rvy}(n)\rightarrow
 E_{\rvx, \rvy}
 \;
 \eeq
-as $k\rightarrow \infty$.
+as $n\rightarrow \infty$.
 
 
 

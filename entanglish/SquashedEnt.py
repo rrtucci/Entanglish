@@ -2,6 +2,7 @@ from entanglish.EntangCase import *
 from entanglish.MaxEntangState import *
 from operator import itemgetter
 import numpy as np
+import random
 
 
 class SquashedEnt(EntangCase):
@@ -84,6 +85,33 @@ class SquashedEnt(EntangCase):
         self.y_axes = None
         self.Dxy = None
 
+    @staticmethod
+    def regulate(Kxy_a):
+        """
+        This internal method returns a list new_Kxy_a which constructed by
+        replacing each item Kxy_alp of list Kxy_a by its positive part
+        normalized so that sum_xya of all items of new_Kxy_a is one.
+
+
+        Parameters
+        ----------
+        Kxy_a : list[DenMat]
+
+        Returns
+        -------
+        list[DenMat]
+
+        """
+
+        sum_xya_Kxy_a = 0
+        new_Kxy_a = []
+        for alp in range(len(Kxy_a)):
+            Kxy_alp = Kxy_a[alp].positive_part()
+            sum_xya_Kxy_a += Kxy_alp.trace()
+            new_Kxy_a.append(Kxy_alp)
+        new_Kxy_a = [Kxy_alp * (1 / sum_xya_Kxy_a) for Kxy_alp in new_Kxy_a]
+        return new_Kxy_a
+
     def get_entang(self, axes_subset):
         """
         This method returns the squashed entanglement Exy, where x =
@@ -104,54 +132,58 @@ class SquashedEnt(EntangCase):
         self.y_axes = [k for k in range(num_row_axes) if k not in self.x_axes]
         num_y_axes = len(self.y_axes)
         self.Dxy = self.den_mat.get_rho_xy(self.x_axes, self.y_axes)
-        Dxy_a = []
 
-        # initial Dxy_a
-        # Dxy_a[0] = Dxy,
-        # all others are max entangled
-        dm_max_ent = DenMat(self.Dxy.num_rows, self.Dxy.row_shape)
-        x_axes0 = list(range(num_x_axes))
-        y_axes0 = list(range(num_x_axes, num_row_axes, 1))
-        max_ent_st = MaxEntangState(dm_max_ent.num_rows, dm_max_ent.row_shape,
-                                    x_axes0, y_axes0)
-        EntangCase.check_max_entang_st(max_ent_st)
-        st_vec = max_ent_st.get_st_vec()
-        entang = max_ent_st.get_known_entang()
-        dm_max_ent.set_arr_from_st_vec(st_vec)
-        # print('dddddd dm max ent', dm_max_ent.arr)
+        # w_alp = 1 / self.num_hidden_states
+        # # initial Kxy_a
+        # # Kxy_a[alp] = Dxy/num_hidden_steps,
+        # # for  all alp
+        # Kxy_alp = self.Dxy*w_alp
+        # Kxy_a = [Kxy_alp]*self.num_hidden_states
+
+        w_a = np.random.rand(self.num_hidden_states)
+        w_a /= np.sum(w_a)
+        dd = np.diag(self.Dxy.arr)
+        Kxy_a = []
         for alp in range(self.num_hidden_states):
             if alp == 0:
-                Dxy_alp = self.Dxy
+                Kxy_alp = self.Dxy.copy()
             else:
-                Dxy_alp = dm_max_ent
-            Dxy_a.append(Dxy_alp)
+                Kxy_alp = DenMat(self.Dxy.num_rows, self.Dxy.row_shape)
+                Kxy_alp.set_arr_to_zero()
+            Kxy_alp.replace_diag_of_arr(dd * (1/self.num_hidden_states))
+            Kxy_a.append(Kxy_alp)
 
+        Kxy_a = SquashedEnt.regulate(Kxy_a)
+
+        entang = 0
+        print('')
         for step in range(self.num_ab_steps):
+            Kxy_a, entang = self.next_step(Kxy_a)
             if self.verbose:
-                print('------------ab step=', step)
-                print('entang=', entang)
-            entang, Dxy_a = self.next_step(Dxy_a)
-        if self.verbose:
-            print('-----------\nfinal entang=', entang)
+                print('----------ab step=', step, 'entang=', entang)
         return entang
 
-    def next_step(self, Dxy_a):
+    def next_step(self, Kxy_a):
         """
         This method is used self.num_ab_steps times, internally, in the
-        method self.get_entang(). Given the current Dxy_a as input,
-        it returns the next estimate of Exy and the next Dxy_a.
+        method self.get_entang(). Given the current Kxy_a as input,
+        it returns the next estimate of Kxy_a and Exy.
 
 
         Parameters
         ----------
-        Dxy_a : list[DenMat]
-             a list of normalized density matrices Dxy_a[alp] such that
+        Kxy_a : list[DenMat]
+            a list of un-normalized density matrices
 
-             sum_alp w_alp * Dxy_a[alp] = Dxy,
+            Kxy_a[alp]=Dxy_a[alp]*w_a[alp].
+
+            Therefore,
+
+            sum_alp Kxy_a[alp] = Dxy,
 
         Returns
         -------
-        float, list[DenMat]
+        list[DenMat], float
 
         """
         num_x_axes = len(self.x_axes)
@@ -159,13 +191,15 @@ class SquashedEnt(EntangCase):
         set_x = set(range(num_x_axes))
         set_y = set(range(num_x_axes, num_x_axes + num_y_axes, 1))
 
-        log_Dxy_a = []
         log_Dx_Dy_a = []
-        entang_a = []
+        w_a = []
+        alp_rand = random.randrange(self.num_hidden_states)
         for alp in range(self.num_hidden_states):
-            Dxy_alp = Dxy_a[alp]
+            Kxy_alp = Kxy_a[alp]
+            w_alp = Kxy_alp.trace()
+            w_a.append(w_alp)
+            Dxy_alp = Kxy_alp*(1/w_alp)
             log_Dxy_alp = self.log(Dxy_alp)
-            log_Dxy_a.append(log_Dxy_alp)
 
             Dx_alp = Dxy_alp.get_partial_tr(set_y)
             Dy_alp = Dxy_alp.get_partial_tr(set_x)
@@ -173,41 +207,34 @@ class SquashedEnt(EntangCase):
                             [Dx_alp, Dy_alp]))
             log_Dx_Dy_a.append(log_Dx_Dy_alp)
 
-            entang_alp = (Dxy_alp*log_Dxy_alp -
-                          Dxy_alp*log_Dx_Dy_alp).trace()/2
-            if alp == -1:
-                print("llll-norm", np.linalg.norm(Dxy_alp.arr),
-                      Dxy_alp.trace())
-                print('hhhhhhh', np.linalg.norm((log_Dxy_alp -
-                                                 log_Dx_Dy_alp).arr))
-                Dx_Dy_alp = DenMat.get_kron_prod_of_den_mats([Dx_alp, Dy_alp])
-                print('vvvvvvvvv', np.linalg.norm(Dxy_alp.arr -
-                    Dx_Dy_alp.arr))
-                print('ccccccDx', Dx_alp)
-                print('ccccccDy', Dy_alp)
-                print('ccccccDxy', Dxy_alp)
-                print('ccccccDxDy', Dx_Dy_alp)
-                print(("bbbnnnmmm", (Dxy_alp*log_Dxy_alp).trace()/2,
-                      -(Dxy_alp*log_Dx_Dy_alp).trace()/2))
-            entang_a.append(entang_alp)
-        alp_min, entang = min(enumerate(entang_a), key=itemgetter(1))
+            if alp == alp_rand:
+                lam_xy = log_Dxy_alp - log_Dx_Dy_alp
         if self.verbose:
-            print('entang_a=', entang_a)
-            print('alp_min=', alp_min)
-        lam_xy = log_Dxy_a[alp_min] - log_Dx_Dy_a[alp_min]
+            print('w_a=', w_a, 'sum=', np.sum(np.array(w_a)))
 
-        # this loop will fill list new_Dxy_a
-        new_Dxy_a = []
+        new_Kxy_a = []
+        sum_numerator = DenMat(self.Dxy.num_rows, self.Dxy.row_shape)
+        sum_numerator.set_arr_to_zero()
         for alp in range(self.num_hidden_states):
-            if alp == alp_min:
-                new_Dxy_alp = self.Dxy
-            else:
-                new_Dxy_alp = self.exp(lam_xy + log_Dx_Dy_a[alp])
-                new_Dxy_alp *= (1/new_Dxy_alp.trace())
-            new_Dxy_a.append(new_Dxy_alp)
-        # print('xxxxxxrrrrr 0=', np.linalg.norm(
-        #     new_Dxy_a[alp_min].arr - self.Dxy.arr))
-        return entang, new_Dxy_a
+            new_Kxy_alp = self.exp(lam_xy + log_Dx_Dy_a[alp])*w_a[alp]
+            new_Kxy_a.append(new_Kxy_alp)
+            sum_numerator += new_Kxy_alp
+        inv_sum_numerator = sum_numerator.inv()
+        for alp in range(self.num_hidden_states):
+            # print('rrrrr', np.linalg.norm(self.Dxy.arr),
+            #             np.linalg.norm(inv_sum_numerator.arr),
+            #             np.linalg.norm(new_Kxy_a[alp].arr))
+            new_Kxy_alp = self.Dxy*inv_sum_numerator*new_Kxy_a[alp]
+            new_Kxy_alp = (new_Kxy_alp + new_Kxy_alp.herm())*(1/2)
+            # print('rrrrr111', np.linalg.norm(new_Kxy_alp.arr))
+            new_Kxy_a[alp] = new_Kxy_alp
+
+        new_Kxy_a = SquashedEnt.regulate(new_Kxy_a)
+        # print('nnnnnnnnnnnnn', np.sum(np.array([x.trace() for x in
+        #                                         new_Kxy_a])))
+        entang = (self.Dxy*lam_xy).trace()/2
+
+        return new_Kxy_a, entang
 
 
 if __name__ == "__main__":
@@ -228,7 +255,8 @@ if __name__ == "__main__":
             print('***************new dm')
             print('evas_of_dm\n', evas_of_dm)
             dm.set_arr_to_rand_den_mat(evas_of_dm)
-            ecase = SquashedEnt(dm, num_hidden_states, num_ab_steps)
+            ecase = SquashedEnt(dm, num_hidden_states, num_ab_steps,
+                                verbose=False)
             print('ent_02_1=', ecase.get_entang({0, 2}))
 
     from entanglish.SymNupState import *
@@ -243,7 +271,7 @@ if __name__ == "__main__":
         dm1.set_arr_from_st_vec(st_vec)
 
         num_hidden_states = 10
-        num_ab_steps = 40
+        num_ab_steps = 50
         print('num_hidden_states=', num_hidden_states)
         print('num_ab_steps=', num_ab_steps)
         ecase = SquashedEnt(
