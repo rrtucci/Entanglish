@@ -676,6 +676,44 @@ E_{\rvx, \rvy}=\min
 E^\alp_{\rvx, \rvy}
 \;.
 \eeq
+
+It is also convenient to define
+
+\beq
+K^\alp_{\rvx, \rvy}=\rho^\alp_{\rvx, \rvy}w^\alp
+\;.
+\eeq
+Note that 
+
+\beq
+w^\alp=\tr_{\rvx, \rvy}K^\alp_{\rvx, \rvy}, \;\;
+\rho^\alp_{\rvx, \rvy}=\frac{K^\alp_{\rvx, \rvy}}{\tr_{\rvx, \rvy}K^\alp_{\rvx, \rvy}}
+\;.
+\eeq
+Hence, one can always translate back and forth
+between the pair $(w^\alp, \rho^\alp_{\rvx, \rvy})$ and
+$K^\alp_{\rvx, \rvy}$ so one can think of these two constructs
+as 2 equivalent representations of the same thing.
+
+Suppose $M^\alp_{\rvx, \rvy}\in \call(\calh_{\rvx, \rvy})$ for all $\alp\in Z_{[0, n_\rvalp)}$.
+Define the function regulate() by
+
+
+\beq
+{\rm regulate}(M^\alp_{\rvx, \rvy}) =
+ \frac{[M^\alp_{\rvx, \rvy}]_{\rm pos. part}}{\sum_{\alp}\tr_{\rvx, \rvy} (numerator)}
+ \;.
+\eeq
+Here $[M]_{\rm pos.part}$ is the positive part of the operator $M$,
+which is obtained by replacing all negative eigenvalues of $M$ by zero
+and leaving non-negative ones the same.
+Note that the regulate() function maps $K^\alp_{\rvx, \rvy}$ to itself:
+
+\beq
+{\rm regulate}(K^\alp_{\rvx, \rvy})=K^\alp_{\rvx, \rvy}
+\;.
+\eeq
+
 Define the Lagrangian
 
 \beq
@@ -694,44 +732,33 @@ the variation of $\call$ when we vary $w^\alp\in \RR$, $\rho^\alp_{\rvx,\rvy}
 \in \call(\calh_{\rvx, \rvy})$
 and the Lagrange multipliers $\mu\in \RR$, $\lam'_{\rvx, \rvy}\in\call(\calh_{\rvx, \rvy})$.
 
-The minimum over the probability distribution $w^\alp$
-is on the boundary of the region of allowed values but it is easy to
-infer. Since $E^\alp_{\rvx, \rvy}\geq 0$ for all $\alp$,
-the optimum probability distribution is 1 for one $\alp$,
-call it $\alp_{min}$, and zero for all other $\alp$
-
-
-\beq
-w^\alp=
-\left\{
-\begin{array}{ll}
-1&{\rm if}\;\; \alp=\alp_{min}\\
-0&{\rm otherwise}
-\end{array}
-\right.
-\;,
-\eeq
-where
-
-\beq
-\alp_{min} = {\rm argmin}\{E^\alp_{\rvx, \rvy}|\forall\alp\}
-\;.
-\eeq
 
 To calculate the optimum $\rho^\alp_{\rvx,\rvy}$, note that
 
 \beq
-\delta{\cal L}=
+\delta{\cal L}=\left\{
+\begin{array}{l}
 \sum_\alp \frac{w^\alp}{2}\tr_{\rvx, \rvy}\left[\delta\rho^\alp_{\rvx,\rvy}
 (\log \rho^\alp_{\rvx,\rvy}+1
 -\log \rho^{\alp}_{\rvx}
 \rho^{\alp}_{\rvy}
-+\lam'_{\rvx,\rvy})\right]
-\;,
++\lam'_{\rvx,\rvy})\right]\\
++\sum_\alp\delta w^\alp\left[
+E^\alp_{\rvx,\rvy}
++\tr_{\rvx, \rvy}
+\frac{\lam'_{\rvx,\rvy}}{2}
+\rho^\alp_{\rvx,\rvy}
++\mu\right]
+\end{array}
+\right.
+\;.
 \eeq
-so
+The two independent variations with respect to $\rho^\alp_{\rvx,\rvy}$ 
+and $w^\alp$ are zero iff
 
 \beq
+\left\{
+\begin{array}{l}
 \forall \alp,
 \lam_{\rvx, \rvy}=-\lam'_{\rvx, \rvy}-1
 =
@@ -739,62 +766,81 @@ so
 -
 \log \rho^{\alp}_{\rvx}
 \rho^{\alp}_{\rvy}
+\\
+\mu=\frac{1}{2}
+\end{array}
+\right.
 \;.
 \eeq
 
 The above results suggest
 the following recursion to go from
-$\rho^{\alp}_{\rvx,\rvy}(k)$
-to $\rho^{\alp}_{\rvx,\rvy}(k+1)$ for $k=0,1,2,\ldots$.
+$K^{\alp}_{\rvx,\rvy}(k)$
+to $K^{\alp}_{\rvx,\rvy}(k+1)$ for $k=0,1,2,\ldots$.
 
-
-For $k=0$, let
-
+For $k=0$, define\footnote{Defining $K^{\alp}_{\rvx,\rvy}(0)=
+\frac{1}{n_\rvalp}\rho_{\rvx,\rvy}$ for all $\alp$, does not work because 
+this is a stationary point of the recursion. Try it.}
 
 \beq
-\rho^{\alp}_{\rvx,\rvy}(0)=
+K^{\alp}_{\rvx,\rvy}(0)=
 \left\{
 \begin{array}{ll}
-\rho_{\rvx,\rvy}&{\rm if}\;\; \alp=0\\
-\rho^{\rm max-entan}_{\rvx,\rvy}&{\rm otherwise}
+{\rm regulate}\left[\rho_{\rvx,\rvy}+(-1+\frac{1}{n_\rvalp})\rho^{\rm diag.part}_{\rvx,\rvy}\right]&{\rm if}\;\; \alp=0\\
+{\rm regulate}\left[\frac{1}{n_\rvalp}\rho^{\rm diag.part}_{\rvx,\rvy}\right]&{\rm otherwise}
 \end{array}
 \right.
 \eeq
+where $\rho^{\rm diag.part}_{\rvx,\rvy}$ is obtained from
+$\rho_{\rvx,\rvy}$ by replacing its non-diagonal elements by zero.
 
 
-
-For $k=0,1,2, ..$, given $\rho^{\alp}_{\rvx,\rvy}(k)$ for all $\alp$, let
-
-\beq
-\alp_{min}(k) ={\rm argmin}\{E^{\alp}_{\rvx, \rvy}(k)|\forall\alp\}
-\eeq
+For $k=0,1,2, ..$, given $K^{\alp}_{\rvx,\rvy}(k)$ for all $\alp$, 
+choose $K^{\alp}_{\rvx,\rvy}(k+1)$ for all $\alp$ as follows.
+Let
+$\alp_{rand}(k)$ be a value of $\rvalp$ chosen uniformly  at random from all
+possible values of $\rvalp$. Set
 
 \beq
 \lam_{\rvx, \rvy}(k)
 =
-\log \rho^{\alp_{min}(k)}_{\rvx,\rvy}(k)
+\log \rho^{\alp_{rand}(k)}_{\rvx,\rvy}(k)
 -
-\log \rho^{\alp_{min}(k)}_{\rvx}(k)
-\rho^{\alp_{min}(k)}_{\rvy}(k)
-\;
+\log \rho^{\alp_{rand}(k)}_{\rvx}(k)
+\rho^{\alp_{rand}(k)}_{\rvy}(k)
+\;,
 \eeq
 
 \beq
-\rho^{\alp}_{\rvx,\rvy}(k+1)
-=
-\frac{\exp\left[
+M^\alp_{\rvx, \rvy}(k)=
+\exp\left[
 \lam_{\rvx, \rvy}(k)
 +
 \log \rho^{\alp}_{\rvx}(k)
 \rho^{\alp}_{\rvy}(k)
-\right]}{\tr_{\rvx, \rvy} \;\;numerator}
+\right]w^\alp
+\;,
+\eeq
+
+
+\beq
+K^{\alp}_{\rvx,\rvy}(k+1)
+=
+{\rm regulate}\left(\frac{1}{2}\rho_{\rvx, \rvy}[\sum_\alp M^\alp_{\rvx, \rvy}(k)]^{-1}
+M^\alp_{\rvx, \rvy}(k) + h.c.\right)
+\;,
+\eeq
+
+\beq
+E_{\rvx, \rvy}(k) = \frac{1}{2}\tr_{\rvx, \rvy} \left[\rho_{\rvx, \rvy}\lam_{\rvx, \rvy}(k)\right]
 \;.
 \eeq
+
 
 We claim but will not prove rigorously that
 
 \beq
-E_{\rvx, \rvy}^{\alp_{min}(k)}(k)\rightarrow
+E_{\rvx, \rvy}(k)\rightarrow
 E_{\rvx, \rvy}
 \;
 \eeq
