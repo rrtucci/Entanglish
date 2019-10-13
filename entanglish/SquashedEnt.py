@@ -181,8 +181,8 @@ class SquashedEnt(EntangCase):
         Delta_xy[alp] matrices. This variance tends to zero as num_ab_steps
         tends to infinity
 
-        mean_alp(x[alp]) = average over alp of x[alp]
-        err = mean_alp norm(Delta_xy[[alp]alp] - mean_alp Delta_xy[alp])
+        mean_alp x[alp] = average over alp of x[alp]
+        err = mean_alp norm(Delta_xy[alp] - mean_alp Delta_xy[alp])
 
         Parameters
         ----------
