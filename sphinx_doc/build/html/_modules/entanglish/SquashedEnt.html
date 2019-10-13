@@ -234,6 +234,33 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">y_axes</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span> <span class="o">=</span> <span class="kc">None</span></div>
 
+<div class="viewcode-block" id="SquashedEnt.regulate"><a class="viewcode-back" href="../../entanglish.SquashedEnt.html#entanglish.SquashedEnt.SquashedEnt.regulate">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">regulate</span><span class="p">(</span><span class="n">Kxy_a</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This internal method returns a list new_Kxy_a which is constructed</span>
+<span class="sd">        by replacing each item Kxy_alp of list Kxy_a by its positive part</span>
+<span class="sd">        normalized so that sum_xya of all items of new_Kxy_a is one.</span>
+
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Kxy_a : list[DenMat]</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list[DenMat]</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">sum_xya_Kxy_a</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">new_Kxy_a</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">alp</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">Kxy_a</span><span class="p">)):</span>
+            <span class="n">Kxy_alp</span> <span class="o">=</span> <span class="n">Kxy_a</span><span class="p">[</span><span class="n">alp</span><span class="p">]</span><span class="o">.</span><span class="n">positive_part</span><span class="p">()</span>
+            <span class="n">sum_xya_Kxy_a</span> <span class="o">+=</span> <span class="n">Kxy_alp</span><span class="o">.</span><span class="n">trace</span><span class="p">()</span>
+            <span class="n">new_Kxy_a</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Kxy_alp</span><span class="p">)</span>
+        <span class="n">new_Kxy_a</span> <span class="o">=</span> <span class="p">[</span><span class="n">Kxy_alp</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">sum_xya_Kxy_a</span><span class="p">)</span> <span class="k">for</span> <span class="n">Kxy_alp</span> <span class="ow">in</span> <span class="n">new_Kxy_a</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">new_Kxy_a</span></div>
+
 <div class="viewcode-block" id="SquashedEnt.get_entang"><a class="viewcode-back" href="../../entanglish.SquashedEnt.html#entanglish.SquashedEnt.SquashedEnt.get_entang">[docs]</a>    <span class="k">def</span> <span class="nf">get_entang</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">axes_subset</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This method returns the squashed entanglement Exy, where x =</span>
@@ -254,54 +281,66 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">y_axes</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_row_axes</span><span class="p">)</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_axes</span><span class="p">]</span>
         <span class="n">num_y_axes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y_axes</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">den_mat</span><span class="o">.</span><span class="n">get_rho_xy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x_axes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_axes</span><span class="p">)</span>
-        <span class="n">Dxy_a</span> <span class="o">=</span> <span class="p">[]</span>
 
-        <span class="c1"># initial Dxy_a</span>
-        <span class="c1"># Dxy_a[0] = Dxy,</span>
-        <span class="c1"># all others are max entangled</span>
-        <span class="n">dm_max_ent</span> <span class="o">=</span> <span class="n">DenMat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span><span class="o">.</span><span class="n">num_rows</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span><span class="o">.</span><span class="n">row_shape</span><span class="p">)</span>
-        <span class="n">x_axes0</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">num_x_axes</span><span class="p">))</span>
-        <span class="n">y_axes0</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">num_x_axes</span><span class="p">,</span> <span class="n">num_row_axes</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
-        <span class="n">max_ent_st</span> <span class="o">=</span> <span class="n">MaxEntangState</span><span class="p">(</span><span class="n">dm_max_ent</span><span class="o">.</span><span class="n">num_rows</span><span class="p">,</span> <span class="n">dm_max_ent</span><span class="o">.</span><span class="n">row_shape</span><span class="p">,</span>
-                                    <span class="n">x_axes0</span><span class="p">,</span> <span class="n">y_axes0</span><span class="p">)</span>
-        <span class="n">EntangCase</span><span class="o">.</span><span class="n">check_max_entang_st</span><span class="p">(</span><span class="n">max_ent_st</span><span class="p">)</span>
-        <span class="n">st_vec</span> <span class="o">=</span> <span class="n">max_ent_st</span><span class="o">.</span><span class="n">get_st_vec</span><span class="p">()</span>
-        <span class="n">entang</span> <span class="o">=</span> <span class="n">max_ent_st</span><span class="o">.</span><span class="n">get_known_entang</span><span class="p">()</span>
-        <span class="n">dm_max_ent</span><span class="o">.</span><span class="n">set_arr_from_st_vec</span><span class="p">(</span><span class="n">st_vec</span><span class="p">)</span>
-        <span class="c1"># print(&#39;dddddd dm max ent&#39;, dm_max_ent.arr)</span>
+        <span class="c1"># w_alp = 1 / self.num_hidden_states</span>
+        <span class="c1"># # initial Kxy_a</span>
+        <span class="c1"># # Kxy_a[alp] = Dxy/num_hidden_steps,</span>
+        <span class="c1"># # for  all alp</span>
+        <span class="c1"># Kxy_alp = self.Dxy*w_alp</span>
+        <span class="c1"># Kxy_a = [Kxy_alp]*self.num_hidden_states</span>
+
+        <span class="n">w_a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_hidden_states</span><span class="p">)</span>
+        <span class="n">w_a</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">w_a</span><span class="p">)</span>
+        <span class="n">dd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span><span class="o">.</span><span class="n">arr</span><span class="p">)</span>
+        <span class="n">Kxy_a</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">alp</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_hidden_states</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">alp</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">Dxy_alp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span>
+                <span class="n">Kxy_alp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">Dxy_alp</span> <span class="o">=</span> <span class="n">dm_max_ent</span>
-            <span class="n">Dxy_a</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Dxy_alp</span><span class="p">)</span>
+                <span class="n">Kxy_alp</span> <span class="o">=</span> <span class="n">DenMat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span><span class="o">.</span><span class="n">num_rows</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span><span class="o">.</span><span class="n">row_shape</span><span class="p">)</span>
+                <span class="n">Kxy_alp</span><span class="o">.</span><span class="n">set_arr_to_zero</span><span class="p">()</span>
+            <span class="n">Kxy_alp</span><span class="o">.</span><span class="n">replace_diag_of_arr</span><span class="p">(</span><span class="n">dd</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">num_hidden_states</span><span class="p">))</span>
+            <span class="n">Kxy_a</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Kxy_alp</span><span class="p">)</span>
 
+        <span class="n">Kxy_a</span> <span class="o">=</span> <span class="n">SquashedEnt</span><span class="o">.</span><span class="n">regulate</span><span class="p">(</span><span class="n">Kxy_a</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_ab_steps</span><span class="p">):</span>
+            <span class="n">Kxy_a</span><span class="p">,</span> <span class="n">entang</span><span class="p">,</span> <span class="n">var_Delta_xy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">next_step</span><span class="p">(</span><span class="n">Kxy_a</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;------------ab step=&#39;</span><span class="p">,</span> <span class="n">step</span><span class="p">)</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;entang=&#39;</span><span class="p">,</span> <span class="n">entang</span><span class="p">)</span>
-            <span class="n">entang</span><span class="p">,</span> <span class="n">Dxy_a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">next_step</span><span class="p">(</span><span class="n">Dxy_a</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;-----------</span><span class="se">\n</span><span class="s1">final entang=&#39;</span><span class="p">,</span> <span class="n">entang</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;--ab step=&#39;</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="s1">&#39;, entang=&#39;</span><span class="p">,</span> <span class="n">entang</span><span class="p">,</span>
+                      <span class="s2">&quot;, var_Delta=&quot;</span><span class="p">,</span> <span class="n">var_Delta_xy</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">entang</span></div>
 
-<div class="viewcode-block" id="SquashedEnt.next_step"><a class="viewcode-back" href="../../entanglish.SquashedEnt.html#entanglish.SquashedEnt.SquashedEnt.next_step">[docs]</a>    <span class="k">def</span> <span class="nf">next_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Dxy_a</span><span class="p">):</span>
+<div class="viewcode-block" id="SquashedEnt.next_step"><a class="viewcode-back" href="../../entanglish.SquashedEnt.html#entanglish.SquashedEnt.SquashedEnt.next_step">[docs]</a>    <span class="k">def</span> <span class="nf">next_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Kxy_a</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This method is used self.num_ab_steps times, internally, in the</span>
-<span class="sd">        method self.get_entang(). Given the current Dxy_a as input,</span>
-<span class="sd">        it returns the next estimate of Exy and the next Dxy_a.</span>
+<span class="sd">        method self.get_entang(). Given the current Kxy_a as input,</span>
+<span class="sd">        it returns the next estimate of Kxy_a , Exy , var_Delta_xy</span>
 
+<span class="sd">        Kxy_a is a list of un-normalized density matrices such that Kxy_a[</span>
+<span class="sd">        alp]=Dxy_a[alp]*w_a[alp]. Therefore, sum_alp Kxy_a[alp] = Dxy.</span>
+
+<span class="sd">        Exy is the entanglement for parts x and y.</span>
+
+<span class="sd">        If</span>
+
+<span class="sd">        Delta_xy[alp]= log Dxy_a[alp] - log(Dx_a[alp]Dy_a[alp]),</span>
+
+<span class="sd">        then var_Delta_xy is a float that measures the variance in the</span>
+<span class="sd">        Delta_xy{ alp] matrices. This variance tends to zero as num_ab_steps</span>
+<span class="sd">        tends to infinity</span>
+
+<span class="sd">        mean_Delta_xy = average over alp of Delta_xy[alp]</span>
+<span class="sd">        var_Delta_xy = sum_alp norm(Delta_xy[alp] - mean Delta_xy)</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        Dxy_a : list[DenMat]</span>
-<span class="sd">             a list of normalized density matrices Dxy_a[alp] such that</span>
-
-<span class="sd">             sum_alp w_alp * Dxy_a[alp] = Dxy,</span>
+<span class="sd">        Kxy_a : list[DenMat]</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        float, list[DenMat]</span>
+<span class="sd">        list[DenMat], float, float</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">num_x_axes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x_axes</span><span class="p">)</span>
@@ -311,9 +350,14 @@
 
         <span class="n">log_Dxy_a</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">log_Dx_Dy_a</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">entang_a</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">w_a</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">Delta_xy</span> <span class="o">=</span> <span class="n">DenMat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span><span class="o">.</span><span class="n">num_rows</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span><span class="o">.</span><span class="n">row_shape</span><span class="p">)</span>
+        <span class="n">Delta_xy</span><span class="o">.</span><span class="n">set_arr_to_zero</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">alp</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_hidden_states</span><span class="p">):</span>
-            <span class="n">Dxy_alp</span> <span class="o">=</span> <span class="n">Dxy_a</span><span class="p">[</span><span class="n">alp</span><span class="p">]</span>
+            <span class="n">Kxy_alp</span> <span class="o">=</span> <span class="n">Kxy_a</span><span class="p">[</span><span class="n">alp</span><span class="p">]</span>
+            <span class="n">w_alp</span> <span class="o">=</span> <span class="n">Kxy_alp</span><span class="o">.</span><span class="n">trace</span><span class="p">()</span>
+            <span class="n">w_a</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">w_alp</span><span class="p">)</span>
+            <span class="n">Dxy_alp</span> <span class="o">=</span> <span class="n">Kxy_alp</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">w_alp</span><span class="p">)</span>
             <span class="n">log_Dxy_alp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">Dxy_alp</span><span class="p">)</span>
             <span class="n">log_Dxy_a</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">log_Dxy_alp</span><span class="p">)</span>
 
@@ -323,41 +367,38 @@
                             <span class="p">[</span><span class="n">Dx_alp</span><span class="p">,</span> <span class="n">Dy_alp</span><span class="p">]))</span>
             <span class="n">log_Dx_Dy_a</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">log_Dx_Dy_alp</span><span class="p">)</span>
 
-            <span class="n">entang_alp</span> <span class="o">=</span> <span class="p">(</span><span class="n">Dxy_alp</span><span class="o">*</span><span class="n">log_Dxy_alp</span> <span class="o">-</span>
-                          <span class="n">Dxy_alp</span><span class="o">*</span><span class="n">log_Dx_Dy_alp</span><span class="p">)</span><span class="o">.</span><span class="n">trace</span><span class="p">()</span><span class="o">/</span><span class="mi">2</span>
-            <span class="k">if</span> <span class="n">alp</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;llll-norm&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">Dxy_alp</span><span class="o">.</span><span class="n">arr</span><span class="p">),</span>
-                      <span class="n">Dxy_alp</span><span class="o">.</span><span class="n">trace</span><span class="p">())</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;hhhhhhh&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">((</span><span class="n">log_Dxy_alp</span> <span class="o">-</span>
-                                                 <span class="n">log_Dx_Dy_alp</span><span class="p">)</span><span class="o">.</span><span class="n">arr</span><span class="p">))</span>
-                <span class="n">Dx_Dy_alp</span> <span class="o">=</span> <span class="n">DenMat</span><span class="o">.</span><span class="n">get_kron_prod_of_den_mats</span><span class="p">([</span><span class="n">Dx_alp</span><span class="p">,</span> <span class="n">Dy_alp</span><span class="p">])</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;vvvvvvvvv&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">Dxy_alp</span><span class="o">.</span><span class="n">arr</span> <span class="o">-</span>
-                    <span class="n">Dx_Dy_alp</span><span class="o">.</span><span class="n">arr</span><span class="p">))</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ccccccDx&#39;</span><span class="p">,</span> <span class="n">Dx_alp</span><span class="p">)</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ccccccDy&#39;</span><span class="p">,</span> <span class="n">Dy_alp</span><span class="p">)</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ccccccDxy&#39;</span><span class="p">,</span> <span class="n">Dxy_alp</span><span class="p">)</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ccccccDxDy&#39;</span><span class="p">,</span> <span class="n">Dx_Dy_alp</span><span class="p">)</span>
-                <span class="nb">print</span><span class="p">((</span><span class="s2">&quot;bbbnnnmmm&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">Dxy_alp</span><span class="o">*</span><span class="n">log_Dxy_alp</span><span class="p">)</span><span class="o">.</span><span class="n">trace</span><span class="p">()</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span>
-                      <span class="o">-</span><span class="p">(</span><span class="n">Dxy_alp</span><span class="o">*</span><span class="n">log_Dx_Dy_alp</span><span class="p">)</span><span class="o">.</span><span class="n">trace</span><span class="p">()</span><span class="o">/</span><span class="mi">2</span><span class="p">))</span>
-            <span class="n">entang_a</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">entang_alp</span><span class="p">)</span>
-        <span class="n">alp_min</span><span class="p">,</span> <span class="n">entang</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">enumerate</span><span class="p">(</span><span class="n">entang_a</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="n">itemgetter</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;entang_a=&#39;</span><span class="p">,</span> <span class="n">entang_a</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;alp_min=&#39;</span><span class="p">,</span> <span class="n">alp_min</span><span class="p">)</span>
-        <span class="n">lam_xy</span> <span class="o">=</span> <span class="n">log_Dxy_a</span><span class="p">[</span><span class="n">alp_min</span><span class="p">]</span> <span class="o">-</span> <span class="n">log_Dx_Dy_a</span><span class="p">[</span><span class="n">alp_min</span><span class="p">]</span>
-
-        <span class="c1"># this loop will fill list new_Dxy_a</span>
-        <span class="n">new_Dxy_a</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">Delta_xy</span> <span class="o">+=</span> <span class="n">log_Dxy_alp</span> <span class="o">-</span> <span class="n">log_Dx_Dy_alp</span>
+        <span class="n">Delta_xy</span> <span class="o">=</span> <span class="n">Delta_xy</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">num_hidden_states</span><span class="p">)</span>
+        <span class="n">var_Delta_xy</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">alp</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_hidden_states</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">alp</span> <span class="o">==</span> <span class="n">alp_min</span><span class="p">:</span>
-                <span class="n">new_Dxy_alp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">new_Dxy_alp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">lam_xy</span> <span class="o">+</span> <span class="n">log_Dx_Dy_a</span><span class="p">[</span><span class="n">alp</span><span class="p">])</span>
-                <span class="n">new_Dxy_alp</span> <span class="o">*=</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">new_Dxy_alp</span><span class="o">.</span><span class="n">trace</span><span class="p">())</span>
-            <span class="n">new_Dxy_a</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_Dxy_alp</span><span class="p">)</span>
-        <span class="c1"># print(&#39;xxxxxxrrrrr 0=&#39;, np.linalg.norm(</span>
-        <span class="c1">#     new_Dxy_a[alp_min].arr - self.Dxy.arr))</span>
-        <span class="k">return</span> <span class="n">entang</span><span class="p">,</span> <span class="n">new_Dxy_a</span></div></div>
+            <span class="n">var_Delta_xy</span> <span class="o">+=</span> \
+                <span class="p">(</span><span class="n">log_Dxy_a</span><span class="p">[</span><span class="n">alp</span><span class="p">]</span> <span class="o">-</span> <span class="n">log_Dx_Dy_a</span><span class="p">[</span><span class="n">alp</span><span class="p">]</span> <span class="o">-</span> <span class="n">Delta_xy</span><span class="p">)</span><span class="o">.</span><span class="n">norm</span><span class="p">()</span>
+        <span class="c1"># if self.verbose:</span>
+        <span class="c1">#     print(&#39;w_a=&#39;, w_a, &#39;sum=&#39;, np.sum(np.array(w_a)))</span>
+
+        <span class="n">new_Kxy_a</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">sum_numerator</span> <span class="o">=</span> <span class="n">DenMat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span><span class="o">.</span><span class="n">num_rows</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span><span class="o">.</span><span class="n">row_shape</span><span class="p">)</span>
+        <span class="n">sum_numerator</span><span class="o">.</span><span class="n">set_arr_to_zero</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">alp</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_hidden_states</span><span class="p">):</span>
+            <span class="n">new_Kxy_alp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">Delta_xy</span> <span class="o">+</span> <span class="n">log_Dx_Dy_a</span><span class="p">[</span><span class="n">alp</span><span class="p">])</span><span class="o">*</span><span class="n">w_a</span><span class="p">[</span><span class="n">alp</span><span class="p">]</span>
+            <span class="n">new_Kxy_a</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_Kxy_alp</span><span class="p">)</span>
+            <span class="n">sum_numerator</span> <span class="o">+=</span> <span class="n">new_Kxy_alp</span>
+        <span class="n">inv_sum_numerator</span> <span class="o">=</span> <span class="n">sum_numerator</span><span class="o">.</span><span class="n">inv</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">alp</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_hidden_states</span><span class="p">):</span>
+            <span class="c1"># print(&#39;rrrrr&#39;, np.linalg.norm(self.Dxy.arr),</span>
+            <span class="c1">#             np.linalg.norm(inv_sum_numerator.arr),</span>
+            <span class="c1">#             np.linalg.norm(new_Kxy_a[alp].arr))</span>
+            <span class="n">new_Kxy_alp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span><span class="o">*</span><span class="n">inv_sum_numerator</span><span class="o">*</span><span class="n">new_Kxy_a</span><span class="p">[</span><span class="n">alp</span><span class="p">]</span>
+            <span class="n">new_Kxy_alp</span> <span class="o">=</span> <span class="p">(</span><span class="n">new_Kxy_alp</span> <span class="o">+</span> <span class="n">new_Kxy_alp</span><span class="o">.</span><span class="n">herm</span><span class="p">())</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+            <span class="c1"># print(&#39;rrrrr111&#39;, np.linalg.norm(new_Kxy_alp.arr))</span>
+            <span class="n">new_Kxy_a</span><span class="p">[</span><span class="n">alp</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_Kxy_alp</span>
+
+        <span class="n">new_Kxy_a</span> <span class="o">=</span> <span class="n">SquashedEnt</span><span class="o">.</span><span class="n">regulate</span><span class="p">(</span><span class="n">new_Kxy_a</span><span class="p">)</span>
+        <span class="c1"># print(&#39;nnnnnnnnnnnnn&#39;, np.sum(np.array([x.trace() for x in</span>
+        <span class="c1">#                                         new_Kxy_a])))</span>
+        <span class="n">entang</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span><span class="o">*</span><span class="n">Delta_xy</span><span class="p">)</span><span class="o">.</span><span class="n">trace</span><span class="p">()</span><span class="o">/</span><span class="mi">2</span>
+
+        <span class="k">return</span> <span class="n">new_Kxy_a</span><span class="p">,</span> <span class="n">entang</span><span class="p">,</span> <span class="n">var_Delta_xy</span></div></div>
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
@@ -370,7 +411,7 @@
             <span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">.</span><span class="mi">05</span><span class="p">,</span> <span class="o">.</span><span class="mi">05</span><span class="p">,</span> <span class="o">.</span><span class="mi">2</span><span class="p">,</span> <span class="o">.</span><span class="mi">2</span><span class="p">,</span> <span class="o">.</span><span class="mi">3</span><span class="p">,</span> <span class="o">.</span><span class="mi">1</span><span class="p">,</span> <span class="o">.</span><span class="mi">06</span><span class="p">,</span> <span class="o">.</span><span class="mi">04</span><span class="p">])</span>
             <span class="p">]</span>
         <span class="n">num_hidden_states</span> <span class="o">=</span> <span class="mi">10</span>
-        <span class="n">num_ab_steps</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="n">num_ab_steps</span> <span class="o">=</span> <span class="mi">60</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;num_hidden_states=&#39;</span><span class="p">,</span> <span class="n">num_hidden_states</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;num_ab_steps=&#39;</span><span class="p">,</span> <span class="n">num_ab_steps</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">evas_of_dm</span> <span class="ow">in</span> <span class="n">evas_of_dm_list</span><span class="p">:</span>
@@ -378,7 +419,8 @@
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;***************new dm&#39;</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;evas_of_dm</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">evas_of_dm</span><span class="p">)</span>
             <span class="n">dm</span><span class="o">.</span><span class="n">set_arr_to_rand_den_mat</span><span class="p">(</span><span class="n">evas_of_dm</span><span class="p">)</span>
-            <span class="n">ecase</span> <span class="o">=</span> <span class="n">SquashedEnt</span><span class="p">(</span><span class="n">dm</span><span class="p">,</span> <span class="n">num_hidden_states</span><span class="p">,</span> <span class="n">num_ab_steps</span><span class="p">)</span>
+            <span class="n">ecase</span> <span class="o">=</span> <span class="n">SquashedEnt</span><span class="p">(</span><span class="n">dm</span><span class="p">,</span> <span class="n">num_hidden_states</span><span class="p">,</span> <span class="n">num_ab_steps</span><span class="p">,</span>
+                                <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ent_02_1=&#39;</span><span class="p">,</span> <span class="n">ecase</span><span class="o">.</span><span class="n">get_entang</span><span class="p">({</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">}))</span>
 
     <span class="kn">from</span> <span class="nn">entanglish.SymNupState</span> <span class="k">import</span> <span class="o">*</span>
@@ -393,11 +435,11 @@
         <span class="n">dm1</span><span class="o">.</span><span class="n">set_arr_from_st_vec</span><span class="p">(</span><span class="n">st_vec</span><span class="p">)</span>
 
         <span class="n">num_hidden_states</span> <span class="o">=</span> <span class="mi">10</span>
-        <span class="n">num_ab_steps</span> <span class="o">=</span> <span class="mi">40</span>
+        <span class="n">num_ab_steps</span> <span class="o">=</span> <span class="mi">60</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;num_hidden_states=&#39;</span><span class="p">,</span> <span class="n">num_hidden_states</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;num_ab_steps=&#39;</span><span class="p">,</span> <span class="n">num_ab_steps</span><span class="p">)</span>
         <span class="n">ecase</span> <span class="o">=</span> <span class="n">SquashedEnt</span><span class="p">(</span>
-            <span class="n">dm1</span><span class="p">,</span> <span class="n">num_hidden_states</span><span class="p">,</span> <span class="n">num_ab_steps</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">dm1</span><span class="p">,</span> <span class="n">num_hidden_states</span><span class="p">,</span> <span class="n">num_ab_steps</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;entang_023: algo value, known value</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span>
               <span class="n">ecase</span><span class="o">.</span><span class="n">get_entang</span><span class="p">({</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">}),</span>
               <span class="n">st</span><span class="o">.</span><span class="n">get_known_entang</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>

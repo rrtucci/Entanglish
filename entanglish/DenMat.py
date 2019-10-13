@@ -740,6 +740,17 @@ class DenMat:
         assert im < 1e-4, im
         return np.trace(self.arr).real
 
+    def norm(self):
+        """
+        This method returns the 2-norm of self.arr
+
+        Returns
+        -------
+        float
+
+        """
+        return np.linalg.norm(self.arr)
+
     def exp(self, method='eigen'):
         """
         This method returns a DenMat which is the matrix exponential of self.

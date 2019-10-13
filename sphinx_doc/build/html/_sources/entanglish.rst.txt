@@ -17,6 +17,7 @@ Submodules
    entanglish.classgraph
    entanglish.run_all_nb
    entanglish.run_all_py
+   entanglish.tempo
    entanglish.utilities
 
 Module contents

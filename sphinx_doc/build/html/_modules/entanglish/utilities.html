@@ -262,15 +262,14 @@
 
 <div class="viewcode-block" id="clipped_log_of_vec"><a class="viewcode-back" href="../../entanglish.utilities.html#entanglish.utilities.clipped_log_of_vec">[docs]</a><span class="k">def</span> <span class="nf">clipped_log_of_vec</span><span class="p">(</span><span class="n">vec</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This method takes as input a float or a 1D array of floats. It returns</span>
-<span class="sd">    the log element-wise of that array, except when an element of the array</span>
-<span class="sd">    is very close to zero or negative. In that exceptional case, the method</span>
-<span class="sd">    &quot;clips the log&quot;, meaning that it returns a fixed negative value like</span>
-<span class="sd">    log(1e-5).</span>
+<span class="sd">    This method takes as input a int|float or a 1D array of floats. It</span>
+<span class="sd">    returns the log element-wise of that array, except when an element of</span>
+<span class="sd">    the array is &lt; 1e-5. In that exceptional case, the method &quot;clips the</span>
+<span class="sd">    log&quot;, meaning that it returns a fixed negative value like log(1e-5).</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    vec : float|np.ndarray</span>
+<span class="sd">    vec : int|float|np.ndarray</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -278,17 +277,51 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">vec1</span> <span class="o">=</span> <span class="n">vec</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">vec</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">vec</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
         <span class="n">vec1</span> <span class="o">=</span> <span class="p">[</span><span class="n">vec</span><span class="p">]</span>
     <span class="n">li</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">vec1</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mf">1e-4</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mf">1e-5</span><span class="p">:</span>
-                <span class="n">li</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">1e-5</span><span class="p">))</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">li</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mf">1e-6</span><span class="p">:</span>
+            <span class="n">li</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">1e-6</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">assert</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;can&#39;t take log of &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="n">li</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">li</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="positive_part"><a class="viewcode-back" href="../../entanglish.utilities.html#entanglish.utilities.positive_part">[docs]</a><span class="k">def</span> <span class="nf">positive_part</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This method returns max(0, x)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x : int|float</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    int|float</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">max</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">x</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="positive_part_of_vec"><a class="viewcode-back" href="../../entanglish.utilities.html#entanglish.utilities.positive_part_of_vec">[docs]</a><span class="k">def</span> <span class="nf">positive_part_of_vec</span><span class="p">(</span><span class="n">vec</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This method takes as input a int|float or a 1D array of floats. It</span>
+<span class="sd">    returns the array, with negative items replaced by zero</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    vec : int|float|np.ndarray</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    np.ndarray</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">vec1</span> <span class="o">=</span> <span class="n">vec</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">vec</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+        <span class="n">vec1</span> <span class="o">=</span> <span class="p">[</span><span class="n">vec</span><span class="p">]</span>
+    <span class="n">li</span> <span class="o">=</span> <span class="p">[</span><span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">vec1</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">li</span><span class="p">)</span></div>
 
 

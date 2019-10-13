@@ -683,7 +683,7 @@ It is also convenient to define
 K^\alp_{\rvx, \rvy}=\rho^\alp_{\rvx, \rvy}w^\alp
 \;.
 \eeq
-Note that 
+Note that
 
 \beq
 w^\alp=\tr_{\rvx, \rvy}K^\alp_{\rvx, \rvy}, \;\;
@@ -753,7 +753,7 @@ E^\alp_{\rvx,\rvy}
 \right.
 \;.
 \eeq
-The two independent variations with respect to $\rho^\alp_{\rvx,\rvy}$ 
+The two independent variations with respect to $\rho^\alp_{\rvx,\rvy}$
 and $w^\alp$ are zero iff
 
 \beq
@@ -779,7 +779,7 @@ $K^{\alp}_{\rvx,\rvy}(n)$
 to $K^{\alp}_{\rvx,\rvy}(n+1)$ for $n=0,1,2,\ldots$.
 
 For $n=0$, define\footnote{Defining $K^{\alp}_{\rvx,\rvy}(0)=
-\frac{1}{n_\rvalp}\rho_{\rvx,\rvy}$ for all $\alp$, does not work because 
+\frac{1}{n_\rvalp}\rho_{\rvx,\rvy}$ for all $\alp$, does not work because
 this is a stationary point of the recursion. Try it.}
 
 \beq
@@ -795,19 +795,18 @@ where $\rho^{\rm diag.part}_{\rvx,\rvy}$ is obtained from
 $\rho_{\rvx,\rvy}$ by replacing its non-diagonal elements by zero.
 
 
-For $n=0,1,2, ..$, given $K^{\alp}_{\rvx,\rvy}(n)$ for all $\alp$, 
+For $n=0,1,2, ..$, given $K^{\alp}_{\rvx,\rvy}(n)$ for all $\alp$,
 choose $K^{\alp}_{\rvx,\rvy}(n+1)$ for all $\alp$ as follows.
-Let
-$\alp_{rand}(n)$ be a value of $\rvalp$ chosen uniformly  at random from all
-possible values of $\rvalp$. Set
+Set
 
 \beq
 \Delta_{\rvx, \rvy}(n)
-=
-\log \rho^{\alp_{rand}(n)}_{\rvx,\rvy}(n)
+=\frac{1}{n_\rvalp}\sum_\alp\left\{
+\log \rho^{\alp}_{\rvx,\rvy}(n)
 -
-\log \rho^{\alp_{rand}(n)}_{\rvx}(n)
-\rho^{\alp_{rand}(n)}_{\rvy}(n)
+\log \rho^{\alp}_{\rvx}(n)
+\rho^{\alp}_{\rvy}(n)
+\right\}
 \;,
 \eeq
 

@@ -238,14 +238,13 @@ then it prints a message and when halt=True, halts execution.</p>
 <dl class="function">
 <dt id="entanglish.utilities.clipped_log_of_vec">
 <code class="sig-prename descclassname">entanglish.utilities.</code><code class="sig-name descname">clipped_log_of_vec</code><span class="sig-paren">(</span><em class="sig-param">vec</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/utilities.html#clipped_log_of_vec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.utilities.clipped_log_of_vec" title="Permalink to this definition">¶</a></dt>
-<dd><p>This method takes as input a float or a 1D array of floats. It returns
-the log element-wise of that array, except when an element of the array
-is very close to zero or negative. In that exceptional case, the method
-“clips the log”, meaning that it returns a fixed negative value like
-log(1e-5).</p>
+<dd><p>This method takes as input a int|float or a 1D array of floats. It
+returns the log element-wise of that array, except when an element of
+the array is &lt; 1e-5. In that exceptional case, the method “clips the
+log”, meaning that it returns a fixed negative value like log(1e-5).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>vec</strong> (<em>float|np.ndarray</em>) – </p>
+<dd class="field-odd"><p><strong>vec</strong> (<em>int|float|np.ndarray</em>) – </p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p></p>
@@ -419,6 +418,41 @@ column vectors and ‘a’ a matrix.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>complex</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="entanglish.utilities.positive_part">
+<code class="sig-prename descclassname">entanglish.utilities.</code><code class="sig-name descname">positive_part</code><span class="sig-paren">(</span><em class="sig-param">x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/utilities.html#positive_part"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.utilities.positive_part" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method returns max(0, x)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>int|float</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int|float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="entanglish.utilities.positive_part_of_vec">
+<code class="sig-prename descclassname">entanglish.utilities.</code><code class="sig-name descname">positive_part_of_vec</code><span class="sig-paren">(</span><em class="sig-param">vec</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/utilities.html#positive_part_of_vec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.utilities.positive_part_of_vec" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method takes as input a int|float or a 1D array of floats. It
+returns the array, with negative items replaced by zero</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>vec</strong> (<em>int|float|np.ndarray</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
 </dd>
 </dl>
 </dd></dl>

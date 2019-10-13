@@ -230,21 +230,48 @@ axes_subset, and y is the set of all other axes.</p>
 
 <dl class="method">
 <dt id="entanglish.SquashedEnt.SquashedEnt.next_step">
-<code class="sig-name descname">next_step</code><span class="sig-paren">(</span><em class="sig-param">Dxy_a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/SquashedEnt.html#SquashedEnt.next_step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.SquashedEnt.SquashedEnt.next_step" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">next_step</code><span class="sig-paren">(</span><em class="sig-param">Kxy_a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/SquashedEnt.html#SquashedEnt.next_step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.SquashedEnt.SquashedEnt.next_step" title="Permalink to this definition">¶</a></dt>
 <dd><p>This method is used self.num_ab_steps times, internally, in the
-method self.get_entang(). Given the current Dxy_a as input,
-it returns the next estimate of Exy and the next Dxy_a.</p>
+method self.get_entang(). Given the current Kxy_a as input,
+it returns the next estimate of Kxy_a , Exy , var_Delta_xy</p>
+<p>Kxy_a is a list of un-normalized density matrices such that Kxy_a[
+alp]=Dxy_a[alp]*w_a[alp]. Therefore, sum_alp Kxy_a[alp] = Dxy.</p>
+<p>Exy is the entanglement for parts x and y.</p>
+<p>If</p>
+<p>Delta_xy[alp]= log Dxy_a[alp] - log(Dx_a[alp]Dy_a[alp]),</p>
+<p>then var_Delta_xy is a float that measures the variance in the
+Delta_xy{ alp] matrices. This variance tends to zero as num_ab_steps
+tends to infinity</p>
+<p>mean_Delta_xy = average over alp of Delta_xy[alp]
+var_Delta_xy = sum_alp norm(Delta_xy[alp] - mean Delta_xy)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>Dxy_a</strong> (<em>list</em><em>[</em><a class="reference internal" href="entanglish.DenMat.html#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat"><em>DenMat</em></a><em>]</em>) – <p>a list of normalized density matrices Dxy_a[alp] such that</p>
-<p>sum_alp w_alp * Dxy_a[alp] = Dxy,</p>
-</p>
+<dd class="field-odd"><p><strong>Kxy_a</strong> (<em>list</em><em>[</em><a class="reference internal" href="entanglish.DenMat.html#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat"><em>DenMat</em></a><em>]</em>) – </p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p></p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>float, list[<a class="reference internal" href="entanglish.DenMat.html#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat">DenMat</a>]</p>
+<dd class="field-odd"><p>list[<a class="reference internal" href="entanglish.DenMat.html#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat">DenMat</a>], float, float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.SquashedEnt.SquashedEnt.regulate">
+<em class="property">static </em><code class="sig-name descname">regulate</code><span class="sig-paren">(</span><em class="sig-param">Kxy_a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/SquashedEnt.html#SquashedEnt.regulate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.SquashedEnt.SquashedEnt.regulate" title="Permalink to this definition">¶</a></dt>
+<dd><p>This internal method returns a list new_Kxy_a which is constructed
+by replacing each item Kxy_alp of list Kxy_a by its positive part
+normalized so that sum_xya of all items of new_Kxy_a is one.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>Kxy_a</strong> (<em>list</em><em>[</em><a class="reference internal" href="entanglish.DenMat.html#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat"><em>DenMat</em></a><em>]</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list[<a class="reference internal" href="entanglish.DenMat.html#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat">DenMat</a>]</p>
 </dd>
 </dl>
 </dd></dl>

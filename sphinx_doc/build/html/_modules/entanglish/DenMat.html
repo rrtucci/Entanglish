@@ -890,6 +890,17 @@
         <span class="k">assert</span> <span class="n">im</span> <span class="o">&lt;</span> <span class="mf">1e-4</span><span class="p">,</span> <span class="n">im</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arr</span><span class="p">)</span><span class="o">.</span><span class="n">real</span></div>
 
+<div class="viewcode-block" id="DenMat.norm"><a class="viewcode-back" href="../../entanglish.DenMat.html#entanglish.DenMat.DenMat.norm">[docs]</a>    <span class="k">def</span> <span class="nf">norm</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method returns the 2-norm of self.arr</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arr</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="DenMat.exp"><a class="viewcode-back" href="../../entanglish.DenMat.html#entanglish.DenMat.DenMat.exp">[docs]</a>    <span class="k">def</span> <span class="nf">exp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;eigen&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This method returns a DenMat which is the matrix exponential of self.</span>
@@ -943,6 +954,20 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">assert</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;unsupported method&#39;</span>
         <span class="k">return</span> <span class="n">DenMat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_rows</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">row_shape</span><span class="p">,</span> <span class="n">logm_arr</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DenMat.positive_part"><a class="viewcode-back" href="../../entanglish.DenMat.html#entanglish.DenMat.DenMat.positive_part">[docs]</a>    <span class="k">def</span> <span class="nf">positive_part</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method returns a DenMat in which negative eigenvalues of</span>
+<span class="sd">        self.arr are replaced by zero.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        DenMat</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">fun</span> <span class="o">=</span> <span class="n">ut</span><span class="o">.</span><span class="n">positive_part_of_vec</span>
+        <span class="n">pos_arr</span> <span class="o">=</span> <span class="n">ut</span><span class="o">.</span><span class="n">fun_of_herm_arr</span><span class="p">(</span><span class="n">fun</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">arr</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">DenMat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_rows</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">row_shape</span><span class="p">,</span> <span class="n">pos_arr</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DenMat.sqrt"><a class="viewcode-back" href="../../entanglish.DenMat.html#entanglish.DenMat.DenMat.sqrt">[docs]</a>    <span class="k">def</span> <span class="nf">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;eigen&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
