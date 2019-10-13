@@ -156,17 +156,17 @@ class SquashedEnt(EntangCase):
 
         print('')
         for step in range(self.num_ab_steps):
-            Kxy_a, entang, var_Delta_xy = self.next_step(Kxy_a)
+            Kxy_a, entang, err = self.next_step(Kxy_a)
             if self.verbose:
                 print('--ab step=', step, ', entang=', entang,
-                      ", var_Delta=", var_Delta_xy)
+                      ", err=", err)
         return entang
 
     def next_step(self, Kxy_a):
         """
         This method is used self.num_ab_steps times, internally, in the
         method self.get_entang(). Given the current Kxy_a as input,
-        it returns the next estimate of Kxy_a , Exy , var_Delta_xy
+        it returns the next estimate of Kxy_a , Exy , err
 
         Kxy_a is a list of un-normalized density matrices such that Kxy_a[
         alp]=Dxy_a[alp]*w_a[alp]. Therefore, sum_alp Kxy_a[alp] = Dxy.
@@ -177,12 +177,12 @@ class SquashedEnt(EntangCase):
 
         Delta_xy[alp]= log Dxy_a[alp] - log(Dx_a[alp]Dy_a[alp]),
 
-        then var_Delta_xy is a float that measures the variance in the
+        then err is a float that measures the variance in the
         Delta_xy[alp] matrices. This variance tends to zero as num_ab_steps
         tends to infinity
 
-        mean_Delta_xy = average over alp of Delta_xy[alp]
-        var_Delta_xy = sum_alp norm(Delta_xy[alp] - mean Delta_xy)
+        mean_alp(x[alp]) = average over alp of x[alp]
+        err = mean_alp norm(Delta_xy[[alp]alp] - mean_alp Delta_xy[alp])
 
         Parameters
         ----------
@@ -219,10 +219,12 @@ class SquashedEnt(EntangCase):
 
             Delta_xy += log_Dxy_alp - log_Dx_Dy_alp
         Delta_xy = Delta_xy*(1/self.num_hidden_states)
-        var_Delta_xy = 0
+
+        err = 0
         for alp in range(self.num_hidden_states):
-            var_Delta_xy += \
-                (log_Dxy_a[alp] - log_Dx_Dy_a[alp] - Delta_xy).norm()
+            err += (log_Dxy_a[alp] - log_Dx_Dy_a[alp] - Delta_xy).norm()
+        err /= self.num_hidden_states
+
         # if self.verbose:
         #     print('w_a=', w_a, 'sum=', np.sum(np.array(w_a)))
 
@@ -248,7 +250,7 @@ class SquashedEnt(EntangCase):
         #                                         new_Kxy_a])))
         entang = (self.Dxy*Delta_xy).trace()/2
 
-        return new_Kxy_a, entang, var_Delta_xy
+        return new_Kxy_a, entang, err
 
 
 if __name__ == "__main__":

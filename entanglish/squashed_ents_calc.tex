@@ -794,21 +794,33 @@ K^{\alp}_{\rvx,\rvy}(0)=
 where $\rho^{\rm diag.part}_{\rvx,\rvy}$ is obtained from
 $\rho_{\rvx,\rvy}$ by replacing its non-diagonal elements by zero.
 
+Let
+\beq
+\av{x^\alp}_\rvalp = \frac{1}{n_\rva}\sum_{\alp=0}^{n_\rvalp-1}x^\alp
+\;.
+\eeq
+
+
 
 For $n=0,1,2, ..$, given $K^{\alp}_{\rvx,\rvy}(n)$ for all $\alp$,
 choose $K^{\alp}_{\rvx,\rvy}(n+1)$ for all $\alp$ as follows.
 Set
 
 \beq
-\Delta_{\rvx, \rvy}(n)
-=\frac{1}{n_\rvalp}\sum_\alp\left\{
+\Delta^\alp_{\rvx, \rvy}(n)=
 \log \rho^{\alp}_{\rvx,\rvy}(n)
 -
 \log \rho^{\alp}_{\rvx}(n)
 \rho^{\alp}_{\rvy}(n)
-\right\}
 \;,
 \eeq
+
+\beq
+\Delta_{\rvx, \rvy}(n)=
+\av{\Delta^\alp_{\rvx, \rvy}(n)}_\rvalp
+\;,
+\eeq
+
 
 \beq
 M^\alp_{\rvx, \rvy}(n)=
@@ -832,6 +844,12 @@ M^\alp_{\rvx, \rvy}(n) + h.c.\right)
 
 \beq
 E_{\rvx, \rvy}(n) = \frac{1}{2}\tr_{\rvx, \rvy} \left[\rho_{\rvx, \rvy}\Delta_{\rvx, \rvy}(n)\right]
+\;,
+\eeq
+
+\beq
+err(n)=
+\av{\|\Delta^\alp_{\rvx, \rvy}(n)-\Delta_{\rvx, \rvy}(n)\|}_\rvalp
 \;.
 \eeq
 
@@ -841,6 +859,11 @@ We claim but will not prove rigorously that
 \beq
 E_{\rvx, \rvy}(n)\rightarrow
 E_{\rvx, \rvy}
+\;,
+\eeq
+
+\beq
+err(n)\rightarrow 0
 \;
 \eeq
 as $n\rightarrow \infty$.
