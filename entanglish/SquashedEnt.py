@@ -178,7 +178,7 @@ class SquashedEnt(EntangCase):
         Delta_xy[alp]= log Dxy_a[alp] - log(Dx_a[alp]Dy_a[alp]),
 
         then var_Delta_xy is a float that measures the variance in the
-        Delta_xy{ alp] matrices. This variance tends to zero as num_ab_steps
+        Delta_xy[alp] matrices. This variance tends to zero as num_ab_steps
         tends to infinity
 
         mean_Delta_xy = average over alp of Delta_xy[alp]
