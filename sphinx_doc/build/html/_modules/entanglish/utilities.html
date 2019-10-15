@@ -260,16 +260,18 @@
     <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">limits</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">),</span> <span class="n">limits</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span></div>
 
 
-<div class="viewcode-block" id="clipped_log_of_vec"><a class="viewcode-back" href="../../entanglish.utilities.html#entanglish.utilities.clipped_log_of_vec">[docs]</a><span class="k">def</span> <span class="nf">clipped_log_of_vec</span><span class="p">(</span><span class="n">vec</span><span class="p">):</span>
+<div class="viewcode-block" id="clipped_log_of_vec"><a class="viewcode-back" href="../../entanglish.utilities.html#entanglish.utilities.clipped_log_of_vec">[docs]</a><span class="k">def</span> <span class="nf">clipped_log_of_vec</span><span class="p">(</span><span class="n">vec</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-7</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This method takes as input a int|float or a 1D array of floats. It</span>
 <span class="sd">    returns the log element-wise of that array, except when an element of</span>
-<span class="sd">    the array is &lt; 1e-5. In that exceptional case, the method &quot;clips the</span>
-<span class="sd">    log&quot;, meaning that it returns a fixed negative value like log(1e-5).</span>
+<span class="sd">    the array is &lt; eps, where eps is a positive but &lt;&lt; 1 float. In that</span>
+<span class="sd">    exceptional case, the method &quot;clips the log&quot;, meaning that it returns a</span>
+<span class="sd">    fixed negative value log(eps).</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    vec : int|float|np.ndarray</span>
+<span class="sd">    eps : float</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -281,8 +283,8 @@
         <span class="n">vec1</span> <span class="o">=</span> <span class="p">[</span><span class="n">vec</span><span class="p">]</span>
     <span class="n">li</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">vec1</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mf">1e-6</span><span class="p">:</span>
-            <span class="n">li</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">1e-6</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">eps</span><span class="p">:</span>
+            <span class="n">li</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">eps</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">li</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">li</span><span class="p">)</span></div>

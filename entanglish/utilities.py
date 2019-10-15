@@ -110,16 +110,18 @@ def clip(x, limits):
     return min(max(limits[0], x), limits[1])
 
 
-def clipped_log_of_vec(vec):
+def clipped_log_of_vec(vec, eps=1e-7):
     """
     This method takes as input a int|float or a 1D array of floats. It
     returns the log element-wise of that array, except when an element of
-    the array is < 1e-5. In that exceptional case, the method "clips the
-    log", meaning that it returns a fixed negative value like log(1e-5).
+    the array is < eps, where eps is a positive but << 1 float. In that
+    exceptional case, the method "clips the log", meaning that it returns a
+    fixed negative value log(eps).
 
     Parameters
     ----------
     vec : int|float|np.ndarray
+    eps : float
 
     Returns
     -------
@@ -131,8 +133,8 @@ def clipped_log_of_vec(vec):
         vec1 = [vec]
     li = []
     for x in vec1:
-        if x < 1e-6:
-            li.append(np.log(1e-6))
+        if x < eps:
+            li.append(np.log(eps))
         else:
             li.append(np.log(x))
     return np.array(li)

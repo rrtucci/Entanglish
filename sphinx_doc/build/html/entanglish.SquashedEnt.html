@@ -153,7 +153,7 @@
 <span id="entanglish-squashedent-module"></span><h1>entanglish.SquashedEnt module<a class="headerlink" href="#module-entanglish.SquashedEnt" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="entanglish.SquashedEnt.SquashedEnt">
-<em class="property">class </em><code class="sig-prename descclassname">entanglish.SquashedEnt.</code><code class="sig-name descname">SquashedEnt</code><span class="sig-paren">(</span><em class="sig-param">den_mat</em>, <em class="sig-param">num_hidden_states</em>, <em class="sig-param">num_ab_steps</em>, <em class="sig-param">method='eigen'</em>, <em class="sig-param">verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/SquashedEnt.html#SquashedEnt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.SquashedEnt.SquashedEnt" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">entanglish.SquashedEnt.</code><code class="sig-name descname">SquashedEnt</code><span class="sig-paren">(</span><em class="sig-param">den_mat</em>, <em class="sig-param">num_hidden_states</em>, <em class="sig-param">num_ab_steps</em>, <em class="sig-param">method='eigen'</em>, <em class="sig-param">recursion_init='eigen'</em>, <em class="sig-param">verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/SquashedEnt.html#SquashedEnt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.SquashedEnt.SquashedEnt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="entanglish.EntangCase.html#entanglish.EntangCase.EntangCase" title="entanglish.EntangCase.EntangCase"><code class="xref py py-class docutils literal notranslate"><span class="pre">entanglish.EntangCase.EntangCase</span></code></a></p>
 <p>This class is a child of class EntangCase. It’s purpose is to calculate
 the (bipartite) quantum entanglement Exy of a mixed state density matrix
@@ -184,18 +184,21 @@ and a Python Implementation Thereof”</p>
 the axes are given in the precise order self.x_axes + self.y_axes.</p></li>
 <li><p><strong>den_mat</strong> (<a class="reference internal" href="entanglish.DenMat.html#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat"><em>DenMat</em></a>) – </p></li>
 <li><p><strong>num_ab_steps</strong> (<em>int</em>) – number of iterations of Arimoto Blahut algo</p></li>
-<li><p><strong>num_hidden_states</strong> (<em>int</em>) – number of hidden states indexed by alpha, so this is number of alphas.
-In the above class docstring, alpha is denoted by h, for hidden.</p></li>
+<li><p><strong>num_hidden_states</strong> (<em>int</em>) – number of hidden states indexed by alpha, so this is number of
+alphas. In the above class docstring, alpha is denoted by h,
+for hidden. This number is &lt;= Dxy.num_rows.</p></li>
 <li><p><strong>x_axes</strong> (<em>list</em><em>[</em><em>int</em><em>]</em>) – This class calculates entanglement for 2 parts: x_axes and y_axes.
 x_axes and y_axes are mutually disjoint lists whose union is range(
 len( den_mat.row_shape))</p></li>
+<li><p><strong>recursion_init</strong> (<em>str</em>) – How to initiate the recursion of Kxy_a. If ‘eigen’, uses the eigen
+decomposition of Dxy and num_hidden_states = Dxy.num_rows</p></li>
 <li><p><strong>y_axes</strong> (<em>list</em><em>[</em><em>int</em><em>]</em>) – </p></li>
 </ul>
 </dd>
 </dl>
 <dl class="method">
 <dt id="entanglish.SquashedEnt.SquashedEnt.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">den_mat</em>, <em class="sig-param">num_hidden_states</em>, <em class="sig-param">num_ab_steps</em>, <em class="sig-param">method='eigen'</em>, <em class="sig-param">verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/SquashedEnt.html#SquashedEnt.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.SquashedEnt.SquashedEnt.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">den_mat</em>, <em class="sig-param">num_hidden_states</em>, <em class="sig-param">num_ab_steps</em>, <em class="sig-param">method='eigen'</em>, <em class="sig-param">recursion_init='eigen'</em>, <em class="sig-param">verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/SquashedEnt.html#SquashedEnt.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.SquashedEnt.SquashedEnt.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constructor</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -204,6 +207,7 @@ len( den_mat.row_shape))</p></li>
 <li><p><strong>num_hidden_states</strong> (<em>int</em>) – number of states of h in the Dxyh defined in class doc string</p></li>
 <li><p><strong>num_ab_steps</strong> (<em>int</em>) – </p></li>
 <li><p><strong>method</strong> (<em>str</em>) – </p></li>
+<li><p><strong>recursion_init</strong> (<em>str</em>) – </p></li>
 <li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
 </ul>
 </dd>
@@ -233,17 +237,17 @@ axes_subset, and y is the set of all other axes.</p>
 <code class="sig-name descname">next_step</code><span class="sig-paren">(</span><em class="sig-param">Kxy_a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/SquashedEnt.html#SquashedEnt.next_step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.SquashedEnt.SquashedEnt.next_step" title="Permalink to this definition">¶</a></dt>
 <dd><p>This method is used self.num_ab_steps times, internally, in the
 method self.get_entang(). Given the current Kxy_a as input,
-it returns the next estimate of Kxy_a , Exy , var_Delta_xy</p>
+it returns the next estimate of Kxy_a , Exy , err</p>
 <p>Kxy_a is a list of un-normalized density matrices such that Kxy_a[
 alp]=Dxy_a[alp]*w_a[alp]. Therefore, sum_alp Kxy_a[alp] = Dxy.</p>
 <p>Exy is the entanglement for parts x and y.</p>
 <p>If</p>
 <p>Delta_xy[alp]= log Dxy_a[alp] - log(Dx_a[alp]Dy_a[alp]),</p>
-<p>then var_Delta_xy is a float that measures the variance in the
+<p>then err is a float that measures the variance in the
 Delta_xy[alp] matrices. This variance tends to zero as num_ab_steps
 tends to infinity</p>
-<p>mean_Delta_xy = average over alp of Delta_xy[alp]
-var_Delta_xy = sum_alp norm(Delta_xy[alp] - mean Delta_xy)</p>
+<p>mean_alp x[alp] = average over alp of x[alp]
+err = mean_alp norm(Delta_xy[alp] - mean_alp Delta_xy[alp])</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>Kxy_a</strong> (<em>list</em><em>[</em><a class="reference internal" href="entanglish.DenMat.html#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat"><em>DenMat</em></a><em>]</em>) – </p>
@@ -263,15 +267,17 @@ var_Delta_xy = sum_alp norm(Delta_xy[alp] - mean Delta_xy)</p>
 <dd><p>This internal method returns a list new_Kxy_a which is constructed
 by replacing each item Kxy_alp of list Kxy_a by its positive part
 normalized so that sum_xya of all items of new_Kxy_a is one.</p>
+<p>Some items of list Kxy_a may be None (those with very small w_alp).
+None items are not changed, they are left as None</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>Kxy_a</strong> (<em>list</em><em>[</em><a class="reference internal" href="entanglish.DenMat.html#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat"><em>DenMat</em></a><em>]</em>) – </p>
+<dd class="field-odd"><p><strong>Kxy_a</strong> (<em>list</em><em>[</em><em>DenMat|None</em><em>]</em>) – </p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p></p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list[<a class="reference internal" href="entanglish.DenMat.html#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat">DenMat</a>]</p>
+<dd class="field-odd"><p>list[DenMat|None]</p>
 </dd>
 </dl>
 </dd></dl>

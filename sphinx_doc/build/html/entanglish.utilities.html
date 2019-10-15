@@ -237,14 +237,18 @@ then it prints a message and when halt=True, halts execution.</p>
 
 <dl class="function">
 <dt id="entanglish.utilities.clipped_log_of_vec">
-<code class="sig-prename descclassname">entanglish.utilities.</code><code class="sig-name descname">clipped_log_of_vec</code><span class="sig-paren">(</span><em class="sig-param">vec</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/utilities.html#clipped_log_of_vec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.utilities.clipped_log_of_vec" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">entanglish.utilities.</code><code class="sig-name descname">clipped_log_of_vec</code><span class="sig-paren">(</span><em class="sig-param">vec</em>, <em class="sig-param">eps=1e-07</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/utilities.html#clipped_log_of_vec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.utilities.clipped_log_of_vec" title="Permalink to this definition">¶</a></dt>
 <dd><p>This method takes as input a int|float or a 1D array of floats. It
 returns the log element-wise of that array, except when an element of
-the array is &lt; 1e-5. In that exceptional case, the method “clips the
-log”, meaning that it returns a fixed negative value like log(1e-5).</p>
+the array is &lt; eps, where eps is a positive but &lt;&lt; 1 float. In that
+exceptional case, the method “clips the log”, meaning that it returns a
+fixed negative value log(eps).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>vec</strong> (<em>int|float|np.ndarray</em>) – </p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vec</strong> (<em>int|float|np.ndarray</em>) – </p></li>
+<li><p><strong>eps</strong> (<em>float</em>) – </p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p></p>
