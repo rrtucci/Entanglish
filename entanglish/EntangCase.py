@@ -242,7 +242,7 @@ class EntangCase:
                 all_lines += line
         print(all_lines)
 
-    def exp(self, dm):
+    def exp(self, dm, method=None):
         """
         This method is a simple wrapper for dm.exp() so that all usages
         inside the class utilize the same method self.method which is an
@@ -251,18 +251,19 @@ class EntangCase:
         Parameters
         ----------
         dm : DenMat
+        method : str
 
         Returns
         -------
         DenMat
 
         """
+        if method is None:
+            method = self.method
         dm_out = None
-        if self.method == 'eigen':
-            dm_out = dm.exp('eigen')
-        elif self.method == 'pade':
-            dm_out = dm.exp('pade')
-        elif self.method == 'pert':
+        if method in ['eigen', 'pade']:
+            dm_out = dm.exp(method)
+        elif method == 'pert':
             esys = DenMatPertTheory.do_bstrap_with_separable_dm0(
                 dm, self.num_bstrap_steps)
             dm_out = DenMat.get_fun_of_dm_from_eigen_sys(
@@ -271,7 +272,38 @@ class EntangCase:
             assert False
         return dm_out
 
-    def log(self, dm, clipped=True):
+    def sqrt(self, dm, method=None):
+        """
+        This method is a simple wrapper for dm.sqrt() so that all usages
+        inside the class utilize the same method self.method which is an
+        attribute of the class.
+
+        Parameters
+        ----------
+        dm : DenMat
+        method : str
+
+        Returns
+        -------
+        DenMat
+
+        """
+        if method is None:
+            method = self.method
+        dm_out = None
+        if method in ['eigen', 'pade']:
+            dm_out = dm.sqrt(method)
+        elif method == 'pert':
+            esys = DenMatPertTheory.do_bstrap_with_separable_dm0(
+                dm, self.num_bstrap_steps)
+            dm_out = DenMat.get_fun_of_dm_from_eigen_sys(
+                dm.num_rows, dm.row_shape, esys, np.sqrt)
+        else:
+            assert False
+        return dm_out
+
+    def log(self, dm, method=None, clipped=True, eps=1e-5,
+            clip_to_zero=False):
         """
         This method is a simple wrapper for dm.log() so that all usages
         inside the class utilize the same method self.method which an
@@ -280,26 +312,33 @@ class EntangCase:
         Parameters
         ----------
         dm : DenMat
-        clipped: bool
-             clips logs (see ut.clipped_log_of_vec) iff this is True
+        method : str
+        clipped : bool
+        eps : float
+        clip_to_zero : bool
+
         Returns
         -------
         DenMat
 
         """
+        if method is None:
+            method = self.method
         dm_out = None
-        if self.method == 'eigen':
-            dm_out = dm.log('eigen', clipped)
-        elif self.method == 'pade':
-            dm_out = dm.log('pade', clipped)
-        elif self.method == 'pert':
+        if method in ['eigen', 'pade']:
+            dm_out = dm.log(method=method,
+                            clipped=clipped,
+                            eps=eps,
+                            clip_to_zero=clip_to_zero)
+        elif method == 'pert':
             esys = DenMatPertTheory.do_bstrap_with_separable_dm0(
                 dm, self.num_bstrap_steps)
             fun = np.log
             if clipped:
                 fun = ut.clipped_log_of_vec
             dm_out = DenMat.get_fun_of_dm_from_eigen_sys(
-                dm.num_rows, dm.row_shape, esys, fun)
+                dm.num_rows, dm.row_shape, esys, fun,
+                clipped=clipped, eps=eps, clip_to_zero=clip_to_zero)
         else:
             assert False
         return dm_out

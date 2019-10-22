@@ -110,31 +110,37 @@ def clip(x, limits):
     return min(max(limits[0], x), limits[1])
 
 
-def clipped_log_of_vec(vec, eps=1e-7):
+def clipped_log_of_vec(vec, eps=1e-5, clip_to_zero=False):
     """
     This method takes as input a int|float or a 1D array of floats. It
     returns the log element-wise of that array, except when an element of
     the array is < eps, where eps is a positive but << 1 float. In that
-    exceptional case, the method "clips the log", meaning that it returns a
-    fixed negative value log(eps).
+    exceptional case, the method "clips the log", meaning that it returns
+    log(eps) if clip_to_zero=False and 0 if clip_to_zero=True
+
 
     Parameters
     ----------
     vec : int|float|np.ndarray
     eps : float
+    clip_to_zero : bool
 
     Returns
     -------
     np.ndarray
 
     """
+    assert eps > 0
     vec1 = vec
     if isinstance(vec, (int, float)):
         vec1 = [vec]
     li = []
     for x in vec1:
         if x < eps:
-            li.append(np.log(eps))
+            if clip_to_zero:
+                li.append(0)
+            else:
+                li.append(np.log(eps))
         else:
             li.append(np.log(x))
     return np.array(li)
@@ -173,11 +179,37 @@ def positive_part_of_vec(vec):
     vec1 = vec
     if isinstance(vec, (int, float)):
         vec1 = [vec]
-    li = [max(0, x) for x in vec1]
-    return np.array(li)
+    li = list(vec1)
+    li_new = [max(0, x) for x in li]
+    return np.array(li_new)
 
 
-def fun_of_herm_arr_from_eigen_sys(fun_of_evas, evas, evec_cols):
+def max_or_zero_of_vec(vec):
+    """
+    This method takes as input a int|float or a 1D array of floats. It
+    returns the array, with all items except the max item replaced by zero
+
+    Parameters
+    ----------
+    vec : int|float|np.ndarray
+
+    Returns
+    -------
+    np.ndarray
+
+    """
+    vec1 = vec
+    if isinstance(vec, (int, float)):
+        vec1 = [vec]
+    li = list(vec1)
+    (xmax, i) = max((x, i) for i, x in enumerate(li))
+    vec1 = np.zeros((len(li),))
+    vec1[i] = xmax
+    return vec1
+
+
+def fun_of_herm_arr_from_eigen_sys(fun_of_evas, evas, evec_cols,
+                                   **fun_kwargs):
     """
     eigen_sys= eigensystem= (eigenvalues, eigenvectors as columns)= (evas,
     evec_cols)
@@ -194,7 +226,8 @@ def fun_of_herm_arr_from_eigen_sys(fun_of_evas, evas, evec_cols):
     fun_of_evas : function
     evas : np.ndarray
     evec_cols : np.ndarray
-
+    fun_kwargs : dict
+        dict of keyword arguments that fun depends on
 
     Returns
     -------
@@ -210,12 +243,12 @@ def fun_of_herm_arr_from_eigen_sys(fun_of_evas, evas, evec_cols):
     # print(',,.,', umat)
     for k in range(len(evas)):
         # multiply each col of evec_cols by corresponding eigenvalue
-        umat[:, k] *= fun_of_evas(evas[k])
+        umat[:, k] *= fun_of_evas(evas[k], **fun_kwargs)
     # print(',,', evec_cols)
     return np.dot(umat, umat_H)
 
 
-def fun_of_herm_arr(fun_of_evas, herm_arr):
+def fun_of_herm_arr(fun_of_evas, herm_arr, **fun_kwargs):
     """
     This method does the same as the method ut.fun_of_herm_arr_from_eigen(),
     except that it calculates evas and eigen_cols from the matrix herm_arr
@@ -227,6 +260,8 @@ def fun_of_herm_arr(fun_of_evas, herm_arr):
         np function acting on 1d array
     herm_arr : np.ndarray
         Hermitian array
+    fun_kwargs : dict
+        dict of keyword args that fun depends on
 
     Returns
     -------
@@ -235,7 +270,7 @@ def fun_of_herm_arr(fun_of_evas, herm_arr):
     """
     evas, evec_cols = np.linalg.eigh(herm_arr)
     return fun_of_herm_arr_from_eigen_sys(
-        fun_of_evas, evas, evec_cols)
+        fun_of_evas, evas, evec_cols, **fun_kwargs)
 
 
 def get_equiv_classes(li):
@@ -270,7 +305,7 @@ def get_equiv_classes(li):
     return classes
 
 
-def is_unitary(umat):
+def is_unitary_arr(umat):
     """
     Returns True iff umat is a unitary matrix
 
@@ -288,77 +323,84 @@ def is_unitary(umat):
                           - np.eye(umat.shape[0])) < 1e-5
 
 
-def assert_positive_arr(arr, halt=True):
+def is_hermitian_arr(arr):
     """
-    This checks that all elements of arr are > 0. If this is not true,
-    then it prints a message and when halt=True, halts execution.
+    Returns True iff arr is a Hermitian matrix.
+
+    Returns
+    -------
+    bool
+
+    """
+    return np.linalg.norm(arr - arr.conj().T) < 1e-6
+
+
+def is_positive_arr(arr):
+    """
+    This method checks that all elements of arr are > 0.
 
     Parameters
     ----------
     arr : np.ndarray
-    halt : bool
 
     Returns
     -------
-    None
+    bool
 
     """
+    out = True
     if not np.all(arr > 0):
         print('some negative neg or zero entries in ' + str(arr))
-        if halt:
-            assert False
+        out = False
+    return out
 
 
-def assert_nonnegative_arr(arr, halt=True):
+def is_nonnegative_arr(arr):
     """
-    This checks that all elements of arr are > -1e-6. If this is not true,
-    then it prints a message and when halt=True, halts execution.
+    This method checks that all elements of arr are > -1e-6.
 
     Parameters
     ----------
     arr : np.ndarray
-    halt : bool
 
     Returns
     -------
-    None
+    bool
 
     """
+    out = True
     if not np.all(arr > -1e-6):
         print('some negative entries in ' + str(arr))
-        if halt:
-            assert False
+        out = False
+    return out
 
 
-def assert_is_prob_dist(prob_dist, halt=True):
+def is_prob_dist(prob_dist):
     """
-    This checks that the elements of arr define a probability distribution.
-    If this is not true, then it prints a message and when halt=True,
-    halts execution.
+    This method checks that the elements of arr define a probability
+    distribution.
 
     Parameters
     ----------
     prob_dist : np.ndarray
-    halt : bool
 
     Returns
     -------
-    None
+    bool
 
     """
-    error = False
+    out = True
     suma = np.sum(prob_dist)
     if not np.all(prob_dist > -1e-6):
         print('some negative probs')
-        error = True
+        out = False
     if not abs(suma - 1) < 1e-3:
         print("probs don't sum to one")
-        error = True
-    if error:
+        out = False
+    if not out:
         print('prob dist=\n', prob_dist)
         print('sum=', suma)
-    if error and halt:
-        assert False
+    return out
 
 
 def get_entropy_from_probs(probs):
@@ -375,7 +417,7 @@ def get_entropy_from_probs(probs):
     float
 
     """
-    assert_is_prob_dist(probs)
+    assert is_prob_dist(probs)
     # print('bbbnnnnn evas', probs)
     ent = 0.0
     for val in probs:

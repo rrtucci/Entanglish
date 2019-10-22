@@ -188,14 +188,14 @@ class DenMatPertTheory:
                 # print('norm arr', norm_arr)
                 if norm_arr > 1e-4:
                     _, evec_cols = np.linalg.eigh(arr)
-                    assert ut.is_unitary(evec_cols)
+                    assert ut.is_unitary_arr(evec_cols)
                     # print('bbbbbbbb', np.around(np.dot(np.dot(
                     #         evec_cols.conj().T,
                     #               arr), evec_cols).real,4))
                     for k1, kk1 in enumerate(eq_class):
                         for k2, kk2 in enumerate(eq_class):
                             umat[kk1, kk2] = evec_cols[k1, k2]
-        assert ut.is_unitary(umat)
+        assert ut.is_unitary_arr(umat)
         # print('ccccccccnorm of rotated_del_dm', np.linalg.norm(
         # self.del_dm_in_sbasis.arr))
         rotated_del_dm = np.dot(

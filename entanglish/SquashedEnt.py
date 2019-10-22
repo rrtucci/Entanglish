@@ -1,12 +1,11 @@
 from entanglish.EntangCase import *
 from entanglish.MaxEntangState import *
-from operator import itemgetter
 import numpy as np
 
 
 class SquashedEnt(EntangCase):
     """
-    This class is a child of class EntangCase. It's purpose is to calculate
+    This class is a child of class EntangCase. Its purpose is to calculate
     the (bipartite) quantum entanglement Exy of a mixed state density matrix
     Dxy with parts x and y. Exy is defined here as the squashed entanglement
     ( see Wikipedia Ref. 1 for more detailed description and original
@@ -16,7 +15,8 @@ class SquashedEnt(EntangCase):
 
     where S(x : y | h) is the conditional mutual information (CMI,
     pronounced "see me") for a density matrix Dxyh. The minimum is over all
-    Dxyh such that Dxy = trace_h Dxyh, where Dxy is given and fixed.
+    Dxyh such that Dxy = trace_h Dxyh, where Dxy is a given, fixed density
+    matrix.
 
     The squashed entanglement reduces to (1/2)*[S(x) + S(y)] = S(x) = S(y)
     when Dxy is a pure state. This is precisely the definition of
@@ -39,21 +39,24 @@ class SquashedEnt(EntangCase):
     ----------
     Dxy : DenMat          
         The input density matrix den_mat, after permuting its axes so that 
-        the axes are given in the precise order self.x_axes + self.y_axes. 
+        the axes are given in the precise order self.x_axes + self.y_axes.
+    Dxy_proj_ops : (DenMat, DenMat)
+        projection operators for zero and nonzero eigenvalues of Dxy
     den_mat : DenMat
+    do_formation_ent : bool
+        True iff want special case of entanglement of formation
     num_ab_steps : int
         number of iterations of Arimoto Blahut algo
     num_hidden_states : int
         number of hidden states indexed by alpha, so this is number of
         alphas. In the above class docstring, alpha is denoted by h,
-        for hidden. This number is <= Dxy.num_rows.
+        for hidden. This number is <= Dxy.num_rows^2.
+    recursion_init : str
+        How to initiate the recursion of Kxy_a.
     x_axes : list[int]
         This class calculates entanglement for 2 parts: x_axes and y_axes.
         x_axes and y_axes are mutually disjoint lists whose union is range(
         len( den_mat.row_shape))
-    recursion_init : str
-        How to initiate the recursion of Kxy_a. If 'eigen', uses the eigen
-        decomposition of Dxy and num_hidden_states = Dxy.num_rows
     y_axes : list[int]
 
     """
@@ -90,13 +93,16 @@ class SquashedEnt(EntangCase):
         self.x_axes = None
         self.y_axes = None
         self.Dxy = None
+        # self.Dxy_proj_ops = None
 
-    @staticmethod
-    def regulate(Kxy_a):
+        self.do_formation_ent = False
+
+    def regulate(self, Kxy_a):
         """
         This internal method returns a list new_Kxy_a which is constructed
-        by replacing each item Kxy_alp of list Kxy_a by its positive part
-        normalized so that sum_xya of all items of new_Kxy_a is one.
+        by replacing each item Kxy_alp of list Kxy_a by its positive_part(),
+        and then dividing the result by sum_xya= sum of all items of
+        new_Kxy_a.
 
         Some items of list Kxy_a may be None (those with very small w_alp).
         None items are not changed, they are left as None
@@ -114,11 +120,17 @@ class SquashedEnt(EntangCase):
         sum_xya_Kxy_a = 0
         new_Kxy_a = []
         for alp in range(len(Kxy_a)):
-            if Kxy_a[alp] is not None:
-                Kxy_alp = Kxy_a[alp].positive_part()
+            Kxy_alp = Kxy_a[alp]
+            if Kxy_alp is not None:
+                # _, proj1 = self.Dxy_proj_ops
+                # Kxy_alp = proj1*Kxy_alp*proj1
+
+                Kxy_alp = Kxy_alp.positive_part()
+
+                # _, proj1 = self.Dxy_proj_ops
+                # Kxy_alp = proj1*Kxy_alp*proj1
+
                 sum_xya_Kxy_a += Kxy_alp.trace()
-            else:
-                Kxy_alp = None
             new_Kxy_a.append(Kxy_alp)
 
         new_Kxy_a = [(Kxy_alp * (1 / sum_xya_Kxy_a) if Kxy_alp is not None
@@ -145,6 +157,7 @@ class SquashedEnt(EntangCase):
         self.y_axes = [k for k in range(num_row_axes) if k not in self.x_axes]
         num_y_axes = len(self.y_axes)
         self.Dxy = self.den_mat.get_rho_xy(self.x_axes, self.y_axes)
+        # self.Dxy_proj_ops = self.Dxy.get_eigenvalue_proj_ops()
 
         Kxy_a = []
         if self.recursion_init == 'stat-pt':
@@ -165,13 +178,23 @@ class SquashedEnt(EntangCase):
                     Kxy_alp.set_arr_to_zero()
                 Kxy_alp.replace_diag_of_arr(dd * (1/self.num_hidden_states))
                 Kxy_a.append(Kxy_alp)
-            Kxy_a = SquashedEnt.regulate(Kxy_a)
-        elif self.recursion_init == 'eigen':
+            Kxy_a = self.regulate(Kxy_a)
+        elif self.recursion_init in ['eigen', 'eigen-sep']:
             assert self.num_hidden_states == self.Dxy.num_rows,\
             'for this choice of recursion init, ' +\
             ' the number of hidden states ' + str(self.num_hidden_states) +\
-            ' must equal the number of rows of Dxy ' + self.Dxy.num_rows
-            evas, evec_cols = np.linalg.eigh(self.Dxy.arr)
+            ' must equal the number of rows of Dxy ' + str(self.Dxy.num_rows)
+            if self.recursion_init == 'eigen':
+                arr = self.Dxy.arr
+            else:
+                num_x_axes = len(self.x_axes)
+                num_y_axes = len(self.y_axes)
+                set_x = set(range(num_x_axes))
+                set_y = set(range(num_x_axes, num_x_axes + num_y_axes, 1))
+                Dx = self.Dxy.get_partial_tr(set_y)
+                Dy = self.Dxy.get_partial_tr(set_x)
+                arr = ut.kron_prod([Dx.arr, Dy.arr])
+            evas, evec_cols = np.linalg.eigh(arr)
             for alp in range(self.num_hidden_states):
                 Kxy_alp = DenMat(self.Dxy.num_rows, self.Dxy.row_shape)
                 eva = evas[alp]
@@ -200,7 +223,7 @@ class SquashedEnt(EntangCase):
         it returns the next estimate of Kxy_a , Exy , err
 
         Kxy_a is a list of un-normalized density matrices such that Kxy_a[
-        alp]=Dxy_a[alp]*w_a[alp]. Therefore, sum_alp Kxy_a[alp] = Dxy.
+        alp]=Dxy_a[alp]*w_a[alp] and sum_alp Kxy_a[alp] = Dxy.
 
         Exy is the entanglement for parts x and y.
 
@@ -235,6 +258,7 @@ class SquashedEnt(EntangCase):
         Delta_xy = DenMat(self.Dxy.num_rows, self.Dxy.row_shape)
         Delta_xy.set_arr_to_zero()
         num_nonzero_w_alp = 0
+        entang = 0
         for alp in range(self.num_hidden_states):
             Kxy_alp = Kxy_a[alp]
             if Kxy_alp is not None:
@@ -245,15 +269,20 @@ class SquashedEnt(EntangCase):
 
             w_a.append(w_alp)
             if w_alp > 1e-5:
+                # proj0, proj1 = self.Dxy_proj_ops
                 Dxy_alp = Kxy_alp*(1/w_alp)
                 log_Dxy_alp = self.log(Dxy_alp)
+                # log_Dxy_alp = log_Dxy_alp*proj1
 
                 Dx_alp = Dxy_alp.get_partial_tr(set_y)
                 Dy_alp = Dxy_alp.get_partial_tr(set_x)
                 log_Dx_Dy_alp = self.log(DenMat.get_kron_prod_of_den_mats(
                                 [Dx_alp, Dy_alp]))
+                # log_Dx_Dy_alp = log_Dx_Dy_alp*proj1
 
                 Delta_xy += log_Dxy_alp - log_Dx_Dy_alp
+                entang += (Dxy_alp*(log_Dxy_alp - log_Dx_Dy_alp)).\
+                    trace()*w_alp/2
             else:
                 log_Dxy_alp = None
                 log_Dx_Dy_alp = None
@@ -268,35 +297,62 @@ class SquashedEnt(EntangCase):
                 err += (log_Dxy_a[alp] - log_Dx_Dy_a[alp] - Delta_xy).norm()
         err /= num_nonzero_w_alp
 
-        # if self.verbose:
-        #     print('w_a=', w_a, 'sum=', np.sum(np.array(w_a)))
+        print_w_a = False
+        if print_w_a:
+            print('w_a=', w_a, 'sum=', np.sum(np.array(w_a)))
 
         new_Kxy_a = []
         sum_numerator = DenMat(self.Dxy.num_rows, self.Dxy.row_shape)
         sum_numerator.set_arr_to_zero()
         for alp in range(self.num_hidden_states):
             if log_Dx_Dy_a[alp] is not None:
-                new_Kxy_alp = self.exp(Delta_xy + log_Dx_Dy_a[alp])*w_a[alp]
+                exp_arg = Delta_xy + log_Dx_Dy_a[alp]
+
+                # this step eliminates proj0*exp_arg*proj0
+                # which is log(eps)*proj0
+
+                # proj0 , proj1 = self.Dxy_proj_ops
+                # exp_arg = exp_arg*proj1 + proj1*exp_arg*proj0
+                if not self.do_formation_ent:
+                    new_Kxy_alp = self.exp(exp_arg)*w_a[alp]
+                else:
+                    evas, evec_cols = np.linalg.eigh(exp_arg.arr)
+                    max_pos = np.argmax(evas)
+                    vec = evec_cols[:, max_pos]
+                    arr = np.outer(vec, np.conj(vec)) * w_a[alp]
+                    new_Kxy_alp = DenMat(self.Dxy.num_rows,
+                                         self.Dxy.row_shape, arr)
+                # _, proj1 = self.Dxy_proj_ops
+                # new_Kxy_alp = proj1*new_Kxy_alp*proj1
+
                 sum_numerator += new_Kxy_alp
             else:
                 new_Kxy_alp = None
             new_Kxy_a.append(new_Kxy_alp)
 
-        inv_sum_numerator = sum_numerator.inv()
+        inv_sum_numerator = sum_numerator.pseudo_inv()
         for alp in range(self.num_hidden_states):
             # print('rrrrr', np.linalg.norm(self.Dxy.arr),
             #             np.linalg.norm(inv_sum_numerator.arr),
             #             np.linalg.norm(new_Kxy_a[alp].arr))
             if new_Kxy_a[alp] is not None:
+                # this didn't work
+                # root = self.sqrt(self.Dxy)*self.sqrt(inv_sum_numerator)
+                # new_Kxy_alp = root*new_Kxy_a[alp]*root.herm()
+
                 new_Kxy_alp = self.Dxy*inv_sum_numerator*new_Kxy_a[alp]
                 new_Kxy_alp = (new_Kxy_alp + new_Kxy_alp.herm())*(1/2)
+
                 # print('rrrrr111', np.linalg.norm(new_Kxy_alp.arr))
                 new_Kxy_a[alp] = new_Kxy_alp
-
-        new_Kxy_a = SquashedEnt.regulate(new_Kxy_a)
+        if not self.do_formation_ent:
+            new_Kxy_a = self.regulate(new_Kxy_a)
         # print('nnnnnnnnnnnnn', np.sum(np.array([x.trace() for x in
         #                                         new_Kxy_a])))
-        entang = (self.Dxy*Delta_xy).trace()/2
+
+        # not as precise, only valid asymptotically
+        # entang_lim = (self.Dxy*Delta_xy).trace()/2
+        # print("entang_lim", entang_lim)
 
         return new_Kxy_a, entang, err
 

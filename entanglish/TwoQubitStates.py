@@ -25,7 +25,7 @@ class TwoQubitStates:
     def get_bell_basis_st_vec(key):
         """
         This method returns one Bell basis state out of 4 possible ones. The
-        4 Bell basis states are orthonormal maximally entangled 2 qubit
+        4 Bell basis states are orthonormal, maximally entangled, 2 qubit
         states.
 
         |==+> = 1/sqrt(2)[|00> + |11>]
@@ -62,23 +62,41 @@ class TwoQubitStates:
         return (st_vec1 + sign1 * st_vec2) / np.sqrt(2)
 
     @staticmethod
-    def get_bell_mixture(prob_dict):
+    def get_bell_basis_diag_dm(fid, prob_dict=None):
         """
         This method returns a DenMat which is constructed as a linear
-        combination, with coefficients prob_dict, of the Bell basis states
-        written as density matrices.
+        combination, with coefficients prob_dict, of the Bell basis state
+        projection operators. So the den matrix returned is diagonal in the
+        Bell basis.
+
+        If prob_dict is not None, use it and ignore value of fid. If
+        prob_dict is None, use prob_dict for an "isotropic" Werner state
+        with fidelity fid. That is, prob_dict[ "==+"]=fid, prob_dict[x]=(
+        1-fid)/3 for all x other than '==+"
 
         Parameters
         ----------
-        prob_dict : dict[str, float]
+        fid : float
+            fidelity.
+        prob_dict : dict[str, float]|None
 
         Returns
         -------
         DenMat
 
         """
-        ut.assert_is_prob_dist(np.array(list(prob_dict.values())))
-        assert set(prob_dict.keys()) == TwoQubitStates.bell_key_set()
+        if prob_dict:
+            assert ut.is_prob_dist(np.array(list(prob_dict.values())))
+            assert set(prob_dict.keys()) == TwoQubitStates.bell_key_set()
+        else:
+            assert 0 <= fid <= 1
+            prob_dict = {}
+            for key in TwoQubitStates.bell_key_set():
+                if key == '==+':
+                    prob_dict[key] = fid
+                else:
+                    prob_dict[key] = (1 - fid) / 3
+
         dm = DenMat(4, (2, 2))
         dm.set_arr_to_zero()
         for key in prob_dict.keys():
@@ -87,59 +105,71 @@ class TwoQubitStates:
         return dm
 
     @staticmethod
-    def get_prob_dict_of_werner_mixture(fid):
+    def get_time_reversed_dm(dm):
         """
-        This method returns prob_dict where prob_dict["==+"]=fid=fidelity
-        and all other values of prob_dict are equal to (1 - fid) / 3.
+        This method returns a DenMat which is the time reversed version of a
+        DenMat dm with dm.num_rows=4.
 
         Parameters
         ----------
-        fid : float
+        dm : DenMat
 
         Returns
         -------
-        dict[str, float]
+        DenMat
 
         """
-        assert 0 <= fid <= 1
-        prob_dict = {}
-        for key in TwoQubitStates.bell_key_set():
-            if key == '==+':
-                prob_dict[key] = fid
-            else:
-                prob_dict[key] = (1 - fid) / 3
-        return prob_dict
+        assert dm.num_rows == 4
+        sigy = np.array([[0, -1j], [1j, 0]])
+        dm_sigyy = DenMat(4, (2, 2), arr=ut.kron_prod([sigy, sigy]))
+        return dm_sigyy*dm.conj()*dm_sigyy
 
     @staticmethod
-    def get_known_formation_entang_of_bell_mixture(prob_dict):
+    def get_concurrence(dm):
         """
-        This method returns the known value (according to Ref.1) for the
-        entanglement of formation for a Bell mixture with coefficients
-        prob_dict.
-
-        References
-        ----------
-
-        1. C.H. Bennett, D.P. DiVincenzo, J. Smolin, W.K. Wootters, “Mixed
-        state entanglement and quantum error correction”,
-        https://arxiv.org/abs/quant-ph/9604024
+        This method returns the concurrence of a DenMat dm wth dm.num_rows=4.
 
         Parameters
         ----------
-        prob_dict : dict[str, float]
+        dm : DenMat
 
         Returns
         -------
         float
 
         """
-        assert set(prob_dict.keys()) == TwoQubitStates.bell_key_set()
-        p_max = max(prob_dict.values())
-        if p_max < 1/2:
-            t = 0
-        else:
-            t = (2*p_max - 1)**2
-        u = (1+np.sqrt(1-t))/2
+        assert dm.num_rows == 4
+        dm_trev = TwoQubitStates.get_time_reversed_dm(dm)
+        dm_root = dm.sqrt()
+        dm2 = dm_root*dm_trev*dm_root
+        evas = np.sqrt(np.linalg.eigvalsh(dm2.arr))
+        max_pos = np.argmax(evas)
+        x = 0
+        for pos in range(4):
+            if pos == max_pos:
+                x += evas[pos]
+            else:
+                x -= evas[pos]
+        return max(0, x)
+
+    @staticmethod
+    def get_known_formation_entang(dm):
+        """
+        This method returns the known formation entanglement for a DenMat dm
+        with dm.num_rows=4.
+
+        Parameters
+        ----------
+        dm : DenMat
+
+        Returns
+        -------
+        float
+
+        """
+        assert dm.num_rows == 4
+        conc = TwoQubitStates.get_concurrence(dm)
+        u = (1+np.sqrt(1-conc**2))/2
         return ut.get_entropy_from_probs(np.array([u, 1-u]))
 
 
@@ -159,21 +189,17 @@ if __name__ == "__main__":
             print('----------key:', key)
             print("st_vec=\n", st_vec)
             ecase.print_entang_profiles([pf], dm.row_shape)
-        print("werner mixture*******************************")
-        prob_dict = TwoQubitStates.get_prob_dict_of_werner_mixture(.7)
-        print("prob_dict=", prob_dict)
-        dm = TwoQubitStates.get_bell_mixture(prob_dict)
-        print('arr=\n', dm.arr)
-        print("formation_entang=",
-              TwoQubitStates.get_known_formation_entang_of_bell_mixture(
-                  prob_dict))
-        num_hidden_states = 4
-        num_ab_steps = 5
-        print('num_hidden_states=', num_hidden_states)
-        print('num_ab_steps=', num_ab_steps)
-        ecase = SquashedEnt(dm, num_hidden_states, num_ab_steps,
-            recursion_init="equi-diag", verbose=True)
-        print('squashed_entang_0=', ecase.get_entang({0}))
-
+        print("*******************************")
+        dm1 = TwoQubitStates.get_bell_basis_diag_dm(fid=.7)
+        # print('arr=\n', dm1.arr)
+        np.random.seed(123)
+        dm2 = DenMat(4, (2, 2))
+        dm2.set_arr_to_rand_den_mat(np.array([.1, .2, .3, .4]))
+        dm3 = DenMat(4, (2, 2))
+        dm3.set_arr_to_rand_den_mat(np.array([.1, .1, .1, .7]))
+        for dm in [dm1, dm2, dm3]:
+            print("----------new dm")
+            print("formation_entang=",
+                  TwoQubitStates.get_known_formation_entang(dm))
 
     main()

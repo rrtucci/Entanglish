@@ -338,14 +338,14 @@
                 <span class="c1"># print(&#39;norm arr&#39;, norm_arr)</span>
                 <span class="k">if</span> <span class="n">norm_arr</span> <span class="o">&gt;</span> <span class="mf">1e-4</span><span class="p">:</span>
                     <span class="n">_</span><span class="p">,</span> <span class="n">evec_cols</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigh</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
-                    <span class="k">assert</span> <span class="n">ut</span><span class="o">.</span><span class="n">is_unitary</span><span class="p">(</span><span class="n">evec_cols</span><span class="p">)</span>
+                    <span class="k">assert</span> <span class="n">ut</span><span class="o">.</span><span class="n">is_unitary_arr</span><span class="p">(</span><span class="n">evec_cols</span><span class="p">)</span>
                     <span class="c1"># print(&#39;bbbbbbbb&#39;, np.around(np.dot(np.dot(</span>
                     <span class="c1">#         evec_cols.conj().T,</span>
                     <span class="c1">#               arr), evec_cols).real,4))</span>
                     <span class="k">for</span> <span class="n">k1</span><span class="p">,</span> <span class="n">kk1</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">eq_class</span><span class="p">):</span>
                         <span class="k">for</span> <span class="n">k2</span><span class="p">,</span> <span class="n">kk2</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">eq_class</span><span class="p">):</span>
                             <span class="n">umat</span><span class="p">[</span><span class="n">kk1</span><span class="p">,</span> <span class="n">kk2</span><span class="p">]</span> <span class="o">=</span> <span class="n">evec_cols</span><span class="p">[</span><span class="n">k1</span><span class="p">,</span> <span class="n">k2</span><span class="p">]</span>
-        <span class="k">assert</span> <span class="n">ut</span><span class="o">.</span><span class="n">is_unitary</span><span class="p">(</span><span class="n">umat</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">ut</span><span class="o">.</span><span class="n">is_unitary_arr</span><span class="p">(</span><span class="n">umat</span><span class="p">)</span>
         <span class="c1"># print(&#39;ccccccccnorm of rotated_del_dm&#39;, np.linalg.norm(</span>
         <span class="c1"># self.del_dm_in_sbasis.arr))</span>
         <span class="n">rotated_del_dm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span>

@@ -1,7 +1,9 @@
 strict digraph  {
+SquashedEnt;
+FormationEnt;
 EntangCase;
 PureStEnt;
-SquashedEnt;
+SquashedEnt -> FormationEnt;
 EntangCase -> PureStEnt;
 EntangCase -> SquashedEnt;
 }

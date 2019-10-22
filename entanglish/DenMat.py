@@ -2,7 +2,7 @@ import numpy as np
 import entanglish.utilities as ut
 import copy as cp
 import scipy as sc
-import numpy.random as npr
+import scipy.linalg as la
 
 
 class DenMat:
@@ -170,7 +170,7 @@ class DenMat:
         None
 
         """
-        ut.assert_is_prob_dist(evas)
+        assert ut.is_prob_dist(evas)
         umat = ut.random_unitary(len(evas))
         umat_H = umat.conj().T
         # multiply each col of umat by corresponding eigenvalue
@@ -453,7 +453,7 @@ class DenMat:
             evas = np.real(np.linalg.eigvalsh(self.arr))
             ent = ut.get_entropy_from_probs(evas)
         elif method == 'pade':
-            ent = - np.trace(np.dot(self.arr, sc.linalg.logm(self.arr))).real
+            ent = - np.trace(np.dot(self.arr, la.logm(self.arr))).real
         else:
             assert False, 'unsupported method for ' +\
                           'calculating entropy of a density matrix.'
@@ -704,18 +704,6 @@ class DenMat:
         """
         return np.linalg.norm(np.dot(self.arr, self.arr) - self.arr) < 1e-6
 
-    def is_hermitian(self):
-        """
-        This method returns a bool which answers the question whether self
-        is a Hermitian matrix or not.
-
-        Returns
-        -------
-        bool
-
-        """
-        return np.linalg.norm(self.arr - self.arr.conj().T) < 1e-6
-
     def herm(self):
         """
         This method returns a DenMat which is the Hermitian conjugate of self.
@@ -727,6 +715,17 @@ class DenMat:
         """
         return DenMat(self.num_rows, self.row_shape, self.arr.conj().T)
 
+    def conj(self):
+        """
+        This method returns a DenMat which is the complex conjugate of self.
+
+        Returns
+        -------
+        DenMat
+
+        """
+        return DenMat(self.num_rows, self.row_shape, self.arr.conj())
+
     def trace(self):
         """
         This method returns the real part of the full trace of self.
@@ -737,7 +736,7 @@ class DenMat:
 
         """
         im = np.trace(self.arr).imag
-        assert im < 1e-4, im
+        assert im < 1e-4, 'imag=' + str(im)
         return np.trace(self.arr).real
 
     def norm(self):
@@ -769,12 +768,13 @@ class DenMat:
         if method == 'eigen':
             expm_arr = ut.fun_of_herm_arr(np.exp, self.arr)
         elif method == 'pade':
-            expm_arr = sc.linalg.expm(self.arr)
+            expm_arr = la.expm(self.arr)
         else:
             assert False, 'unsupported method'
         return DenMat(self.num_rows, self.row_shape, expm_arr)
 
-    def log(self, method='eigen', clipped=False):
+    def log(self, method='eigen', clipped=True, eps=1e-5,
+            clip_to_zero=False):
         """
         This method returns a DenMat which is the matrix natural log of self.
 
@@ -784,6 +784,10 @@ class DenMat:
             method used to calculate the natural log. Either 'eigen' or 'pade'.
         clipped : bool
             clips logs (see ut.clipped_log_of_vec) iff this is True
+        eps : float
+            used only if clipping log
+        clip_to_zero : bool
+            used only if clipping log
 
         Returns
         -------
@@ -794,13 +798,17 @@ class DenMat:
         # self.normalize_diag_of_arr()
         logm_arr = None
         if method == 'eigen':
-            fun = np.log
             if clipped:
-                # print('was here')
-                fun = ut.clipped_log_of_vec
-            logm_arr = ut.fun_of_herm_arr(fun, self.arr)
+                logm_arr = ut.fun_of_herm_arr(ut.clipped_log_of_vec,
+                                              self.arr,
+                                              eps=eps,
+                                              clip_to_zero=clip_to_zero)
+            else:
+                logm_arr = ut.fun_of_herm_arr(np.log,
+                                              self.arr)
+
         elif method == 'pade':
-            logm_arr = sc.linalg.logm(self.arr)
+            logm_arr = la.logm(self.arr)
         else:
             assert False, 'unsupported method'
         return DenMat(self.num_rows, self.row_shape, logm_arr)
@@ -818,6 +826,38 @@ class DenMat:
         fun = ut.positive_part_of_vec
         pos_arr = ut.fun_of_herm_arr(fun, self.arr)
         return DenMat(self.num_rows, self.row_shape, pos_arr)
+
+    def purer_version(self):
+        """
+        This method returns a DenMat in which all eigenvalues of self.arr
+        except the maximum one are replaced by zero.
+
+        Returns
+        -------
+        DenMat
+
+        """
+        evas, evec_cols = np.linalg.eigh(self.arr)
+        max_pos = np.argmax(evas)
+        vec = evec_cols[:, max_pos]
+        arr = np.outer(vec, np.conj(vec))*evas[max_pos]
+        return DenMat(self.num_rows, self.row_shape, arr)
+
+    def purer_version2(self):
+        """
+        This method returns a DenMat in which self.arr is replaced by (
+        self.arr^2)/sqrt(tr2) where tr2 is the trace of self.arr^2. This
+        transformation has no effect on self if self is an un-normalized
+        pure state.
+
+        Returns
+        -------
+        DenMat
+
+        """
+        dm2 = self*self
+        tr2 = dm2.trace()
+        return dm2*(1/np.sqrt(tr2))
 
     def sqrt(self, method='eigen'):
         """
@@ -837,7 +877,7 @@ class DenMat:
         if method == 'eigen':
             sqrtm_arr = ut.fun_of_herm_arr(np.sqrt, self.arr)
         elif method == 'pade':
-            sqrtm_arr = sc.linalg.sqrtm(self.arr)
+            sqrtm_arr = la.sqrtm(self.arr)
         else:
             assert False, 'unsupported method'
         return DenMat(self.num_rows, self.row_shape, sqrtm_arr)
@@ -899,7 +939,7 @@ class DenMat:
 
         """
 
-        assert self.is_hermitian()
+        assert ut.is_hermitian_arr(self.arr)
         evas, evec_cols = np.linalg.eigh(self.arr)
         is_zero = []
         is_not_zero = []
@@ -911,10 +951,10 @@ class DenMat:
                 is_zero.append(0)
                 is_not_zero.append(1)
         arr_proj_zero = ut.fun_of_herm_arr_from_eigen_sys(
-            lambda x: x, np.array(is_zero), evec_cols)
+            lambda xx: xx, np.array(is_zero), evec_cols)
 
         arr_proj_not_zero = ut.fun_of_herm_arr_from_eigen_sys(
-            lambda x: x, np.array(is_not_zero), evec_cols)
+            lambda xx: xx, np.array(is_not_zero), evec_cols)
 
         proj_0 = DenMat(self.num_rows, self.row_shape, arr_proj_zero)
         proj_1 = DenMat(self.num_rows, self.row_shape, arr_proj_not_zero)
@@ -976,7 +1016,8 @@ class DenMat:
 
     @staticmethod
     def get_fun_of_dm_from_eigen_sys(num_rows, row_shape,
-                                     eigen_sys, fun_of_scalars):
+                                     eigen_sys, fun_of_scalars,
+                                     **fun_kwargs):
         """
         If (evas, U) = eigen_sys and fun = fun_of_scalars, then this method
         returns U.fun(evas).U^dag, where U^dag is the Hermitian conjugate of
@@ -993,16 +1034,17 @@ class DenMat:
         eigen_sys : tuple[np.ndarray, np.ndarray]
         fun_of_scalars :
             function that can act on scalars or numpy arrays element-wise
+        fun_kwargs : dict
+            dict of keyword args that fun depends on
 
         Returns
         -------
         DenMat
 
         """
-        evas = eigen_sys[0]
-        evec_cols = eigen_sys[1]
+        evas, evec_cols = eigen_sys
         arr = ut.fun_of_herm_arr_from_eigen_sys(
-            fun_of_scalars, evas, evec_cols)
+            fun_of_scalars, evas, evec_cols, **fun_kwargs)
         return DenMat(num_rows, row_shape, arr)
 
 
