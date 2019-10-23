@@ -416,6 +416,20 @@ a scalar is defined only if scalar is on the right side of self.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="entanglish.DenMat.DenMat.conj">
+<code class="sig-name descname">conj</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat.conj"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat.conj" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method returns a DenMat which is the complex conjugate of self.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat">DenMat</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="entanglish.DenMat.DenMat.copy">
 <code class="sig-name descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat.copy" title="Permalink to this definition">¶</a></dt>
 <dd><p>This method returns a copy of self.</p>
@@ -575,7 +589,7 @@ non-negative and sum to 1.</p>
 
 <dl class="method">
 <dt id="entanglish.DenMat.DenMat.get_fun_of_dm_from_eigen_sys">
-<em class="property">static </em><code class="sig-name descname">get_fun_of_dm_from_eigen_sys</code><span class="sig-paren">(</span><em class="sig-param">num_rows</em>, <em class="sig-param">row_shape</em>, <em class="sig-param">eigen_sys</em>, <em class="sig-param">fun_of_scalars</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat.get_fun_of_dm_from_eigen_sys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat.get_fun_of_dm_from_eigen_sys" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="sig-name descname">get_fun_of_dm_from_eigen_sys</code><span class="sig-paren">(</span><em class="sig-param">num_rows</em>, <em class="sig-param">row_shape</em>, <em class="sig-param">eigen_sys</em>, <em class="sig-param">fun_of_scalars</em>, <em class="sig-param">**fun_kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat.get_fun_of_dm_from_eigen_sys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat.get_fun_of_dm_from_eigen_sys" title="Permalink to this definition">¶</a></dt>
 <dd><p>If (evas, U) = eigen_sys and fun = fun_of_scalars, then this method
 returns U.fun(evas).U^dag, where U^dag is the Hermitian conjugate of
 the unitary matrix U.</p>
@@ -589,6 +603,7 @@ instead of an approx to fun of dm, use fun_of_scalars = lambda x: x</p>
 <li><p><strong>row_shape</strong> (<em>tuple</em><em>[</em><em>int</em><em>]</em>) – </p></li>
 <li><p><strong>eigen_sys</strong> (<em>tuple</em><em>[</em><em>np.ndarray</em><em>, </em><em>np.ndarray</em><em>]</em>) – </p></li>
 <li><p><strong>fun_of_scalars</strong> – function that can act on scalars or numpy arrays element-wise</p></li>
+<li><p><strong>fun_kwargs</strong> (<em>dict</em>) – dict of keyword args that fun depends on</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -738,21 +753,6 @@ taking the inverse of copy</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="entanglish.DenMat.DenMat.is_hermitian">
-<code class="sig-name descname">is_hermitian</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat.is_hermitian"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat.is_hermitian" title="Permalink to this definition">¶</a></dt>
-<dd><p>This method returns a bool which answers the question whether self
-is a Hermitian matrix or not.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p></p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
 <dt id="entanglish.DenMat.DenMat.is_pure_state">
 <code class="sig-name descname">is_pure_state</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat.is_pure_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat.is_pure_state" title="Permalink to this definition">¶</a></dt>
 <dd><p>This method returns a bool which answers the question whether self
@@ -769,13 +769,15 @@ is a pure state or not.</p>
 
 <dl class="method">
 <dt id="entanglish.DenMat.DenMat.log">
-<code class="sig-name descname">log</code><span class="sig-paren">(</span><em class="sig-param">method='eigen'</em>, <em class="sig-param">clipped=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat.log"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat.log" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">log</code><span class="sig-paren">(</span><em class="sig-param">method='eigen'</em>, <em class="sig-param">clipped=True</em>, <em class="sig-param">eps=1e-05</em>, <em class="sig-param">clip_to_zero=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat.log"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat.log" title="Permalink to this definition">¶</a></dt>
 <dd><p>This method returns a DenMat which is the matrix natural log of self.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>method</strong> (<em>str</em>) – method used to calculate the natural log. Either ‘eigen’ or ‘pade’.</p></li>
 <li><p><strong>clipped</strong> (<em>bool</em>) – clips logs (see ut.clipped_log_of_vec) iff this is True</p></li>
+<li><p><strong>eps</strong> (<em>float</em>) – used only if clipping log</p></li>
+<li><p><strong>clip_to_zero</strong> (<em>bool</em>) – used only if clipping log</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -893,6 +895,38 @@ self.arr are replaced by zero.</p>
 <dd><p>This method returns a DenMat which is the Penrose pseudo inverse
 matrix of self. By pseudo inverse, we mean that it takes the inverse
 of non-zero eigenvalues only, but keeps the zero ones the same.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat">DenMat</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.DenMat.DenMat.purer_version">
+<code class="sig-name descname">purer_version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat.purer_version"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat.purer_version" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method returns a DenMat in which all eigenvalues of self.arr
+except the maximum one are replaced by zero.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat">DenMat</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="entanglish.DenMat.DenMat.purer_version2">
+<code class="sig-name descname">purer_version2</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat.purer_version2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat.purer_version2" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method returns a DenMat in which self.arr is replaced by (
+self.arr^2)/sqrt(tr2) where tr2 is the trace of self.arr^2. This
+transformation has no effect on self if self is an un-normalized
+pure state.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p></p>

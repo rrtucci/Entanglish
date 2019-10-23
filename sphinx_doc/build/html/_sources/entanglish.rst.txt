@@ -9,11 +9,13 @@ Submodules
    entanglish.DenMat
    entanglish.DenMatPertTheory
    entanglish.EntangCase
+   entanglish.FormationEnt
    entanglish.MaxEntangState
    entanglish.OtherStates
    entanglish.PureStEnt
    entanglish.SquashedEnt
    entanglish.SymNupState
+   entanglish.TwoQubitState
    entanglish.classgraph
    entanglish.run_all_nb
    entanglish.run_all_py

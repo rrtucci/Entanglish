@@ -260,31 +260,37 @@
     <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">limits</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">),</span> <span class="n">limits</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span></div>
 
 
-<div class="viewcode-block" id="clipped_log_of_vec"><a class="viewcode-back" href="../../entanglish.utilities.html#entanglish.utilities.clipped_log_of_vec">[docs]</a><span class="k">def</span> <span class="nf">clipped_log_of_vec</span><span class="p">(</span><span class="n">vec</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-7</span><span class="p">):</span>
+<div class="viewcode-block" id="clipped_log_of_vec"><a class="viewcode-back" href="../../entanglish.utilities.html#entanglish.utilities.clipped_log_of_vec">[docs]</a><span class="k">def</span> <span class="nf">clipped_log_of_vec</span><span class="p">(</span><span class="n">vec</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">,</span> <span class="n">clip_to_zero</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This method takes as input a int|float or a 1D array of floats. It</span>
 <span class="sd">    returns the log element-wise of that array, except when an element of</span>
 <span class="sd">    the array is &lt; eps, where eps is a positive but &lt;&lt; 1 float. In that</span>
-<span class="sd">    exceptional case, the method &quot;clips the log&quot;, meaning that it returns a</span>
-<span class="sd">    fixed negative value log(eps).</span>
+<span class="sd">    exceptional case, the method &quot;clips the log&quot;, meaning that it returns</span>
+<span class="sd">    log(eps) if clip_to_zero=False and 0 if clip_to_zero=True</span>
+
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    vec : int|float|np.ndarray</span>
 <span class="sd">    eps : float</span>
+<span class="sd">    clip_to_zero : bool</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    np.ndarray</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">eps</span> <span class="o">&gt;</span> <span class="mi">0</span>
     <span class="n">vec1</span> <span class="o">=</span> <span class="n">vec</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">vec</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
         <span class="n">vec1</span> <span class="o">=</span> <span class="p">[</span><span class="n">vec</span><span class="p">]</span>
     <span class="n">li</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">vec1</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">eps</span><span class="p">:</span>
-            <span class="n">li</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">eps</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">clip_to_zero</span><span class="p">:</span>
+                <span class="n">li</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">li</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">eps</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">li</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">li</span><span class="p">)</span></div>
@@ -323,11 +329,37 @@
     <span class="n">vec1</span> <span class="o">=</span> <span class="n">vec</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">vec</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
         <span class="n">vec1</span> <span class="o">=</span> <span class="p">[</span><span class="n">vec</span><span class="p">]</span>
-    <span class="n">li</span> <span class="o">=</span> <span class="p">[</span><span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">vec1</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">li</span><span class="p">)</span></div>
+    <span class="n">li</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">vec1</span><span class="p">)</span>
+    <span class="n">li_new</span> <span class="o">=</span> <span class="p">[</span><span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">li</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">li_new</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="fun_of_herm_arr_from_eigen_sys"><a class="viewcode-back" href="../../entanglish.utilities.html#entanglish.utilities.fun_of_herm_arr_from_eigen_sys">[docs]</a><span class="k">def</span> <span class="nf">fun_of_herm_arr_from_eigen_sys</span><span class="p">(</span><span class="n">fun_of_evas</span><span class="p">,</span> <span class="n">evas</span><span class="p">,</span> <span class="n">evec_cols</span><span class="p">):</span>
+<div class="viewcode-block" id="max_or_zero_of_vec"><a class="viewcode-back" href="../../entanglish.utilities.html#entanglish.utilities.max_or_zero_of_vec">[docs]</a><span class="k">def</span> <span class="nf">max_or_zero_of_vec</span><span class="p">(</span><span class="n">vec</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This method takes as input a int|float or a 1D array of floats. It</span>
+<span class="sd">    returns the array, with all items except the max item replaced by zero</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    vec : int|float|np.ndarray</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    np.ndarray</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">vec1</span> <span class="o">=</span> <span class="n">vec</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">vec</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+        <span class="n">vec1</span> <span class="o">=</span> <span class="p">[</span><span class="n">vec</span><span class="p">]</span>
+    <span class="n">li</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">vec1</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">xmax</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="o">=</span> <span class="nb">max</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">li</span><span class="p">))</span>
+    <span class="n">vec1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">li</span><span class="p">),))</span>
+    <span class="n">vec1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">xmax</span>
+    <span class="k">return</span> <span class="n">vec1</span></div>
+
+
+<div class="viewcode-block" id="fun_of_herm_arr_from_eigen_sys"><a class="viewcode-back" href="../../entanglish.utilities.html#entanglish.utilities.fun_of_herm_arr_from_eigen_sys">[docs]</a><span class="k">def</span> <span class="nf">fun_of_herm_arr_from_eigen_sys</span><span class="p">(</span><span class="n">fun_of_evas</span><span class="p">,</span> <span class="n">evas</span><span class="p">,</span> <span class="n">evec_cols</span><span class="p">,</span>
+                                   <span class="o">**</span><span class="n">fun_kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    eigen_sys= eigensystem= (eigenvalues, eigenvectors as columns)= (evas,</span>
 <span class="sd">    evec_cols)</span>
@@ -344,7 +376,8 @@
 <span class="sd">    fun_of_evas : function</span>
 <span class="sd">    evas : np.ndarray</span>
 <span class="sd">    evec_cols : np.ndarray</span>
-
+<span class="sd">    fun_kwargs : dict</span>
+<span class="sd">        dict of keyword arguments that fun depends on</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -360,12 +393,12 @@
     <span class="c1"># print(&#39;,,.,&#39;, umat)</span>
     <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">evas</span><span class="p">)):</span>
         <span class="c1"># multiply each col of evec_cols by corresponding eigenvalue</span>
-        <span class="n">umat</span><span class="p">[:,</span> <span class="n">k</span><span class="p">]</span> <span class="o">*=</span> <span class="n">fun_of_evas</span><span class="p">(</span><span class="n">evas</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+        <span class="n">umat</span><span class="p">[:,</span> <span class="n">k</span><span class="p">]</span> <span class="o">*=</span> <span class="n">fun_of_evas</span><span class="p">(</span><span class="n">evas</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="o">**</span><span class="n">fun_kwargs</span><span class="p">)</span>
     <span class="c1"># print(&#39;,,&#39;, evec_cols)</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">umat</span><span class="p">,</span> <span class="n">umat_H</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="fun_of_herm_arr"><a class="viewcode-back" href="../../entanglish.utilities.html#entanglish.utilities.fun_of_herm_arr">[docs]</a><span class="k">def</span> <span class="nf">fun_of_herm_arr</span><span class="p">(</span><span class="n">fun_of_evas</span><span class="p">,</span> <span class="n">herm_arr</span><span class="p">):</span>
+<div class="viewcode-block" id="fun_of_herm_arr"><a class="viewcode-back" href="../../entanglish.utilities.html#entanglish.utilities.fun_of_herm_arr">[docs]</a><span class="k">def</span> <span class="nf">fun_of_herm_arr</span><span class="p">(</span><span class="n">fun_of_evas</span><span class="p">,</span> <span class="n">herm_arr</span><span class="p">,</span> <span class="o">**</span><span class="n">fun_kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This method does the same as the method ut.fun_of_herm_arr_from_eigen(),</span>
 <span class="sd">    except that it calculates evas and eigen_cols from the matrix herm_arr</span>
@@ -377,6 +410,8 @@
 <span class="sd">        np function acting on 1d array</span>
 <span class="sd">    herm_arr : np.ndarray</span>
 <span class="sd">        Hermitian array</span>
+<span class="sd">    fun_kwargs : dict</span>
+<span class="sd">        dict of keyword args that fun depends on</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -385,7 +420,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">evas</span><span class="p">,</span> <span class="n">evec_cols</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigh</span><span class="p">(</span><span class="n">herm_arr</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">fun_of_herm_arr_from_eigen_sys</span><span class="p">(</span>
-        <span class="n">fun_of_evas</span><span class="p">,</span> <span class="n">evas</span><span class="p">,</span> <span class="n">evec_cols</span><span class="p">)</span></div>
+        <span class="n">fun_of_evas</span><span class="p">,</span> <span class="n">evas</span><span class="p">,</span> <span class="n">evec_cols</span><span class="p">,</span> <span class="o">**</span><span class="n">fun_kwargs</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="get_equiv_classes"><a class="viewcode-back" href="../../entanglish.utilities.html#entanglish.utilities.get_equiv_classes">[docs]</a><span class="k">def</span> <span class="nf">get_equiv_classes</span><span class="p">(</span><span class="n">li</span><span class="p">):</span>
@@ -438,77 +473,84 @@
                           <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">umat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span> <span class="o">&lt;</span> <span class="mf">1e-5</span></div>
 
 
-<div class="viewcode-block" id="assert_positive_arr"><a class="viewcode-back" href="../../entanglish.utilities.html#entanglish.utilities.assert_positive_arr">[docs]</a><span class="k">def</span> <span class="nf">assert_positive_arr</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">halt</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="is_hermitian_arr"><a class="viewcode-back" href="../../entanglish.utilities.html#entanglish.utilities.is_hermitian_arr">[docs]</a><span class="k">def</span> <span class="nf">is_hermitian_arr</span><span class="p">(</span><span class="n">arr</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This checks that all elements of arr are &gt; 0. If this is not true,</span>
-<span class="sd">    then it prints a message and when halt=True, halts execution.</span>
+<span class="sd">    Returns True iff arr is a Hermitian matrix.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    bool</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">arr</span> <span class="o">-</span> <span class="n">arr</span><span class="o">.</span><span class="n">conj</span><span class="p">()</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-6</span></div>
+
+
+<div class="viewcode-block" id="is_positive_arr"><a class="viewcode-back" href="../../entanglish.utilities.html#entanglish.utilities.is_positive_arr">[docs]</a><span class="k">def</span> <span class="nf">is_positive_arr</span><span class="p">(</span><span class="n">arr</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This method checks that all elements of arr are &gt; 0.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    arr : np.ndarray</span>
-<span class="sd">    halt : bool</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    None</span>
+<span class="sd">    bool</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">arr</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;some negative neg or zero entries in &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">arr</span><span class="p">))</span>
-        <span class="k">if</span> <span class="n">halt</span><span class="p">:</span>
-            <span class="k">assert</span> <span class="kc">False</span></div>
+        <span class="n">out</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">return</span> <span class="n">out</span></div>
 
 
-<div class="viewcode-block" id="assert_nonnegative_arr"><a class="viewcode-back" href="../../entanglish.utilities.html#entanglish.utilities.assert_nonnegative_arr">[docs]</a><span class="k">def</span> <span class="nf">assert_nonnegative_arr</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">halt</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="is_nonnegative_arr"><a class="viewcode-back" href="../../entanglish.utilities.html#entanglish.utilities.is_nonnegative_arr">[docs]</a><span class="k">def</span> <span class="nf">is_nonnegative_arr</span><span class="p">(</span><span class="n">arr</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This checks that all elements of arr are &gt; -1e-6. If this is not true,</span>
-<span class="sd">    then it prints a message and when halt=True, halts execution.</span>
+<span class="sd">    This method checks that all elements of arr are &gt; -1e-6.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    arr : np.ndarray</span>
-<span class="sd">    halt : bool</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    None</span>
+<span class="sd">    bool</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">arr</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mf">1e-6</span><span class="p">):</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;some negative entries in &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">arr</span><span class="p">))</span>
-        <span class="k">if</span> <span class="n">halt</span><span class="p">:</span>
-            <span class="k">assert</span> <span class="kc">False</span></div>
+        <span class="n">out</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">return</span> <span class="n">out</span></div>
 
 
-<div class="viewcode-block" id="assert_is_prob_dist"><a class="viewcode-back" href="../../entanglish.utilities.html#entanglish.utilities.assert_is_prob_dist">[docs]</a><span class="k">def</span> <span class="nf">assert_is_prob_dist</span><span class="p">(</span><span class="n">prob_dist</span><span class="p">,</span> <span class="n">halt</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="is_prob_dist"><a class="viewcode-back" href="../../entanglish.utilities.html#entanglish.utilities.is_prob_dist">[docs]</a><span class="k">def</span> <span class="nf">is_prob_dist</span><span class="p">(</span><span class="n">prob_dist</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This checks that the elements of arr define a probability distribution.</span>
-<span class="sd">    If this is not true, then it prints a message and when halt=True,</span>
-<span class="sd">    halts execution.</span>
+<span class="sd">    This method checks that the elements of arr define a probability</span>
+<span class="sd">    distribution.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    prob_dist : np.ndarray</span>
-<span class="sd">    halt : bool</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    None</span>
+<span class="sd">    bool</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">error</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="n">suma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">prob_dist</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">prob_dist</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mf">1e-6</span><span class="p">):</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;some negative probs&#39;</span><span class="p">)</span>
-        <span class="n">error</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">abs</span><span class="p">(</span><span class="n">suma</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-3</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;probs don&#39;t sum to one&quot;</span><span class="p">)</span>
-        <span class="n">error</span> <span class="o">=</span> <span class="kc">True</span>
-    <span class="k">if</span> <span class="n">error</span><span class="p">:</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">out</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;prob dist=</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">prob_dist</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;sum=&#39;</span><span class="p">,</span> <span class="n">suma</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">error</span> <span class="ow">and</span> <span class="n">halt</span><span class="p">:</span>
-        <span class="k">assert</span> <span class="kc">False</span></div>
+    <span class="k">return</span> <span class="n">out</span></div>
 
 
 <div class="viewcode-block" id="get_entropy_from_probs"><a class="viewcode-back" href="../../entanglish.utilities.html#entanglish.utilities.get_entropy_from_probs">[docs]</a><span class="k">def</span> <span class="nf">get_entropy_from_probs</span><span class="p">(</span><span class="n">probs</span><span class="p">):</span>
@@ -525,7 +567,7 @@
 <span class="sd">    float</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">assert_is_prob_dist</span><span class="p">(</span><span class="n">probs</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">is_prob_dist</span><span class="p">(</span><span class="n">probs</span><span class="p">)</span>
     <span class="c1"># print(&#39;bbbnnnnn evas&#39;, probs)</span>
     <span class="n">ent</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">probs</span><span class="p">:</span>

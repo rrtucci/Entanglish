@@ -1,0 +1,397 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>entanglish.TwoQubitState &mdash; entanglish 0.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> entanglish
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+        
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Table of Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../classgraph.html">Class Graph</a></li>
+</ul>
+
+            
+          
+        <a href="py-modindex.html">Module Index</a>
+    
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">entanglish</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>entanglish.TwoQubitState</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for entanglish.TwoQubitState</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">entanglish.DenMat</span> <span class="k">import</span> <span class="o">*</span>
+
+
+<div class="viewcode-block" id="TwoQubitState"><a class="viewcode-back" href="../../entanglish.TwoQubitState.html#entanglish.TwoQubitState.TwoQubitState">[docs]</a><span class="k">class</span> <span class="nc">TwoQubitState</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class has no constructor. It contains only static methods. Its</span>
+<span class="sd">    methods deal with entanglement of 2 qubit states.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="TwoQubitState.bell_key_set"><a class="viewcode-back" href="../../entanglish.TwoQubitState.html#entanglish.TwoQubitState.TwoQubitState.bell_key_set">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">bell_key_set</span><span class="p">():</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method returns a set of 4 strings which label the 4 Bell basis</span>
+<span class="sd">        states.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        set[str]</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;==+&#39;</span><span class="p">,</span> <span class="s1">&#39;==-&#39;</span><span class="p">,</span> <span class="s1">&#39;!=+&#39;</span><span class="p">,</span> <span class="s1">&#39;!=-&#39;</span><span class="p">}</span></div>
+
+<div class="viewcode-block" id="TwoQubitState.get_bell_basis_st_vec"><a class="viewcode-back" href="../../entanglish.TwoQubitState.html#entanglish.TwoQubitState.TwoQubitState.get_bell_basis_st_vec">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_bell_basis_st_vec</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method returns one Bell basis state out of 4 possible ones. The</span>
+<span class="sd">        4 Bell basis states are orthonormal, maximally entangled, 2 qubit</span>
+<span class="sd">        states.</span>
+
+<span class="sd">        |==+&gt; = 1/sqrt(2)[|00&gt; + |11&gt;]</span>
+<span class="sd">        |==-&gt; = 1/sqrt(2)[|00&gt; - |11&gt;]</span>
+<span class="sd">        |!=+&gt; = 1/sqrt(2)[|01&gt; + |10&gt;]</span>
+<span class="sd">        |!=-&gt; = 1/sqrt(2)[|01&gt; - |10&gt;]</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        key : str</span>
+<span class="sd">            either &#39;==+&#39;, &#39;==-&#39;, &#39;!=+&#39;, or &#39;!=-&#39;</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        np.ndarray</span>
+<span class="sd">            shape = (4,)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">TwoQubitState</span><span class="o">.</span><span class="n">bell_key_set</span><span class="p">()</span>
+        <span class="c1"># row_shape = (2, 2)</span>
+        <span class="n">st_vec1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">4</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">complex</span><span class="p">)</span>
+        <span class="n">st_vec2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">4</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">complex</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">key</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;=&#39;</span><span class="p">:</span>
+            <span class="n">st_vec1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># |0&gt;|0&gt;</span>
+            <span class="n">st_vec2</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># |1&gt;|1&gt;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">st_vec1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># |0&gt;|1&gt;</span>
+            <span class="n">st_vec2</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># |1&gt;|0&gt;</span>
+        <span class="k">if</span> <span class="n">key</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;+&#39;</span><span class="p">:</span>
+            <span class="n">sign1</span> <span class="o">=</span> <span class="o">+</span><span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sign1</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="n">st_vec1</span> <span class="o">+</span> <span class="n">sign1</span> <span class="o">*</span> <span class="n">st_vec2</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TwoQubitState.get_bell_basis_diag_dm"><a class="viewcode-back" href="../../entanglish.TwoQubitState.html#entanglish.TwoQubitState.TwoQubitState.get_bell_basis_diag_dm">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_bell_basis_diag_dm</span><span class="p">(</span><span class="n">fid</span><span class="p">,</span> <span class="n">prob_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method returns a DenMat which is constructed as a linear</span>
+<span class="sd">        combination, with coefficients prob_dict, of the Bell basis state</span>
+<span class="sd">        projection operators. So the den matrix returned is diagonal in the</span>
+<span class="sd">        Bell basis.</span>
+
+<span class="sd">        If prob_dict is not None, use it and ignore value of fid. If</span>
+<span class="sd">        prob_dict is None, use prob_dict for an &quot;isotropic&quot; Werner state</span>
+<span class="sd">        with fidelity fid. That is, prob_dict[ &quot;==+&quot;]=fid, prob_dict[x]=(</span>
+<span class="sd">        1-fid)/3 for all x other than &#39;==+&quot;</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        fid : float</span>
+<span class="sd">            fidelity.</span>
+<span class="sd">        prob_dict : dict[str, float]|None</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        DenMat</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">prob_dict</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">ut</span><span class="o">.</span><span class="n">is_prob_dist</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">prob_dict</span><span class="o">.</span><span class="n">values</span><span class="p">())))</span>
+            <span class="k">assert</span> <span class="nb">set</span><span class="p">(</span><span class="n">prob_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">==</span> <span class="n">TwoQubitState</span><span class="o">.</span><span class="n">bell_key_set</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">fid</span> <span class="o">&lt;=</span> <span class="mi">1</span>
+            <span class="n">prob_dict</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">TwoQubitState</span><span class="o">.</span><span class="n">bell_key_set</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;==+&#39;</span><span class="p">:</span>
+                    <span class="n">prob_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">fid</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">prob_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">fid</span><span class="p">)</span> <span class="o">/</span> <span class="mi">3</span>
+
+        <span class="n">dm</span> <span class="o">=</span> <span class="n">DenMat</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">dm</span><span class="o">.</span><span class="n">set_arr_to_zero</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">prob_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">st_vec</span> <span class="o">=</span> <span class="n">TwoQubitState</span><span class="o">.</span><span class="n">get_bell_basis_st_vec</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+            <span class="n">dm</span><span class="o">.</span><span class="n">arr</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">st_vec</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">st_vec</span><span class="p">))</span> <span class="o">*</span> <span class="n">prob_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">dm</span></div>
+
+<div class="viewcode-block" id="TwoQubitState.get_time_reversed_dm"><a class="viewcode-back" href="../../entanglish.TwoQubitState.html#entanglish.TwoQubitState.TwoQubitState.get_time_reversed_dm">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_time_reversed_dm</span><span class="p">(</span><span class="n">dm</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method returns a DenMat which is the time reversed version of a</span>
+<span class="sd">        DenMat dm for 2 qubits.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        dm : DenMat</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        DenMat</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">dm</span><span class="o">.</span><span class="n">num_rows</span> <span class="o">==</span> <span class="mi">4</span>
+        <span class="n">sigy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="n">j</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="n">j</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+        <span class="n">dm_sigyy</span> <span class="o">=</span> <span class="n">DenMat</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">arr</span><span class="o">=</span><span class="n">ut</span><span class="o">.</span><span class="n">kron_prod</span><span class="p">([</span><span class="n">sigy</span><span class="p">,</span> <span class="n">sigy</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="n">dm_sigyy</span><span class="o">*</span><span class="n">dm</span><span class="o">.</span><span class="n">conj</span><span class="p">()</span><span class="o">*</span><span class="n">dm_sigyy</span></div>
+
+<div class="viewcode-block" id="TwoQubitState.get_concurrence"><a class="viewcode-back" href="../../entanglish.TwoQubitState.html#entanglish.TwoQubitState.TwoQubitState.get_concurrence">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_concurrence</span><span class="p">(</span><span class="n">dm</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method returns the concurrence of a DenMat dm for 2 qubits.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        dm : DenMat</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">dm</span><span class="o">.</span><span class="n">num_rows</span> <span class="o">==</span> <span class="mi">4</span>
+        <span class="n">dm_trev</span> <span class="o">=</span> <span class="n">TwoQubitState</span><span class="o">.</span><span class="n">get_time_reversed_dm</span><span class="p">(</span><span class="n">dm</span><span class="p">)</span>
+        <span class="n">dm_root</span> <span class="o">=</span> <span class="n">dm</span><span class="o">.</span><span class="n">sqrt</span><span class="p">()</span>
+        <span class="n">dm2</span> <span class="o">=</span> <span class="n">dm_root</span><span class="o">*</span><span class="n">dm_trev</span><span class="o">*</span><span class="n">dm_root</span>
+        <span class="n">evas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigvalsh</span><span class="p">(</span><span class="n">dm2</span><span class="o">.</span><span class="n">arr</span><span class="p">))</span>
+        <span class="n">max_pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">evas</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">pos</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">pos</span> <span class="o">==</span> <span class="n">max_pos</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">+=</span> <span class="n">evas</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">-=</span> <span class="n">evas</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span>
+        <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TwoQubitState.get_known_formation_entang"><a class="viewcode-back" href="../../entanglish.TwoQubitState.html#entanglish.TwoQubitState.TwoQubitState.get_known_formation_entang">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_known_formation_entang</span><span class="p">(</span><span class="n">dm</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method returns the known formation entanglement for a DenMat dm</span>
+<span class="sd">        for 2 qubits.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        dm : DenMat</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">dm</span><span class="o">.</span><span class="n">num_rows</span> <span class="o">==</span> <span class="mi">4</span>
+        <span class="n">conc</span> <span class="o">=</span> <span class="n">TwoQubitState</span><span class="o">.</span><span class="n">get_concurrence</span><span class="p">(</span><span class="n">dm</span><span class="p">)</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">conc</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span><span class="o">/</span><span class="mi">2</span>
+        <span class="k">return</span> <span class="n">ut</span><span class="o">.</span><span class="n">get_entropy_from_probs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">u</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span><span class="n">u</span><span class="p">]))</span></div></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">entanglish.EntangCase</span> <span class="k">import</span> <span class="o">*</span>
+    <span class="kn">from</span> <span class="nn">entanglish.PureStEnt</span> <span class="k">import</span> <span class="o">*</span>
+    <span class="kn">from</span> <span class="nn">entanglish.SquashedEnt</span> <span class="k">import</span> <span class="o">*</span>
+
+    <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;4 Bell Basis states**********************&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">TwoQubitState</span><span class="o">.</span><span class="n">bell_key_set</span><span class="p">():</span>
+            <span class="n">st_vec</span> <span class="o">=</span> <span class="n">TwoQubitState</span><span class="o">.</span><span class="n">get_bell_basis_st_vec</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+            <span class="n">dm</span> <span class="o">=</span> <span class="n">DenMat</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+            <span class="n">dm</span><span class="o">.</span><span class="n">set_arr_from_st_vec</span><span class="p">(</span><span class="n">st_vec</span><span class="p">)</span>
+            <span class="n">ecase</span> <span class="o">=</span> <span class="n">PureStEnt</span><span class="p">(</span><span class="n">dm</span><span class="p">)</span>
+            <span class="n">pf</span> <span class="o">=</span> <span class="n">ecase</span><span class="o">.</span><span class="n">get_entang_profile</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;----------key:&#39;</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;st_vec=</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">st_vec</span><span class="p">)</span>
+            <span class="n">ecase</span><span class="o">.</span><span class="n">print_entang_profiles</span><span class="p">([</span><span class="n">pf</span><span class="p">],</span> <span class="n">dm</span><span class="o">.</span><span class="n">row_shape</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;*******************************&quot;</span><span class="p">)</span>
+        <span class="n">dm1</span> <span class="o">=</span> <span class="n">TwoQubitState</span><span class="o">.</span><span class="n">get_bell_basis_diag_dm</span><span class="p">(</span><span class="n">fid</span><span class="o">=.</span><span class="mi">7</span><span class="p">)</span>
+        <span class="c1"># print(&#39;arr=\n&#39;, dm1.arr)</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+        <span class="n">dm2</span> <span class="o">=</span> <span class="n">DenMat</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">dm2</span><span class="o">.</span><span class="n">set_arr_to_rand_den_mat</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">.</span><span class="mi">1</span><span class="p">,</span> <span class="o">.</span><span class="mi">2</span><span class="p">,</span> <span class="o">.</span><span class="mi">3</span><span class="p">,</span> <span class="o">.</span><span class="mi">4</span><span class="p">]))</span>
+        <span class="n">dm3</span> <span class="o">=</span> <span class="n">DenMat</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">dm3</span><span class="o">.</span><span class="n">set_arr_to_rand_den_mat</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">.</span><span class="mi">1</span><span class="p">,</span> <span class="o">.</span><span class="mi">1</span><span class="p">,</span> <span class="o">.</span><span class="mi">1</span><span class="p">,</span> <span class="o">.</span><span class="mi">7</span><span class="p">]))</span>
+        <span class="k">for</span> <span class="n">dm</span> <span class="ow">in</span> <span class="p">[</span><span class="n">dm1</span><span class="p">,</span> <span class="n">dm2</span><span class="p">,</span> <span class="n">dm3</span><span class="p">]:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;----------new dm&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;formation_entang=&quot;</span><span class="p">,</span>
+                  <span class="n">TwoQubitState</span><span class="o">.</span><span class="n">get_known_formation_entang</span><span class="p">(</span><span class="n">dm</span><span class="p">))</span>
+
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Robert R. Tucci &amp; Entanglish contributors
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

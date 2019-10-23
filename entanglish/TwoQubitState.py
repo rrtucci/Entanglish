@@ -2,7 +2,7 @@ import numpy as np
 from entanglish.DenMat import *
 
 
-class TwoQubitStates:
+class TwoQubitState:
     """
     This class has no constructor. It contains only static methods. Its
     methods deal with entanglement of 2 qubit states.
@@ -44,7 +44,7 @@ class TwoQubitStates:
             shape = (4,)
 
         """
-        assert key in TwoQubitStates.bell_key_set()
+        assert key in TwoQubitState.bell_key_set()
         # row_shape = (2, 2)
         st_vec1 = np.zeros((4,), dtype=complex)
         st_vec2 = np.zeros((4,), dtype=complex)
@@ -87,11 +87,11 @@ class TwoQubitStates:
         """
         if prob_dict:
             assert ut.is_prob_dist(np.array(list(prob_dict.values())))
-            assert set(prob_dict.keys()) == TwoQubitStates.bell_key_set()
+            assert set(prob_dict.keys()) == TwoQubitState.bell_key_set()
         else:
             assert 0 <= fid <= 1
             prob_dict = {}
-            for key in TwoQubitStates.bell_key_set():
+            for key in TwoQubitState.bell_key_set():
                 if key == '==+':
                     prob_dict[key] = fid
                 else:
@@ -100,7 +100,7 @@ class TwoQubitStates:
         dm = DenMat(4, (2, 2))
         dm.set_arr_to_zero()
         for key in prob_dict.keys():
-            st_vec = TwoQubitStates.get_bell_basis_st_vec(key)
+            st_vec = TwoQubitState.get_bell_basis_st_vec(key)
             dm.arr += np.outer(st_vec, np.conj(st_vec)) * prob_dict[key]
         return dm
 
@@ -108,7 +108,7 @@ class TwoQubitStates:
     def get_time_reversed_dm(dm):
         """
         This method returns a DenMat which is the time reversed version of a
-        DenMat dm with dm.num_rows=4.
+        DenMat dm for 2 qubits.
 
         Parameters
         ----------
@@ -127,7 +127,7 @@ class TwoQubitStates:
     @staticmethod
     def get_concurrence(dm):
         """
-        This method returns the concurrence of a DenMat dm wth dm.num_rows=4.
+        This method returns the concurrence of a DenMat dm for 2 qubits.
 
         Parameters
         ----------
@@ -139,7 +139,7 @@ class TwoQubitStates:
 
         """
         assert dm.num_rows == 4
-        dm_trev = TwoQubitStates.get_time_reversed_dm(dm)
+        dm_trev = TwoQubitState.get_time_reversed_dm(dm)
         dm_root = dm.sqrt()
         dm2 = dm_root*dm_trev*dm_root
         evas = np.sqrt(np.linalg.eigvalsh(dm2.arr))
@@ -156,7 +156,7 @@ class TwoQubitStates:
     def get_known_formation_entang(dm):
         """
         This method returns the known formation entanglement for a DenMat dm
-        with dm.num_rows=4.
+        for 2 qubits.
 
         Parameters
         ----------
@@ -168,7 +168,7 @@ class TwoQubitStates:
 
         """
         assert dm.num_rows == 4
-        conc = TwoQubitStates.get_concurrence(dm)
+        conc = TwoQubitState.get_concurrence(dm)
         u = (1+np.sqrt(1-conc**2))/2
         return ut.get_entropy_from_probs(np.array([u, 1-u]))
 
@@ -180,8 +180,8 @@ if __name__ == "__main__":
 
     def main():
         print('4 Bell Basis states**********************')
-        for key in TwoQubitStates.bell_key_set():
-            st_vec = TwoQubitStates.get_bell_basis_st_vec(key)
+        for key in TwoQubitState.bell_key_set():
+            st_vec = TwoQubitState.get_bell_basis_st_vec(key)
             dm = DenMat(4, (2, 2))
             dm.set_arr_from_st_vec(st_vec)
             ecase = PureStEnt(dm)
@@ -190,7 +190,7 @@ if __name__ == "__main__":
             print("st_vec=\n", st_vec)
             ecase.print_entang_profiles([pf], dm.row_shape)
         print("*******************************")
-        dm1 = TwoQubitStates.get_bell_basis_diag_dm(fid=.7)
+        dm1 = TwoQubitState.get_bell_basis_diag_dm(fid=.7)
         # print('arr=\n', dm1.arr)
         np.random.seed(123)
         dm2 = DenMat(4, (2, 2))
@@ -200,6 +200,6 @@ if __name__ == "__main__":
         for dm in [dm1, dm2, dm3]:
             print("----------new dm")
             print("formation_entang=",
-                  TwoQubitStates.get_known_formation_entang(dm))
+                  TwoQubitState.get_known_formation_entang(dm))
 
     main()

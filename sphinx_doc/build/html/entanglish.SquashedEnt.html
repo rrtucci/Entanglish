@@ -155,7 +155,7 @@
 <dt id="entanglish.SquashedEnt.SquashedEnt">
 <em class="property">class </em><code class="sig-prename descclassname">entanglish.SquashedEnt.</code><code class="sig-name descname">SquashedEnt</code><span class="sig-paren">(</span><em class="sig-param">den_mat</em>, <em class="sig-param">num_hidden_states</em>, <em class="sig-param">num_ab_steps</em>, <em class="sig-param">method='eigen'</em>, <em class="sig-param">recursion_init='eigen'</em>, <em class="sig-param">verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/SquashedEnt.html#SquashedEnt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.SquashedEnt.SquashedEnt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="entanglish.EntangCase.html#entanglish.EntangCase.EntangCase" title="entanglish.EntangCase.EntangCase"><code class="xref py py-class docutils literal notranslate"><span class="pre">entanglish.EntangCase.EntangCase</span></code></a></p>
-<p>This class is a child of class EntangCase. It’s purpose is to calculate
+<p>This class is a child of class EntangCase. Its purpose is to calculate
 the (bipartite) quantum entanglement Exy of a mixed state density matrix
 Dxy with parts x and y. Exy is defined here as the squashed entanglement
 ( see Wikipedia Ref. 1 for more detailed description and original
@@ -163,7 +163,8 @@ references of squashed entanglement)</p>
 <p>Exy = (1/2)*min[S(x : y | h)]</p>
 <p>where S(x : y | h) is the conditional mutual information (CMI,
 pronounced “see me”) for a density matrix Dxyh. The minimum is over all
-Dxyh such that Dxy = trace_h Dxyh, where Dxy is given and fixed.</p>
+Dxyh such that Dxy = trace_h Dxyh, where Dxy is a given, fixed density
+matrix.</p>
 <p>The squashed entanglement reduces to (1/2)*[S(x) + S(y)] = S(x) = S(y)
 when Dxy is a pure state. This is precisely the definition of
 entanglement for pure states that we use in the class PureStEnt.</p>
@@ -182,16 +183,17 @@ and a Python Implementation Thereof”</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>Dxy</strong> (<a class="reference internal" href="entanglish.DenMat.html#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat"><em>DenMat</em></a>) – The input density matrix den_mat, after permuting its axes so that
 the axes are given in the precise order self.x_axes + self.y_axes.</p></li>
+<li><p><strong>Dxy_proj_ops</strong> (<em>(</em><a class="reference internal" href="entanglish.DenMat.html#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat"><em>DenMat</em></a><em>, </em><a class="reference internal" href="entanglish.DenMat.html#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat"><em>DenMat</em></a><em>)</em>) – projection operators for zero and nonzero eigenvalues of Dxy</p></li>
 <li><p><strong>den_mat</strong> (<a class="reference internal" href="entanglish.DenMat.html#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat"><em>DenMat</em></a>) – </p></li>
+<li><p><strong>do_formation_ent</strong> (<em>bool</em>) – True iff want special case of entanglement of formation</p></li>
 <li><p><strong>num_ab_steps</strong> (<em>int</em>) – number of iterations of Arimoto Blahut algo</p></li>
 <li><p><strong>num_hidden_states</strong> (<em>int</em>) – number of hidden states indexed by alpha, so this is number of
 alphas. In the above class docstring, alpha is denoted by h,
-for hidden. This number is &lt;= Dxy.num_rows.</p></li>
+for hidden. This number is &lt;= Dxy.num_rows^2.</p></li>
+<li><p><strong>recursion_init</strong> (<em>str</em>) – How to initiate the recursion of Kxy_a.</p></li>
 <li><p><strong>x_axes</strong> (<em>list</em><em>[</em><em>int</em><em>]</em>) – This class calculates entanglement for 2 parts: x_axes and y_axes.
 x_axes and y_axes are mutually disjoint lists whose union is range(
 len( den_mat.row_shape))</p></li>
-<li><p><strong>recursion_init</strong> (<em>str</em>) – How to initiate the recursion of Kxy_a. If ‘eigen’, uses the eigen
-decomposition of Dxy and num_hidden_states = Dxy.num_rows</p></li>
 <li><p><strong>y_axes</strong> (<em>list</em><em>[</em><em>int</em><em>]</em>) – </p></li>
 </ul>
 </dd>
@@ -239,7 +241,7 @@ axes_subset, and y is the set of all other axes.</p>
 method self.get_entang(). Given the current Kxy_a as input,
 it returns the next estimate of Kxy_a , Exy , err</p>
 <p>Kxy_a is a list of un-normalized density matrices such that Kxy_a[
-alp]=Dxy_a[alp]*w_a[alp]. Therefore, sum_alp Kxy_a[alp] = Dxy.</p>
+alp]=Dxy_a[alp]*w_a[alp] and sum_alp Kxy_a[alp] = Dxy.</p>
 <p>Exy is the entanglement for parts x and y.</p>
 <p>If</p>
 <p>Delta_xy[alp]= log Dxy_a[alp] - log(Dx_a[alp]Dy_a[alp]),</p>
@@ -263,10 +265,11 @@ err = mean_alp norm(Delta_xy[alp] - mean_alp Delta_xy[alp])</p>
 
 <dl class="method">
 <dt id="entanglish.SquashedEnt.SquashedEnt.regulate">
-<em class="property">static </em><code class="sig-name descname">regulate</code><span class="sig-paren">(</span><em class="sig-param">Kxy_a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/SquashedEnt.html#SquashedEnt.regulate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.SquashedEnt.SquashedEnt.regulate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">regulate</code><span class="sig-paren">(</span><em class="sig-param">Kxy_a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/SquashedEnt.html#SquashedEnt.regulate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.SquashedEnt.SquashedEnt.regulate" title="Permalink to this definition">¶</a></dt>
 <dd><p>This internal method returns a list new_Kxy_a which is constructed
-by replacing each item Kxy_alp of list Kxy_a by its positive part
-normalized so that sum_xya of all items of new_Kxy_a is one.</p>
+by replacing each item Kxy_alp of list Kxy_a by its positive_part(),
+and then dividing the result by sum_xya= sum of all items of
+new_Kxy_a.</p>
 <p>Some items of list Kxy_a may be None (those with very small w_alp).
 None items are not changed, they are left as None</p>
 <dl class="field-list simple">

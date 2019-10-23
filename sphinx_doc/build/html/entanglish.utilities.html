@@ -152,70 +152,6 @@
   <div class="section" id="module-entanglish.utilities">
 <span id="entanglish-utilities-module"></span><h1>entanglish.utilities module<a class="headerlink" href="#module-entanglish.utilities" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
-<dt id="entanglish.utilities.assert_is_prob_dist">
-<code class="sig-prename descclassname">entanglish.utilities.</code><code class="sig-name descname">assert_is_prob_dist</code><span class="sig-paren">(</span><em class="sig-param">prob_dist</em>, <em class="sig-param">halt=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/utilities.html#assert_is_prob_dist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.utilities.assert_is_prob_dist" title="Permalink to this definition">¶</a></dt>
-<dd><p>This checks that the elements of arr define a probability distribution.
-If this is not true, then it prints a message and when halt=True,
-halts execution.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>prob_dist</strong> (<em>np.ndarray</em>) – </p></li>
-<li><p><strong>halt</strong> (<em>bool</em>) – </p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="entanglish.utilities.assert_nonnegative_arr">
-<code class="sig-prename descclassname">entanglish.utilities.</code><code class="sig-name descname">assert_nonnegative_arr</code><span class="sig-paren">(</span><em class="sig-param">arr</em>, <em class="sig-param">halt=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/utilities.html#assert_nonnegative_arr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.utilities.assert_nonnegative_arr" title="Permalink to this definition">¶</a></dt>
-<dd><p>This checks that all elements of arr are &gt; -1e-6. If this is not true,
-then it prints a message and when halt=True, halts execution.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>arr</strong> (<em>np.ndarray</em>) – </p></li>
-<li><p><strong>halt</strong> (<em>bool</em>) – </p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="entanglish.utilities.assert_positive_arr">
-<code class="sig-prename descclassname">entanglish.utilities.</code><code class="sig-name descname">assert_positive_arr</code><span class="sig-paren">(</span><em class="sig-param">arr</em>, <em class="sig-param">halt=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/utilities.html#assert_positive_arr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.utilities.assert_positive_arr" title="Permalink to this definition">¶</a></dt>
-<dd><p>This checks that all elements of arr are &gt; 0. If this is not true,
-then it prints a message and when halt=True, halts execution.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>arr</strong> (<em>np.ndarray</em>) – </p></li>
-<li><p><strong>halt</strong> (<em>bool</em>) – </p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
 <dt id="entanglish.utilities.clip">
 <code class="sig-prename descclassname">entanglish.utilities.</code><code class="sig-name descname">clip</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">limits</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/utilities.html#clip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.utilities.clip" title="Permalink to this definition">¶</a></dt>
 <dd><p>This method clips x between limits[0] and limits[1]</p>
@@ -237,17 +173,18 @@ then it prints a message and when halt=True, halts execution.</p>
 
 <dl class="function">
 <dt id="entanglish.utilities.clipped_log_of_vec">
-<code class="sig-prename descclassname">entanglish.utilities.</code><code class="sig-name descname">clipped_log_of_vec</code><span class="sig-paren">(</span><em class="sig-param">vec</em>, <em class="sig-param">eps=1e-07</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/utilities.html#clipped_log_of_vec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.utilities.clipped_log_of_vec" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">entanglish.utilities.</code><code class="sig-name descname">clipped_log_of_vec</code><span class="sig-paren">(</span><em class="sig-param">vec</em>, <em class="sig-param">eps=1e-05</em>, <em class="sig-param">clip_to_zero=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/utilities.html#clipped_log_of_vec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.utilities.clipped_log_of_vec" title="Permalink to this definition">¶</a></dt>
 <dd><p>This method takes as input a int|float or a 1D array of floats. It
 returns the log element-wise of that array, except when an element of
 the array is &lt; eps, where eps is a positive but &lt;&lt; 1 float. In that
-exceptional case, the method “clips the log”, meaning that it returns a
-fixed negative value log(eps).</p>
+exceptional case, the method “clips the log”, meaning that it returns
+log(eps) if clip_to_zero=False and 0 if clip_to_zero=True</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>vec</strong> (<em>int|float|np.ndarray</em>) – </p></li>
 <li><p><strong>eps</strong> (<em>float</em>) – </p></li>
+<li><p><strong>clip_to_zero</strong> (<em>bool</em>) – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -282,7 +219,7 @@ out of n possible choices, “n choose k” = n!/[(n-k)! k!]</p>
 
 <dl class="function">
 <dt id="entanglish.utilities.fun_of_herm_arr">
-<code class="sig-prename descclassname">entanglish.utilities.</code><code class="sig-name descname">fun_of_herm_arr</code><span class="sig-paren">(</span><em class="sig-param">fun_of_evas</em>, <em class="sig-param">herm_arr</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/utilities.html#fun_of_herm_arr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.utilities.fun_of_herm_arr" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">entanglish.utilities.</code><code class="sig-name descname">fun_of_herm_arr</code><span class="sig-paren">(</span><em class="sig-param">fun_of_evas</em>, <em class="sig-param">herm_arr</em>, <em class="sig-param">**fun_kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/utilities.html#fun_of_herm_arr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.utilities.fun_of_herm_arr" title="Permalink to this definition">¶</a></dt>
 <dd><p>This method does the same as the method ut.fun_of_herm_arr_from_eigen(),
 except that it calculates evas and eigen_cols from the matrix herm_arr
 which it has as input.</p>
@@ -291,6 +228,7 @@ which it has as input.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>fun_of_evas</strong> (<em>function</em>) – np function acting on 1d array</p></li>
 <li><p><strong>herm_arr</strong> (<em>np.ndarray</em>) – Hermitian array</p></li>
+<li><p><strong>fun_kwargs</strong> (<em>dict</em>) – dict of keyword args that fun depends on</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -304,7 +242,7 @@ which it has as input.</p>
 
 <dl class="function">
 <dt id="entanglish.utilities.fun_of_herm_arr_from_eigen_sys">
-<code class="sig-prename descclassname">entanglish.utilities.</code><code class="sig-name descname">fun_of_herm_arr_from_eigen_sys</code><span class="sig-paren">(</span><em class="sig-param">fun_of_evas</em>, <em class="sig-param">evas</em>, <em class="sig-param">evec_cols</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/utilities.html#fun_of_herm_arr_from_eigen_sys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.utilities.fun_of_herm_arr_from_eigen_sys" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">entanglish.utilities.</code><code class="sig-name descname">fun_of_herm_arr_from_eigen_sys</code><span class="sig-paren">(</span><em class="sig-param">fun_of_evas</em>, <em class="sig-param">evas</em>, <em class="sig-param">evec_cols</em>, <em class="sig-param">**fun_kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/utilities.html#fun_of_herm_arr_from_eigen_sys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.utilities.fun_of_herm_arr_from_eigen_sys" title="Permalink to this definition">¶</a></dt>
 <dd><p>eigen_sys= eigensystem= (eigenvalues, eigenvectors as columns)= (evas,
 evec_cols)</p>
 <p>This method returns a function fun of a Hermitian matrix mat. This is
@@ -319,6 +257,7 @@ the 1D array of eigenvalues evas.</p>
 <li><p><strong>fun_of_evas</strong> (<em>function</em>) – </p></li>
 <li><p><strong>evas</strong> (<em>np.ndarray</em>) – </p></li>
 <li><p><strong>evec_cols</strong> (<em>np.ndarray</em>) – </p></li>
+<li><p><strong>fun_kwargs</strong> (<em>dict</em>) – dict of keyword arguments that fun depends on</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -365,6 +304,72 @@ epsilon.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>list[list[int]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="entanglish.utilities.is_hermitian_arr">
+<code class="sig-prename descclassname">entanglish.utilities.</code><code class="sig-name descname">is_hermitian_arr</code><span class="sig-paren">(</span><em class="sig-param">arr</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/utilities.html#is_hermitian_arr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.utilities.is_hermitian_arr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True iff arr is a Hermitian matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="entanglish.utilities.is_nonnegative_arr">
+<code class="sig-prename descclassname">entanglish.utilities.</code><code class="sig-name descname">is_nonnegative_arr</code><span class="sig-paren">(</span><em class="sig-param">arr</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/utilities.html#is_nonnegative_arr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.utilities.is_nonnegative_arr" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method checks that all elements of arr are &gt; -1e-6.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>arr</strong> (<em>np.ndarray</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="entanglish.utilities.is_positive_arr">
+<code class="sig-prename descclassname">entanglish.utilities.</code><code class="sig-name descname">is_positive_arr</code><span class="sig-paren">(</span><em class="sig-param">arr</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/utilities.html#is_positive_arr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.utilities.is_positive_arr" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method checks that all elements of arr are &gt; 0.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>arr</strong> (<em>np.ndarray</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="entanglish.utilities.is_prob_dist">
+<code class="sig-prename descclassname">entanglish.utilities.</code><code class="sig-name descname">is_prob_dist</code><span class="sig-paren">(</span><em class="sig-param">prob_dist</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/utilities.html#is_prob_dist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.utilities.is_prob_dist" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method checks that the elements of arr define a probability
+distribution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>prob_dist</strong> (<em>np.ndarray</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
 </dd>
 </dl>
 </dd></dl>
@@ -422,6 +427,24 @@ column vectors and ‘a’ a matrix.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>complex</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="entanglish.utilities.max_or_zero_of_vec">
+<code class="sig-prename descclassname">entanglish.utilities.</code><code class="sig-name descname">max_or_zero_of_vec</code><span class="sig-paren">(</span><em class="sig-param">vec</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/utilities.html#max_or_zero_of_vec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.utilities.max_or_zero_of_vec" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method takes as input a int|float or a 1D array of floats. It
+returns the array, with all items except the max item replaced by zero</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>vec</strong> (<em>int|float|np.ndarray</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
 </dd>
 </dl>
 </dd></dl>

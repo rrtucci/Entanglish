@@ -24,9 +24,9 @@ class FormationEnt(SquashedEnt):
     formation are the same as those for calculating squashed entang. Those
     steps that aren't are turned on or off with the bool flag do_formation_ent
 
-    A closed exact formula is known, thanks to Wooters et al., for the
+    A closed exact formula is known, thanks to Wootters et al., for the
     entang of formation of an arbitrary mixture of 2 qubits. Class
-    TwoQubitStates of entanglish contains an implementation of said formula.
+    TwoQubitState of entanglish contains an implementation of said formula.
 
     See Ref.1 for a detailed explanation of the algos used in this class.
 
@@ -55,7 +55,7 @@ class FormationEnt(SquashedEnt):
 
 if __name__ == "__main__":
 
-    from entanglish.TwoQubitStates import *
+    from entanglish.TwoQubitState import *
     from entanglish.SymNupState import *
 
     def main1():
@@ -106,7 +106,7 @@ if __name__ == "__main__":
 
     def main3():
         print('###############################main3, werner 2 qubit')
-        dm1 = TwoQubitStates.get_bell_basis_diag_dm(.7)
+        dm1 = TwoQubitState.get_bell_basis_diag_dm(.7)
         num_hidden_states = 4
         num_ab_steps = 5
         print('num_hidden_states=', num_hidden_states)
@@ -114,7 +114,7 @@ if __name__ == "__main__":
         for dm in [dm1]:
             print("-------new dm")
             formation_entang =\
-                  TwoQubitStates.get_known_formation_entang(dm)
+                  TwoQubitState.get_known_formation_entang(dm)
 
             ecase = FormationEnt(dm, num_hidden_states, num_ab_steps,
                 recursion_init='equi-diag', verbose=True)
@@ -135,7 +135,7 @@ if __name__ == "__main__":
         for dm in [dm2, dm3]:
             print("-------new dm")
             formation_entang =\
-                  TwoQubitStates.get_known_formation_entang(dm)
+                  TwoQubitState.get_known_formation_entang(dm)
 
             ecase = FormationEnt(dm, num_hidden_states, num_ab_steps,
                 recursion_init='eigen-sep', verbose=True)

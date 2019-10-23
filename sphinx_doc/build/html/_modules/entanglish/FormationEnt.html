@@ -1,0 +1,340 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>entanglish.FormationEnt &mdash; entanglish 0.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> entanglish
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+        
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Table of Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../classgraph.html">Class Graph</a></li>
+</ul>
+
+            
+          
+        <a href="py-modindex.html">Module Index</a>
+    
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">entanglish</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>entanglish.FormationEnt</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for entanglish.FormationEnt</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">entanglish.SquashedEnt</span> <span class="k">import</span> <span class="o">*</span>
+
+
+<div class="viewcode-block" id="FormationEnt"><a class="viewcode-back" href="../../entanglish.FormationEnt.html#entanglish.FormationEnt.FormationEnt">[docs]</a><span class="k">class</span> <span class="nc">FormationEnt</span><span class="p">(</span><span class="n">SquashedEnt</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class is a child of class SquashedEnt. Its purpose is to calculate</span>
+<span class="sd">    the (bipartite) quantum entanglement Exy of a mixed state density matrix</span>
+<span class="sd">    Dxy with parts x and y. Exy is defined here as the entanglement of</span>
+<span class="sd">    formation</span>
+
+<span class="sd">    Exy = sum_alp w_a[alp]  min S(Dx_a[alp])</span>
+
+<span class="sd">    where S(Dx_a[alp]) is the von Neumann entropy for  density matrix Dx_a[</span>
+<span class="sd">    alp] = tr_y Dxy_a[alp]. The minimum is over all Dxy_a[alp] such that</span>
+<span class="sd">    Dxy_a[alp] is a pure state |psi[alp]&gt;&lt;psi[alp]|, and sum_alp w_a[ alp]</span>
+<span class="sd">    Dxy_a[ alp] = Dxy where Dxy is a given, fixed density matrix.</span>
+
+<span class="sd">    If we add to the definition of squashed entanglement the further</span>
+<span class="sd">    constraint that Dxy_a[alp] is a pure state for all alp, then the</span>
+<span class="sd">    squashed entanglement of Dxy becomes precisely the entanglement of</span>
+<span class="sd">    formation of Dxy.</span>
+
+<span class="sd">    In this class, most of the steps used for calculating entang of</span>
+<span class="sd">    formation are the same as those for calculating squashed entang. Those</span>
+<span class="sd">    steps that aren&#39;t are turned on or off with the bool flag do_formation_ent</span>
+
+<span class="sd">    A closed exact formula is known, thanks to Wootters et al., for the</span>
+<span class="sd">    entang of formation of an arbitrary mixture of 2 qubits. Class</span>
+<span class="sd">    TwoQubitState of entanglish contains an implementation of said formula.</span>
+
+<span class="sd">    See Ref.1 for a detailed explanation of the algos used in this class.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    1. R.R. Tucci, &quot;A New  Algorithm for Calculating Squashed Entanglement</span>
+<span class="sd">    and a Python Implementation Thereof&quot;</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="FormationEnt.__init__"><a class="viewcode-back" href="../../entanglish.FormationEnt.html#entanglish.FormationEnt.FormationEnt.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        args :</span>
+<span class="sd">            list of args of SquashedEnt constructor</span>
+<span class="sd">        kwargs :</span>
+<span class="sd">            dictionary of kwargs of SquashedEnt constructor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">SquashedEnt</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">do_formation_ent</span> <span class="o">=</span> <span class="kc">True</span></div></div>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+
+    <span class="kn">from</span> <span class="nn">entanglish.TwoQubitState</span> <span class="k">import</span> <span class="o">*</span>
+    <span class="kn">from</span> <span class="nn">entanglish.SymNupState</span> <span class="k">import</span> <span class="o">*</span>
+
+    <span class="k">def</span> <span class="nf">main1</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;###############################main1, rand, 3 qubits&#39;</span><span class="p">)</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+        <span class="n">dm</span> <span class="o">=</span> <span class="n">DenMat</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">evas_of_dm_list</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">.</span><span class="mi">07</span><span class="p">,</span> <span class="o">.</span><span class="mi">03</span><span class="p">,</span> <span class="o">.</span><span class="mi">25</span><span class="p">,</span> <span class="o">.</span><span class="mi">15</span><span class="p">,</span> <span class="o">.</span><span class="mi">3</span><span class="p">,</span> <span class="o">.</span><span class="mi">1</span><span class="p">,</span> <span class="o">.</span><span class="mi">06</span><span class="p">,</span> <span class="o">.</span><span class="mi">04</span><span class="p">])</span>
+            <span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">.</span><span class="mi">05</span><span class="p">,</span> <span class="o">.</span><span class="mi">05</span><span class="p">,</span> <span class="o">.</span><span class="mi">2</span><span class="p">,</span> <span class="o">.</span><span class="mi">2</span><span class="p">,</span> <span class="o">.</span><span class="mi">3</span><span class="p">,</span> <span class="o">.</span><span class="mi">1</span><span class="p">,</span> <span class="o">.</span><span class="mi">06</span><span class="p">,</span> <span class="o">.</span><span class="mi">04</span><span class="p">])</span>
+            <span class="p">]</span>
+        <span class="n">num_hidden_states</span> <span class="o">=</span> <span class="mi">8</span>
+        <span class="n">num_ab_steps</span> <span class="o">=</span> <span class="mi">40</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;num_hidden_states=&#39;</span><span class="p">,</span> <span class="n">num_hidden_states</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;num_ab_steps=&#39;</span><span class="p">,</span> <span class="n">num_ab_steps</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">evas_of_dm</span> <span class="ow">in</span> <span class="n">evas_of_dm_list</span><span class="p">:</span>
+            <span class="n">evas_of_dm</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">evas_of_dm</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;***************new dm&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;evas_of_dm</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">evas_of_dm</span><span class="p">)</span>
+            <span class="n">dm</span><span class="o">.</span><span class="n">set_arr_to_rand_den_mat</span><span class="p">(</span><span class="n">evas_of_dm</span><span class="p">)</span>
+            <span class="n">ecase</span> <span class="o">=</span> <span class="n">FormationEnt</span><span class="p">(</span><span class="n">dm</span><span class="p">,</span> <span class="n">num_hidden_states</span><span class="p">,</span> <span class="n">num_ab_steps</span><span class="p">,</span>
+                                <span class="n">recursion_init</span><span class="o">=</span><span class="s1">&#39;equi-diag&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ent_02_1=&#39;</span><span class="p">,</span> <span class="n">ecase</span><span class="o">.</span><span class="n">get_entang</span><span class="p">({</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">}))</span>
+
+    <span class="k">def</span> <span class="nf">main2</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;###############################main2, sym nup&#39;</span><span class="p">)</span>
+        <span class="n">num_bits</span> <span class="o">=</span> <span class="mi">4</span>
+        <span class="n">num_up</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">dm1</span> <span class="o">=</span> <span class="n">DenMat</span><span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="n">num_bits</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">([</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">num_bits</span><span class="p">))</span>
+        <span class="n">st</span> <span class="o">=</span> <span class="n">SymNupState</span><span class="p">(</span><span class="n">num_up</span><span class="p">,</span> <span class="n">num_bits</span><span class="p">)</span>
+        <span class="n">st_vec</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">get_st_vec</span><span class="p">()</span>
+        <span class="n">dm1</span><span class="o">.</span><span class="n">set_arr_from_st_vec</span><span class="p">(</span><span class="n">st_vec</span><span class="p">)</span>
+
+        <span class="n">num_hidden_states</span> <span class="o">=</span> <span class="mi">16</span>
+        <span class="n">num_ab_steps</span> <span class="o">=</span> <span class="mi">5</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;num_hidden_states=&#39;</span><span class="p">,</span> <span class="n">num_hidden_states</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;num_ab_steps=&#39;</span><span class="p">,</span> <span class="n">num_ab_steps</span><span class="p">)</span>
+        <span class="n">ecase</span> <span class="o">=</span> <span class="n">FormationEnt</span><span class="p">(</span><span class="n">dm1</span><span class="p">,</span> <span class="n">num_hidden_states</span><span class="p">,</span> <span class="n">num_ab_steps</span><span class="p">,</span>
+            <span class="n">recursion_init</span><span class="o">=</span><span class="s1">&#39;eigen&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;entang_023: algo value, known value</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span>
+              <span class="n">ecase</span><span class="o">.</span><span class="n">get_entang</span><span class="p">({</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">}),</span>
+              <span class="n">st</span><span class="o">.</span><span class="n">get_known_entang</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;entang_02: algo value, known value</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span>
+              <span class="n">ecase</span><span class="o">.</span><span class="n">get_entang</span><span class="p">({</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">}),</span>
+              <span class="n">st</span><span class="o">.</span><span class="n">get_known_entang</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;entang_1: algo value, known value</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span>
+              <span class="n">ecase</span><span class="o">.</span><span class="n">get_entang</span><span class="p">({</span><span class="mi">1</span><span class="p">}),</span>
+              <span class="n">st</span><span class="o">.</span><span class="n">get_known_entang</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">main3</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;###############################main3, werner 2 qubit&#39;</span><span class="p">)</span>
+        <span class="n">dm1</span> <span class="o">=</span> <span class="n">TwoQubitState</span><span class="o">.</span><span class="n">get_bell_basis_diag_dm</span><span class="p">(</span><span class="o">.</span><span class="mi">7</span><span class="p">)</span>
+        <span class="n">num_hidden_states</span> <span class="o">=</span> <span class="mi">4</span>
+        <span class="n">num_ab_steps</span> <span class="o">=</span> <span class="mi">5</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;num_hidden_states=&#39;</span><span class="p">,</span> <span class="n">num_hidden_states</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;num_ab_steps=&#39;</span><span class="p">,</span> <span class="n">num_ab_steps</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">dm</span> <span class="ow">in</span> <span class="p">[</span><span class="n">dm1</span><span class="p">]:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-------new dm&quot;</span><span class="p">)</span>
+            <span class="n">formation_entang</span> <span class="o">=</span>\
+                  <span class="n">TwoQubitState</span><span class="o">.</span><span class="n">get_known_formation_entang</span><span class="p">(</span><span class="n">dm</span><span class="p">)</span>
+
+            <span class="n">ecase</span> <span class="o">=</span> <span class="n">FormationEnt</span><span class="p">(</span><span class="n">dm</span><span class="p">,</span> <span class="n">num_hidden_states</span><span class="p">,</span> <span class="n">num_ab_steps</span><span class="p">,</span>
+                <span class="n">recursion_init</span><span class="o">=</span><span class="s1">&#39;equi-diag&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;entang_0: algo value, known value</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span>
+                  <span class="n">ecase</span><span class="o">.</span><span class="n">get_entang</span><span class="p">({</span><span class="mi">1</span><span class="p">}),</span> <span class="n">formation_entang</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">main4</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;###############################main4, rand, 2 qubit&#39;</span><span class="p">)</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+        <span class="n">dm2</span> <span class="o">=</span> <span class="n">DenMat</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">dm2</span><span class="o">.</span><span class="n">set_arr_to_rand_den_mat</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">.</span><span class="mi">1</span> <span class="p">,</span> <span class="o">.</span><span class="mi">2</span> <span class="p">,</span> <span class="o">.</span><span class="mi">3</span><span class="p">,</span> <span class="o">.</span><span class="mi">4</span><span class="p">]))</span>
+        <span class="n">dm3</span> <span class="o">=</span> <span class="n">DenMat</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">dm3</span><span class="o">.</span><span class="n">set_arr_to_rand_den_mat</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">.</span><span class="mi">1</span> <span class="p">,</span> <span class="o">.</span><span class="mi">1</span> <span class="p">,</span> <span class="o">.</span><span class="mi">1</span><span class="p">,</span> <span class="o">.</span><span class="mi">7</span><span class="p">]))</span>
+        <span class="n">num_hidden_states</span> <span class="o">=</span> <span class="mi">4</span>
+        <span class="n">num_ab_steps</span> <span class="o">=</span> <span class="mi">40</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;num_hidden_states=&#39;</span><span class="p">,</span> <span class="n">num_hidden_states</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;num_ab_steps=&#39;</span><span class="p">,</span> <span class="n">num_ab_steps</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">dm</span> <span class="ow">in</span> <span class="p">[</span><span class="n">dm2</span><span class="p">,</span> <span class="n">dm3</span><span class="p">]:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-------new dm&quot;</span><span class="p">)</span>
+            <span class="n">formation_entang</span> <span class="o">=</span>\
+                  <span class="n">TwoQubitState</span><span class="o">.</span><span class="n">get_known_formation_entang</span><span class="p">(</span><span class="n">dm</span><span class="p">)</span>
+
+            <span class="n">ecase</span> <span class="o">=</span> <span class="n">FormationEnt</span><span class="p">(</span><span class="n">dm</span><span class="p">,</span> <span class="n">num_hidden_states</span><span class="p">,</span> <span class="n">num_ab_steps</span><span class="p">,</span>
+                <span class="n">recursion_init</span><span class="o">=</span><span class="s1">&#39;eigen-sep&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;entang_0: algo value, known value</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span>
+                  <span class="n">ecase</span><span class="o">.</span><span class="n">get_entang</span><span class="p">({</span><span class="mi">1</span><span class="p">}),</span> <span class="n">formation_entang</span><span class="p">)</span>
+
+    <span class="n">main1</span><span class="p">()</span>
+    <span class="n">main2</span><span class="p">()</span>
+    <span class="n">main3</span><span class="p">()</span>
+    <span class="n">main4</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Robert R. Tucci &amp; Entanglish contributors
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
