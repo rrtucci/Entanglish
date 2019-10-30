@@ -178,7 +178,7 @@ if __name__ == "__main__":
     from entanglish.PureStEnt import *
     from entanglish.SquashedEnt import *
 
-    def main():
+    def main1():
         print('4 Bell Basis states**********************')
         for key in TwoQubitState.bell_key_set():
             st_vec = TwoQubitState.get_bell_basis_st_vec(key)
@@ -202,4 +202,21 @@ if __name__ == "__main__":
             print("formation_entang=",
                   TwoQubitState.get_known_formation_entang(dm))
 
-    main()
+    import matplotlib.pyplot as plt
+
+    def main2():
+        xvals = np.arange(0, 1.05, .05)
+        ln2 = np.log(2)
+        yvals = [TwoQubitState.get_known_formation_entang(
+            TwoQubitState.get_bell_basis_diag_dm(fid))/ln2 for fid in xvals]
+        plt.plot(xvals, yvals)
+        plt.xlabel('Fidelity, F')
+        plt.ylabel('Formation Entang/ln(2)')
+        plt.axis([0, 1, 0, 1])
+        plt.grid(True)
+        plt.xticks(np.arange(0, 1, step=0.1))
+        plt.yticks(np.arange(0, 1, step=0.1))
+        plt.show()
+
+    main1()
+    main2()
