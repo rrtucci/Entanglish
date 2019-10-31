@@ -214,8 +214,8 @@ if __name__ == "__main__":
         plt.ylabel('Formation Entang/ln(2)')
         plt.axis([0, 1, 0, 1])
         plt.grid(True)
-        plt.xticks(np.arange(0, 1, step=0.1))
-        plt.yticks(np.arange(0, 1, step=0.1))
+        plt.xticks(np.arange(0, 1.1, step=0.1))
+        plt.yticks(np.arange(0, 1.1, step=0.1))
         plt.show()
 
     main1()

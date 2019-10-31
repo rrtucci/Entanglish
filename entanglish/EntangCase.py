@@ -242,6 +242,36 @@ class EntangCase:
                 all_lines += line
         print(all_lines)
 
+    def sqrt(self, dm, method=None):
+        """
+        This method is a simple wrapper for dm.sqrt() so that all usages
+        inside the class utilize the same method self.method which is an
+        attribute of the class.
+
+        Parameters
+        ----------
+        dm : DenMat
+        method : str
+
+        Returns
+        -------
+        DenMat
+
+        """
+        if method is None:
+            method = self.method
+        dm_out = None
+        if method in ['eigen', 'pade']:
+            dm_out = dm.sqrt(method=method)
+        elif method == 'pert':
+            esys = DenMatPertTheory.do_bstrap_with_separable_dm0(
+                dm, self.num_bstrap_steps)
+            dm_out = DenMat.get_fun_of_dm_from_eigen_sys(
+                dm.num_rows, dm.row_shape, esys, np.sqrt)
+        else:
+            assert False
+        return dm_out
+
     def exp(self, dm, method=None):
         """
         This method is a simple wrapper for dm.exp() so that all usages
@@ -268,36 +298,6 @@ class EntangCase:
                 dm, self.num_bstrap_steps)
             dm_out = DenMat.get_fun_of_dm_from_eigen_sys(
                 dm.num_rows, dm.row_shape, esys, np.exp)
-        else:
-            assert False
-        return dm_out
-
-    def sqrt(self, dm, method=None):
-        """
-        This method is a simple wrapper for dm.sqrt() so that all usages
-        inside the class utilize the same method self.method which is an
-        attribute of the class.
-
-        Parameters
-        ----------
-        dm : DenMat
-        method : str
-
-        Returns
-        -------
-        DenMat
-
-        """
-        if method is None:
-            method = self.method
-        dm_out = None
-        if method in ['eigen', 'pade']:
-            dm_out = dm.sqrt(method)
-        elif method == 'pert':
-            esys = DenMatPertTheory.do_bstrap_with_separable_dm0(
-                dm, self.num_bstrap_steps)
-            dm_out = DenMat.get_fun_of_dm_from_eigen_sys(
-                dm.num_rows, dm.row_shape, esys, np.sqrt)
         else:
             assert False
         return dm_out

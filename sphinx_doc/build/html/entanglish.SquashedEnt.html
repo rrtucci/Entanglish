@@ -153,14 +153,14 @@
 <span id="entanglish-squashedent-module"></span><h1>entanglish.SquashedEnt module<a class="headerlink" href="#module-entanglish.SquashedEnt" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="entanglish.SquashedEnt.SquashedEnt">
-<em class="property">class </em><code class="sig-prename descclassname">entanglish.SquashedEnt.</code><code class="sig-name descname">SquashedEnt</code><span class="sig-paren">(</span><em class="sig-param">den_mat</em>, <em class="sig-param">num_hidden_states</em>, <em class="sig-param">num_ab_steps</em>, <em class="sig-param">method='eigen'</em>, <em class="sig-param">recursion_init='eigen'</em>, <em class="sig-param">verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/SquashedEnt.html#SquashedEnt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.SquashedEnt.SquashedEnt" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">entanglish.SquashedEnt.</code><code class="sig-name descname">SquashedEnt</code><span class="sig-paren">(</span><em class="sig-param">den_mat</em>, <em class="sig-param">num_ab_steps</em>, <em class="sig-param">num_hidden_states=0</em>, <em class="sig-param">method='eigen'</em>, <em class="sig-param">recursion_init='eigen'</em>, <em class="sig-param">verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/SquashedEnt.html#SquashedEnt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.SquashedEnt.SquashedEnt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="entanglish.EntangCase.html#entanglish.EntangCase.EntangCase" title="entanglish.EntangCase.EntangCase"><code class="xref py py-class docutils literal notranslate"><span class="pre">entanglish.EntangCase.EntangCase</span></code></a></p>
 <p>This class is a child of class EntangCase. Its purpose is to calculate
 the (bipartite) quantum entanglement Exy of a mixed state density matrix
 Dxy with parts x and y. Exy is defined here as the squashed entanglement
 ( see Wikipedia Ref. 1 for more detailed description and original
 references of squashed entanglement)</p>
-<p>Exy = (1/2)*min[S(x : y | h)]</p>
+<p>Exy = (1/2)*min S(x : y | h)</p>
 <p>where S(x : y | h) is the conditional mutual information (CMI,
 pronounced “see me”) for a density matrix Dxyh. The minimum is over all
 Dxyh such that Dxy = trace_h Dxyh, where Dxy is a given, fixed density
@@ -184,6 +184,7 @@ and a Python Implementation Thereof”</p>
 <li><p><strong>Dxy</strong> (<a class="reference internal" href="entanglish.DenMat.html#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat"><em>DenMat</em></a>) – The input density matrix den_mat, after permuting its axes so that
 the axes are given in the precise order self.x_axes + self.y_axes.</p></li>
 <li><p><strong>Dxy_proj_ops</strong> (<em>(</em><a class="reference internal" href="entanglish.DenMat.html#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat"><em>DenMat</em></a><em>, </em><a class="reference internal" href="entanglish.DenMat.html#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat"><em>DenMat</em></a><em>)</em>) – projection operators for zero and nonzero eigenvalues of Dxy</p></li>
+<li><p><strong>Dxy_sqrt</strong> (<a class="reference internal" href="entanglish.DenMat.html#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat"><em>DenMat</em></a>) – square root of Dxy</p></li>
 <li><p><strong>den_mat</strong> (<a class="reference internal" href="entanglish.DenMat.html#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat"><em>DenMat</em></a>) – </p></li>
 <li><p><strong>do_formation_ent</strong> (<em>bool</em>) – True iff want special case of entanglement of formation</p></li>
 <li><p><strong>num_ab_steps</strong> (<em>int</em>) – number of iterations of Arimoto Blahut algo</p></li>
@@ -200,7 +201,7 @@ len( den_mat.row_shape))</p></li>
 </dl>
 <dl class="method">
 <dt id="entanglish.SquashedEnt.SquashedEnt.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">den_mat</em>, <em class="sig-param">num_hidden_states</em>, <em class="sig-param">num_ab_steps</em>, <em class="sig-param">method='eigen'</em>, <em class="sig-param">recursion_init='eigen'</em>, <em class="sig-param">verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/SquashedEnt.html#SquashedEnt.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.SquashedEnt.SquashedEnt.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">den_mat</em>, <em class="sig-param">num_ab_steps</em>, <em class="sig-param">num_hidden_states=0</em>, <em class="sig-param">method='eigen'</em>, <em class="sig-param">recursion_init='eigen'</em>, <em class="sig-param">verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/SquashedEnt.html#SquashedEnt.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.SquashedEnt.SquashedEnt.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constructor</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -268,8 +269,7 @@ err = mean_alp norm(Delta_xy[alp] - mean_alp Delta_xy[alp])</p>
 <code class="sig-name descname">regulate</code><span class="sig-paren">(</span><em class="sig-param">Kxy_a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/SquashedEnt.html#SquashedEnt.regulate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.SquashedEnt.SquashedEnt.regulate" title="Permalink to this definition">¶</a></dt>
 <dd><p>This internal method returns a list new_Kxy_a which is constructed
 by replacing each item Kxy_alp of list Kxy_a by its positive_part(),
-and then dividing the result by sum_xya= sum of all items of
-new_Kxy_a.</p>
+and then dividing the result by sum_alp tr_xy new_Kxy_a[alp]</p>
 <p>Some items of list Kxy_a may be None (those with very small w_alp).
 None items are not changed, they are left as None</p>
 <dl class="field-list simple">

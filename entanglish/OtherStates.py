@@ -49,10 +49,11 @@ if __name__ == "__main__":
     def main():
         print('bound entang state **********************')
         dm_bd = OtherStates.get_den_mat_with_bound_entang(.5)
-        num_hidden_states = 8
+
+        recursion_init='eigen+'
         num_ab_steps = 30
-        ecase = SquashedEnt(dm_bd, num_hidden_states, num_ab_steps,
-                            recursion_init='equi-diag', verbose=True)
+        ecase = SquashedEnt(dm_bd, num_ab_steps,
+                            recursion_init=recursion_init, verbose=True)
         pf = ecase.get_entang_profile()
         ecase.print_entang_profiles([pf], dm_bd.row_shape)
 

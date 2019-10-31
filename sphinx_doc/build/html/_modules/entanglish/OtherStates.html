@@ -199,10 +199,11 @@
     <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;bound entang state **********************&#39;</span><span class="p">)</span>
         <span class="n">dm_bd</span> <span class="o">=</span> <span class="n">OtherStates</span><span class="o">.</span><span class="n">get_den_mat_with_bound_entang</span><span class="p">(</span><span class="o">.</span><span class="mi">5</span><span class="p">)</span>
-        <span class="n">num_hidden_states</span> <span class="o">=</span> <span class="mi">8</span>
+
+        <span class="n">recursion_init</span><span class="o">=</span><span class="s1">&#39;eigen+&#39;</span>
         <span class="n">num_ab_steps</span> <span class="o">=</span> <span class="mi">30</span>
-        <span class="n">ecase</span> <span class="o">=</span> <span class="n">SquashedEnt</span><span class="p">(</span><span class="n">dm_bd</span><span class="p">,</span> <span class="n">num_hidden_states</span><span class="p">,</span> <span class="n">num_ab_steps</span><span class="p">,</span>
-                            <span class="n">recursion_init</span><span class="o">=</span><span class="s1">&#39;equi-diag&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">ecase</span> <span class="o">=</span> <span class="n">SquashedEnt</span><span class="p">(</span><span class="n">dm_bd</span><span class="p">,</span> <span class="n">num_ab_steps</span><span class="p">,</span>
+                            <span class="n">recursion_init</span><span class="o">=</span><span class="n">recursion_init</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">pf</span> <span class="o">=</span> <span class="n">ecase</span><span class="o">.</span><span class="n">get_entang_profile</span><span class="p">()</span>
         <span class="n">ecase</span><span class="o">.</span><span class="n">print_entang_profiles</span><span class="p">([</span><span class="n">pf</span><span class="p">],</span> <span class="n">dm_bd</span><span class="o">.</span><span class="n">row_shape</span><span class="p">)</span>
 

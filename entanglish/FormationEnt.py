@@ -10,7 +10,7 @@ class FormationEnt(SquashedEnt):
 
     Exy = sum_alp w_a[alp]  min S(Dx_a[alp])
 
-    where S(Dx_a[alp]) is the von Neumann entropy for  density matrix Dx_a[
+    where S(Dx_a[alp]) is the von Neumann entropy for density matrix Dx_a[
     alp] = tr_y Dxy_a[alp]. The minimum is over all Dxy_a[alp] such that
     Dxy_a[alp] is a pure state |psi[alp]><psi[alp]|, and sum_alp w_a[ alp]
     Dxy_a[ alp] = Dxy where Dxy is a given, fixed density matrix.
@@ -53,6 +53,7 @@ class FormationEnt(SquashedEnt):
         SquashedEnt.__init__(self, *args, **kwargs)
         self.do_formation_ent = True
 
+
 if __name__ == "__main__":
 
     from entanglish.TwoQubitState import *
@@ -66,17 +67,18 @@ if __name__ == "__main__":
             np.array([.07, .03, .25, .15, .3, .1, .06, .04])
             , np.array([.05, .05, .2, .2, .3, .1, .06, .04])
             ]
-        num_hidden_states = 8
-        num_ab_steps = 40
-        print('num_hidden_states=', num_hidden_states)
+
+        recursion_init = "eigen+"
+        num_ab_steps = 100
+        print("recursion_init=", recursion_init)
         print('num_ab_steps=', num_ab_steps)
         for evas_of_dm in evas_of_dm_list:
             evas_of_dm /= np.sum(evas_of_dm)
             print('***************new dm')
             print('evas_of_dm\n', evas_of_dm)
             dm.set_arr_to_rand_den_mat(evas_of_dm)
-            ecase = FormationEnt(dm, num_hidden_states, num_ab_steps,
-                                recursion_init='equi-diag', verbose=True)
+            ecase = FormationEnt(dm, num_ab_steps,
+                recursion_init=recursion_init, verbose=True)
             print('ent_02_1=', ecase.get_entang({0, 2}))
 
     def main2():
@@ -88,12 +90,12 @@ if __name__ == "__main__":
         st_vec = st.get_st_vec()
         dm1.set_arr_from_st_vec(st_vec)
 
-        num_hidden_states = 16
-        num_ab_steps = 5
-        print('num_hidden_states=', num_hidden_states)
+        recursion_init = "eigen+"
+        num_ab_steps = 15
+        print("recursion_init=", recursion_init)
         print('num_ab_steps=', num_ab_steps)
-        ecase = FormationEnt(dm1, num_hidden_states, num_ab_steps,
-            recursion_init='eigen', verbose=True)
+        ecase = FormationEnt(dm1, num_ab_steps,
+            recursion_init=recursion_init, verbose=False)
         print('entang_023: algo value, known value\n',
               ecase.get_entang({0, 2, 3}),
               st.get_known_entang(3))
@@ -107,17 +109,17 @@ if __name__ == "__main__":
     def main3():
         print('###############################main3, werner 2 qubit')
         dm1 = TwoQubitState.get_bell_basis_diag_dm(.7)
-        num_hidden_states = 4
-        num_ab_steps = 5
-        print('num_hidden_states=', num_hidden_states)
+
+        recursion_init = "eigen+"
+        num_ab_steps = 100
+        print("recursion_init=", recursion_init)
         print('num_ab_steps=', num_ab_steps)
         for dm in [dm1]:
             print("-------new dm")
             formation_entang =\
                   TwoQubitState.get_known_formation_entang(dm)
-
-            ecase = FormationEnt(dm, num_hidden_states, num_ab_steps,
-                recursion_init='equi-diag', verbose=True)
+            ecase = FormationEnt(dm, num_ab_steps,
+                recursion_init=recursion_init, verbose=True)
             print('entang_0: algo value, known value\n',
                   ecase.get_entang({1}), formation_entang)
 
@@ -125,20 +127,20 @@ if __name__ == "__main__":
         print('###############################main4, rand, 2 qubit')
         np.random.seed(123)
         dm2 = DenMat(4, (2, 2))
-        dm2.set_arr_to_rand_den_mat(np.array([.1 , .2 , .3, .4]))
+        dm2.set_arr_to_rand_den_mat(np.array([.1, .2, .3, .4]))
         dm3 = DenMat(4, (2, 2))
-        dm3.set_arr_to_rand_den_mat(np.array([.1 , .1 , .1, .7]))
-        num_hidden_states = 4
-        num_ab_steps = 40
-        print('num_hidden_states=', num_hidden_states)
+        dm3.set_arr_to_rand_den_mat(np.array([.1, .1, .1, .7]))
+
+        recursion_init = "eigen+"
+        num_ab_steps = 200
+        print("recursion_init=", recursion_init)
         print('num_ab_steps=', num_ab_steps)
         for dm in [dm2, dm3]:
             print("-------new dm")
             formation_entang =\
                   TwoQubitState.get_known_formation_entang(dm)
-
-            ecase = FormationEnt(dm, num_hidden_states, num_ab_steps,
-                recursion_init='eigen-sep', verbose=True)
+            ecase = FormationEnt(dm, num_ab_steps,
+                recursion_init=recursion_init, verbose=True)
             print('entang_0: algo value, known value\n',
                   ecase.get_entang({1}), formation_entang)
 

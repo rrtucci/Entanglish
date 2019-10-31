@@ -275,25 +275,6 @@ class DenMat:
         assert abs(tr) > 1e-6
         self.arr /= tr
 
-    def depurify(self, eps):
-        """
-        This method replaces self for a pure state by a nearby density mat
-        that is mixed
-
-        Parameters
-        ----------
-        eps : float
-            small positive number
-
-        Returns
-        -------
-        None
-
-        """
-        probs = np.random.random(self.num_rows)
-        probs = probs/np.sum(probs)
-        self.arr = (self.arr + eps*np.diag(probs)) / (self.trace() + eps)
-
     @staticmethod
     def get_kron_prod_of_den_mats(den_mat_list):
         """
@@ -704,6 +685,26 @@ class DenMat:
         """
         return np.linalg.norm(np.dot(self.arr, self.arr) - self.arr) < 1e-6
 
+    def depurify(self, eps):
+        """
+        If self is a pure state, this method returns a nearby density mat
+        that is mixed
+
+        Parameters
+        ----------
+        eps : float
+            small positive number
+
+        Returns
+        -------
+        DenMat
+
+        """
+        probs = np.random.random(self.num_rows)
+        probs = probs/np.sum(probs)
+        arr = (self.arr + eps*np.diag(probs)) / (self.trace() + eps)
+        return DenMat(self.num_rows, self.row_shape, arr)
+
     def herm(self):
         """
         This method returns a DenMat which is the Hermitian conjugate of self.
@@ -749,6 +750,30 @@ class DenMat:
 
         """
         return np.linalg.norm(self.arr)
+
+    def sqrt(self, method='eigen'):
+        """
+        This method returns a DenMat which is the matrix square root of self.
+
+        Parameters
+        ----------
+        method : str
+            method used to calculate sqrt. Either 'eigen' or 'pade'.
+
+        Returns
+        -------
+        DenMat
+
+        """
+        sqrtm_arr = None
+        if method == 'eigen':
+            sqrtm_arr = ut.fun_of_herm_arr(lambda x: np.sqrt(x) if x > 0 else
+            0, self.arr)
+        elif method == 'pade':
+            sqrtm_arr = la.sqrtm(self.arr)
+        else:
+            assert False, 'unsupported method'
+        return DenMat(self.num_rows, self.row_shape, sqrtm_arr)
 
     def exp(self, method='eigen'):
         """
@@ -858,29 +883,6 @@ class DenMat:
         dm2 = self*self
         tr2 = dm2.trace()
         return dm2*(1/np.sqrt(tr2))
-
-    def sqrt(self, method='eigen'):
-        """
-        This method returns a DenMat which is the matrix square root of self.
-
-        Parameters
-        ----------
-        method : str
-            method used to calculate sqrt. Either 'eigen' or 'pade'.
-
-        Returns
-        -------
-        DenMat
-
-        """
-        sqrtm_arr = None
-        if method == 'eigen':
-            sqrtm_arr = ut.fun_of_herm_arr(np.sqrt, self.arr)
-        elif method == 'pade':
-            sqrtm_arr = la.sqrtm(self.arr)
-        else:
-            assert False, 'unsupported method'
-        return DenMat(self.num_rows, self.row_shape, sqrtm_arr)
 
     def inv(self, regulator=0.0):
         """

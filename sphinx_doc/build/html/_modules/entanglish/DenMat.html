@@ -425,25 +425,6 @@
         <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">tr</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1e-6</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">arr</span> <span class="o">/=</span> <span class="n">tr</span></div>
 
-<div class="viewcode-block" id="DenMat.depurify"><a class="viewcode-back" href="../../entanglish.DenMat.html#entanglish.DenMat.DenMat.depurify">[docs]</a>    <span class="k">def</span> <span class="nf">depurify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eps</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This method replaces self for a pure state by a nearby density mat</span>
-<span class="sd">        that is mixed</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        eps : float</span>
-<span class="sd">            small positive number</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        None</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">probs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_rows</span><span class="p">)</span>
-        <span class="n">probs</span> <span class="o">=</span> <span class="n">probs</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">probs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">arr</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arr</span> <span class="o">+</span> <span class="n">eps</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">probs</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="p">()</span> <span class="o">+</span> <span class="n">eps</span><span class="p">)</span></div>
-
 <div class="viewcode-block" id="DenMat.get_kron_prod_of_den_mats"><a class="viewcode-back" href="../../entanglish.DenMat.html#entanglish.DenMat.DenMat.get_kron_prod_of_den_mats">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_kron_prod_of_den_mats</span><span class="p">(</span><span class="n">den_mat_list</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -854,6 +835,26 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">arr</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">arr</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-6</span></div>
 
+<div class="viewcode-block" id="DenMat.depurify"><a class="viewcode-back" href="../../entanglish.DenMat.html#entanglish.DenMat.DenMat.depurify">[docs]</a>    <span class="k">def</span> <span class="nf">depurify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eps</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        If self is a pure state, this method returns a nearby density mat</span>
+<span class="sd">        that is mixed</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        eps : float</span>
+<span class="sd">            small positive number</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        DenMat</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">probs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_rows</span><span class="p">)</span>
+        <span class="n">probs</span> <span class="o">=</span> <span class="n">probs</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">probs</span><span class="p">)</span>
+        <span class="n">arr</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arr</span> <span class="o">+</span> <span class="n">eps</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">probs</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="p">()</span> <span class="o">+</span> <span class="n">eps</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">DenMat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_rows</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">row_shape</span><span class="p">,</span> <span class="n">arr</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="DenMat.herm"><a class="viewcode-back" href="../../entanglish.DenMat.html#entanglish.DenMat.DenMat.herm">[docs]</a>    <span class="k">def</span> <span class="nf">herm</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This method returns a DenMat which is the Hermitian conjugate of self.</span>
@@ -899,6 +900,30 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arr</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DenMat.sqrt"><a class="viewcode-back" href="../../entanglish.DenMat.html#entanglish.DenMat.DenMat.sqrt">[docs]</a>    <span class="k">def</span> <span class="nf">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;eigen&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method returns a DenMat which is the matrix square root of self.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        method : str</span>
+<span class="sd">            method used to calculate sqrt. Either &#39;eigen&#39; or &#39;pade&#39;.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        DenMat</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">sqrtm_arr</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;eigen&#39;</span><span class="p">:</span>
+            <span class="n">sqrtm_arr</span> <span class="o">=</span> <span class="n">ut</span><span class="o">.</span><span class="n">fun_of_herm_arr</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span>
+            <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">arr</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;pade&#39;</span><span class="p">:</span>
+            <span class="n">sqrtm_arr</span> <span class="o">=</span> <span class="n">la</span><span class="o">.</span><span class="n">sqrtm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arr</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;unsupported method&#39;</span>
+        <span class="k">return</span> <span class="n">DenMat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_rows</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">row_shape</span><span class="p">,</span> <span class="n">sqrtm_arr</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DenMat.exp"><a class="viewcode-back" href="../../entanglish.DenMat.html#entanglish.DenMat.DenMat.exp">[docs]</a>    <span class="k">def</span> <span class="nf">exp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;eigen&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -1008,29 +1033,6 @@
         <span class="n">dm2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">*</span><span class="bp">self</span>
         <span class="n">tr2</span> <span class="o">=</span> <span class="n">dm2</span><span class="o">.</span><span class="n">trace</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">dm2</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">tr2</span><span class="p">))</span></div>
-
-<div class="viewcode-block" id="DenMat.sqrt"><a class="viewcode-back" href="../../entanglish.DenMat.html#entanglish.DenMat.DenMat.sqrt">[docs]</a>    <span class="k">def</span> <span class="nf">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;eigen&#39;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This method returns a DenMat which is the matrix square root of self.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        method : str</span>
-<span class="sd">            method used to calculate sqrt. Either &#39;eigen&#39; or &#39;pade&#39;.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        DenMat</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">sqrtm_arr</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;eigen&#39;</span><span class="p">:</span>
-            <span class="n">sqrtm_arr</span> <span class="o">=</span> <span class="n">ut</span><span class="o">.</span><span class="n">fun_of_herm_arr</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">arr</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;pade&#39;</span><span class="p">:</span>
-            <span class="n">sqrtm_arr</span> <span class="o">=</span> <span class="n">la</span><span class="o">.</span><span class="n">sqrtm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arr</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">assert</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;unsupported method&#39;</span>
-        <span class="k">return</span> <span class="n">DenMat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_rows</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">row_shape</span><span class="p">,</span> <span class="n">sqrtm_arr</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DenMat.inv"><a class="viewcode-back" href="../../entanglish.DenMat.html#entanglish.DenMat.DenMat.inv">[docs]</a>    <span class="k">def</span> <span class="nf">inv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">regulator</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>

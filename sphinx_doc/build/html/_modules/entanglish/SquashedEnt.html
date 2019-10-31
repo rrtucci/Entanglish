@@ -161,7 +161,7 @@
 <span class="sd">    ( see Wikipedia Ref. 1 for more detailed description and original</span>
 <span class="sd">    references of squashed entanglement)</span>
 
-<span class="sd">    Exy = (1/2)*min[S(x : y | h)]</span>
+<span class="sd">    Exy = (1/2)*min S(x : y | h)</span>
 
 <span class="sd">    where S(x : y | h) is the conditional mutual information (CMI,</span>
 <span class="sd">    pronounced &quot;see me&quot;) for a density matrix Dxyh. The minimum is over all</span>
@@ -192,6 +192,8 @@
 <span class="sd">        the axes are given in the precise order self.x_axes + self.y_axes.</span>
 <span class="sd">    Dxy_proj_ops : (DenMat, DenMat)</span>
 <span class="sd">        projection operators for zero and nonzero eigenvalues of Dxy</span>
+<span class="sd">    Dxy_sqrt : DenMat</span>
+<span class="sd">        square root of Dxy</span>
 <span class="sd">    den_mat : DenMat</span>
 <span class="sd">    do_formation_ent : bool</span>
 <span class="sd">        True iff want special case of entanglement of formation</span>
@@ -210,8 +212,8 @@
 <span class="sd">    y_axes : list[int]</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="SquashedEnt.__init__"><a class="viewcode-back" href="../../entanglish.SquashedEnt.html#entanglish.SquashedEnt.SquashedEnt.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">den_mat</span><span class="p">,</span> <span class="n">num_hidden_states</span><span class="p">,</span>
-                 <span class="n">num_ab_steps</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;eigen&quot;</span><span class="p">,</span> <span class="n">recursion_init</span><span class="o">=</span><span class="s1">&#39;eigen&#39;</span><span class="p">,</span>
+<div class="viewcode-block" id="SquashedEnt.__init__"><a class="viewcode-back" href="../../entanglish.SquashedEnt.html#entanglish.SquashedEnt.SquashedEnt.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">den_mat</span><span class="p">,</span> <span class="n">num_ab_steps</span><span class="p">,</span> <span class="n">num_hidden_states</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                <span class="n">method</span><span class="o">=</span><span class="s2">&quot;eigen&quot;</span><span class="p">,</span> <span class="n">recursion_init</span><span class="o">=</span><span class="s1">&#39;eigen&#39;</span><span class="p">,</span>
                 <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constructor</span>
@@ -229,21 +231,21 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 
-
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">assert</span> <span class="n">method</span> <span class="o">!=</span> <span class="s2">&quot;pert&quot;</span><span class="p">,</span> <span class="s2">&quot;evaluation of squashed ent not implemented&#39; </span><span class="se">\</span>
 <span class="s2">                                 &#39;for method==&#39;pert&#39;&quot;</span>
         <span class="n">EntangCase</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">den_mat</span><span class="o">.</span><span class="n">row_shape</span><span class="p">),</span> <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span>
                             <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">den_mat</span> <span class="o">=</span> <span class="n">den_mat</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">num_hidden_states</span> <span class="o">=</span> <span class="n">num_hidden_states</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">num_ab_steps</span> <span class="o">=</span> <span class="n">num_ab_steps</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_hidden_states</span> <span class="o">=</span> <span class="n">num_hidden_states</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">recursion_init</span> <span class="o">=</span> <span class="n">recursion_init</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">x_axes</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">y_axes</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="c1"># self.Dxy_proj_ops = None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Dxy_proj_ops</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Dxy_sqrt</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">do_formation_ent</span> <span class="o">=</span> <span class="kc">False</span></div>
 
@@ -251,8 +253,7 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This internal method returns a list new_Kxy_a which is constructed</span>
 <span class="sd">        by replacing each item Kxy_alp of list Kxy_a by its positive_part(),</span>
-<span class="sd">        and then dividing the result by sum_xya= sum of all items of</span>
-<span class="sd">        new_Kxy_a.</span>
+<span class="sd">        and then dividing the result by sum_alp tr_xy new_Kxy_a[alp]</span>
 
 <span class="sd">        Some items of list Kxy_a may be None (those with very small w_alp).</span>
 <span class="sd">        None items are not changed, they are left as None</span>
@@ -308,56 +309,99 @@
         <span class="n">num_y_axes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y_axes</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">den_mat</span><span class="o">.</span><span class="n">get_rho_xy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x_axes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_axes</span><span class="p">)</span>
         <span class="c1"># self.Dxy_proj_ops = self.Dxy.get_eigenvalue_proj_ops()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Dxy_sqrt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span><span class="p">)</span>
 
         <span class="n">Kxy_a</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">recursion_init</span> <span class="o">==</span> <span class="s1">&#39;stat-pt&#39;</span><span class="p">:</span>
             <span class="c1"># this turns out to be a stationary point of the recursion</span>
             <span class="c1"># relation</span>
+            <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_hidden_states</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">,</span>\
+                <span class="s1">&#39;num_hidden_states must be specified&#39;</span>
             <span class="n">w_alp</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_hidden_states</span>
             <span class="n">Kxy_alp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span><span class="o">*</span><span class="n">w_alp</span>
             <span class="n">Kxy_a</span> <span class="o">=</span> <span class="p">[</span><span class="n">Kxy_alp</span><span class="p">]</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">num_hidden_states</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">recursion_init</span> <span class="o">==</span> <span class="s1">&#39;equi-diag&#39;</span><span class="p">:</span>
-            <span class="n">w_a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_hidden_states</span><span class="p">)</span>
-            <span class="n">w_a</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">w_a</span><span class="p">)</span>
-            <span class="n">dd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span><span class="o">.</span><span class="n">arr</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">alp</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_hidden_states</span><span class="p">):</span>
-                <span class="k">if</span> <span class="n">alp</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                    <span class="n">Kxy_alp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-                <span class="k">else</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">recursion_init</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;eigen&#39;</span><span class="p">,</span> <span class="s1">&#39;eigen+&#39;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">recursion_init</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;+&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">num_hidden_states</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span><span class="o">.</span><span class="n">num_rows</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">num_hidden_states</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span><span class="o">.</span><span class="n">num_rows</span><span class="o">**</span><span class="mi">2</span>
+            <span class="n">evas</span><span class="p">,</span> <span class="n">evec_cols</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigh</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span><span class="o">.</span><span class="n">arr</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">recursion_init</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;+&#39;</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">alp</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_hidden_states</span><span class="p">):</span>
+                    <span class="n">Kxy_alp</span> <span class="o">=</span> <span class="n">DenMat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span><span class="o">.</span><span class="n">num_rows</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span><span class="o">.</span><span class="n">row_shape</span><span class="p">)</span>
+                    <span class="n">eva</span> <span class="o">=</span> <span class="n">evas</span><span class="p">[</span><span class="n">alp</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">eva</span> <span class="o">&lt;</span> <span class="mf">1e-5</span><span class="p">:</span>
+                        <span class="n">Kxy_alp</span> <span class="o">=</span> <span class="kc">None</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">Kxy_alp</span><span class="o">.</span><span class="n">set_arr_from_st_vec</span><span class="p">(</span><span class="n">evec_cols</span><span class="p">[:,</span> <span class="n">alp</span><span class="p">])</span>
+                        <span class="n">Kxy_alp</span> <span class="o">=</span> <span class="n">Kxy_alp</span><span class="o">*</span><span class="n">eva</span>
+                    <span class="n">Kxy_a</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Kxy_alp</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># this gives indices of evas in decreasing order</span>
+                <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">evas</span><span class="p">))</span>
+
+                <span class="n">evas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">evas</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">indices</span><span class="p">])</span>
+                <span class="n">evec_cols</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span>
+                    <span class="p">[</span><span class="n">evec_cols</span><span class="p">[:,</span> <span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">indices</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+                <span class="n">num_nonzero_evas</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span><span class="o">.</span><span class="n">num_rows</span>
+                <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">evas</span><span class="p">)):</span>
+                    <span class="k">if</span> <span class="n">evas</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">1e-5</span><span class="p">:</span>
+                        <span class="n">num_nonzero_evas</span> <span class="o">=</span> <span class="n">k</span>
+                        <span class="k">break</span>
+
+                <span class="n">eps</span> <span class="o">=</span> <span class="n">evas</span><span class="p">[</span><span class="n">num_nonzero_evas</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span><span class="o">.</span><span class="n">num_rows</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+                <span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+                <span class="n">zc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+                <span class="n">diag_ind</span> <span class="o">=</span> <span class="p">[(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span><span class="o">.</span><span class="n">num_rows</span><span class="p">)]</span>
+                <span class="n">non_diag_ind</span> <span class="o">=</span> <span class="p">[(</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">)</span>
+                                <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span><span class="o">.</span><span class="n">num_rows</span><span class="p">)</span>
+                                <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span><span class="o">.</span><span class="n">num_rows</span><span class="p">)</span>
+                                <span class="k">if</span> <span class="n">row</span> <span class="o">!=</span> <span class="n">col</span><span class="p">]</span>
+                <span class="n">indices</span> <span class="o">=</span> <span class="n">diag_ind</span> <span class="o">+</span> <span class="n">non_diag_ind</span>
+                <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">indices</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span><span class="o">.</span><span class="n">num_rows</span><span class="o">**</span><span class="mi">2</span>
+                <span class="n">alp</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+                <span class="k">for</span> <span class="n">row</span><span class="p">,</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">indices</span><span class="p">:</span>
+                    <span class="n">alp</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="k">if</span> <span class="n">alp</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span><span class="o">.</span><span class="n">num_rows</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">alp</span> <span class="o">&lt;</span> <span class="n">num_nonzero_evas</span><span class="p">:</span>
+                            <span class="n">w_alp</span> <span class="o">=</span> <span class="n">evas</span><span class="p">[</span><span class="n">alp</span><span class="p">]</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span><span class="o">.</span><span class="n">num_rows</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">eps</span>
+                            <span class="k">assert</span> <span class="n">w_alp</span> <span class="o">&gt;</span> <span class="mi">0</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">w_alp</span> <span class="o">=</span> <span class="mf">0.0</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">w_alp</span> <span class="o">=</span> <span class="n">eps</span>
+                    <span class="k">if</span> <span class="n">w_alp</span> <span class="o">&lt;</span> <span class="mf">1e-6</span><span class="p">:</span>
+                        <span class="n">Kxy_a</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+                        <span class="k">continue</span>
                     <span class="n">Kxy_alp</span> <span class="o">=</span> <span class="n">DenMat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span><span class="o">.</span><span class="n">num_rows</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span><span class="o">.</span><span class="n">row_shape</span><span class="p">)</span>
                     <span class="n">Kxy_alp</span><span class="o">.</span><span class="n">set_arr_to_zero</span><span class="p">()</span>
-                <span class="n">Kxy_alp</span><span class="o">.</span><span class="n">replace_diag_of_arr</span><span class="p">(</span><span class="n">dd</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">num_hidden_states</span><span class="p">))</span>
-                <span class="n">Kxy_a</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Kxy_alp</span><span class="p">)</span>
-            <span class="n">Kxy_a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">regulate</span><span class="p">(</span><span class="n">Kxy_a</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">recursion_init</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;eigen&#39;</span><span class="p">,</span> <span class="s1">&#39;eigen-sep&#39;</span><span class="p">]:</span>
-            <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_hidden_states</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span><span class="o">.</span><span class="n">num_rows</span><span class="p">,</span>\
-            <span class="s1">&#39;for this choice of recursion init, &#39;</span> <span class="o">+</span>\
-            <span class="s1">&#39; the number of hidden states &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_hidden_states</span><span class="p">)</span> <span class="o">+</span>\
-            <span class="s1">&#39; must equal the number of rows of Dxy &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span><span class="o">.</span><span class="n">num_rows</span><span class="p">)</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">recursion_init</span> <span class="o">==</span> <span class="s1">&#39;eigen&#39;</span><span class="p">:</span>
-                <span class="n">arr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span><span class="o">.</span><span class="n">arr</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">num_x_axes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x_axes</span><span class="p">)</span>
-                <span class="n">num_y_axes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y_axes</span><span class="p">)</span>
-                <span class="n">set_x</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">num_x_axes</span><span class="p">))</span>
-                <span class="n">set_y</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">num_x_axes</span><span class="p">,</span> <span class="n">num_x_axes</span> <span class="o">+</span> <span class="n">num_y_axes</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
-                <span class="n">Dx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span><span class="o">.</span><span class="n">get_partial_tr</span><span class="p">(</span><span class="n">set_y</span><span class="p">)</span>
-                <span class="n">Dy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span><span class="o">.</span><span class="n">get_partial_tr</span><span class="p">(</span><span class="n">set_x</span><span class="p">)</span>
-                <span class="n">arr</span> <span class="o">=</span> <span class="n">ut</span><span class="o">.</span><span class="n">kron_prod</span><span class="p">([</span><span class="n">Dx</span><span class="o">.</span><span class="n">arr</span><span class="p">,</span> <span class="n">Dy</span><span class="o">.</span><span class="n">arr</span><span class="p">])</span>
-            <span class="n">evas</span><span class="p">,</span> <span class="n">evec_cols</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigh</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">alp</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_hidden_states</span><span class="p">):</span>
-                <span class="n">Kxy_alp</span> <span class="o">=</span> <span class="n">DenMat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span><span class="o">.</span><span class="n">num_rows</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span><span class="o">.</span><span class="n">row_shape</span><span class="p">)</span>
-                <span class="n">eva</span> <span class="o">=</span> <span class="n">evas</span><span class="p">[</span><span class="n">alp</span><span class="p">]</span>
-                <span class="k">if</span> <span class="n">eva</span> <span class="o">&lt;</span> <span class="mf">1e-5</span><span class="p">:</span>
-                    <span class="n">Kxy_alp</span> <span class="o">=</span> <span class="kc">None</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">Kxy_alp</span><span class="o">.</span><span class="n">set_arr_from_st_vec</span><span class="p">(</span><span class="n">evec_cols</span><span class="p">[:,</span> <span class="n">alp</span><span class="p">])</span>
-                    <span class="n">Kxy_alp</span> <span class="o">=</span> <span class="n">Kxy_alp</span><span class="o">*</span><span class="n">eva</span>
-                <span class="n">Kxy_a</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Kxy_alp</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">alp</span> <span class="o">&lt;</span> <span class="n">num_nonzero_evas</span><span class="p">:</span>
+                        <span class="n">Kxy_alp</span><span class="p">[</span><span class="n">alp</span><span class="p">,</span> <span class="n">alp</span><span class="p">]</span> <span class="o">=</span> <span class="n">w_alp</span>
+                    <span class="k">elif</span> <span class="n">alp</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span><span class="o">.</span><span class="n">num_rows</span><span class="p">:</span>
+                        <span class="n">Kxy_alp</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">row</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">eps</span><span class="p">)</span> <span class="o">*</span> <span class="n">w_alp</span>
+                        <span class="n">Kxy_alp</span><span class="p">[</span><span class="n">col</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">eps</span> <span class="o">*</span> <span class="n">w_alp</span>
+                        <span class="k">if</span> <span class="n">row</span> <span class="o">&lt;</span> <span class="n">col</span><span class="p">:</span>
+                            <span class="n">Kxy_alp</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">z</span><span class="o">*</span><span class="n">eps</span><span class="o">*</span><span class="n">w_alp</span>
+                            <span class="n">Kxy_alp</span><span class="p">[</span><span class="n">col</span><span class="p">,</span> <span class="n">row</span><span class="p">]</span> <span class="o">=</span> <span class="n">zc</span><span class="o">*</span><span class="n">eps</span><span class="o">*</span><span class="n">w_alp</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">Kxy_alp</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">zc</span><span class="o">*</span><span class="n">eps</span><span class="o">*</span><span class="n">w_alp</span>
+                            <span class="n">Kxy_alp</span><span class="p">[</span><span class="n">col</span><span class="p">,</span> <span class="n">row</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">z</span><span class="o">*</span><span class="n">eps</span><span class="o">*</span><span class="n">w_alp</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="c1"># should never reach here because of continue</span>
+                        <span class="k">assert</span> <span class="kc">False</span>
+                    <span class="n">Kxy_alp</span><span class="o">.</span><span class="n">arr</span> <span class="o">=</span> <span class="n">ut</span><span class="o">.</span><span class="n">switch_arr_basis</span><span class="p">(</span><span class="n">Kxy_alp</span><span class="o">.</span><span class="n">arr</span><span class="p">,</span> <span class="n">evec_cols</span><span class="p">,</span>
+                                                      <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                    <span class="n">Kxy_a</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Kxy_alp</span><span class="p">)</span>
+
         <span class="k">else</span><span class="p">:</span>
             <span class="k">assert</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;unexpected recursion_init&#39;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">initial norm of Dxy - sum_alp Kxy_alp, should be 0</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span><span class="o">.</span><span class="n">arr</span> <span class="o">-</span>
+                <span class="nb">sum</span><span class="p">([</span><span class="n">Kxy_alp</span><span class="o">.</span><span class="n">arr</span> <span class="k">for</span> <span class="n">Kxy_alp</span> <span class="ow">in</span> <span class="n">Kxy_a</span>
+                     <span class="k">if</span> <span class="n">Kxy_alp</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">])))</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
         <span class="n">entang</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
         <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_ab_steps</span><span class="p">):</span>
             <span class="n">Kxy_a</span><span class="p">,</span> <span class="n">entang</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">next_step</span><span class="p">(</span><span class="n">Kxy_a</span><span class="p">)</span>
@@ -413,12 +457,15 @@
             <span class="n">Kxy_alp</span> <span class="o">=</span> <span class="n">Kxy_a</span><span class="p">[</span><span class="n">alp</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">Kxy_alp</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">w_alp</span> <span class="o">=</span> <span class="n">Kxy_alp</span><span class="o">.</span><span class="n">trace</span><span class="p">()</span>
-                <span class="n">num_nonzero_w_alp</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">if</span> <span class="n">w_alp</span> <span class="o">&lt;</span> <span class="mf">1e-6</span><span class="p">:</span>
+                    <span class="n">w_alp</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="n">Kxy_alp</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">num_nonzero_w_alp</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">w_alp</span> <span class="o">=</span> <span class="mf">0.0</span>
-
             <span class="n">w_a</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">w_alp</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">w_alp</span> <span class="o">&gt;</span> <span class="mf">1e-5</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">Kxy_alp</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="c1"># proj0, proj1 = self.Dxy_proj_ops</span>
                 <span class="n">Dxy_alp</span> <span class="o">=</span> <span class="n">Kxy_alp</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">w_alp</span><span class="p">)</span>
                 <span class="n">log_Dxy_alp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">Dxy_alp</span><span class="p">)</span>
@@ -486,19 +533,16 @@
             <span class="c1">#             np.linalg.norm(inv_sum_numerator.arr),</span>
             <span class="c1">#             np.linalg.norm(new_Kxy_a[alp].arr))</span>
             <span class="k">if</span> <span class="n">new_Kxy_a</span><span class="p">[</span><span class="n">alp</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="c1"># this didn&#39;t work</span>
-                <span class="c1"># root = self.sqrt(self.Dxy)*self.sqrt(inv_sum_numerator)</span>
-                <span class="c1"># new_Kxy_alp = root*new_Kxy_a[alp]*root.herm()</span>
+                <span class="n">root</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Dxy_sqrt</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">inv_sum_numerator</span><span class="p">)</span>
+                <span class="n">new_Kxy_alp</span> <span class="o">=</span> <span class="n">root</span><span class="o">*</span><span class="n">new_Kxy_a</span><span class="p">[</span><span class="n">alp</span><span class="p">]</span><span class="o">*</span><span class="n">root</span><span class="o">.</span><span class="n">herm</span><span class="p">()</span>
 
-                <span class="n">new_Kxy_alp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span><span class="o">*</span><span class="n">inv_sum_numerator</span><span class="o">*</span><span class="n">new_Kxy_a</span><span class="p">[</span><span class="n">alp</span><span class="p">]</span>
-                <span class="n">new_Kxy_alp</span> <span class="o">=</span> <span class="p">(</span><span class="n">new_Kxy_alp</span> <span class="o">+</span> <span class="n">new_Kxy_alp</span><span class="o">.</span><span class="n">herm</span><span class="p">())</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+                <span class="c1"># didn&#39;t work too well:</span>
+                <span class="c1"># new_Kxy_alp = self.Dxy*inv_sum_numerator*new_Kxy_a[alp]</span>
+                <span class="c1"># new_Kxy_alp = (new_Kxy_alp + new_Kxy_alp.herm())*(1/2)</span>
 
-                <span class="c1"># print(&#39;rrrrr111&#39;, np.linalg.norm(new_Kxy_alp.arr))</span>
                 <span class="n">new_Kxy_a</span><span class="p">[</span><span class="n">alp</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_Kxy_alp</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_formation_ent</span><span class="p">:</span>
             <span class="n">new_Kxy_a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">regulate</span><span class="p">(</span><span class="n">new_Kxy_a</span><span class="p">)</span>
-        <span class="c1"># print(&#39;nnnnnnnnnnnnn&#39;, np.sum(np.array([x.trace() for x in</span>
-        <span class="c1">#                                         new_Kxy_a])))</span>
 
         <span class="c1"># not as precise, only valid asymptotically</span>
         <span class="c1"># entang_lim = (self.Dxy*Delta_xy).trace()/2</span>
@@ -516,17 +560,18 @@
             <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">.</span><span class="mi">07</span><span class="p">,</span> <span class="o">.</span><span class="mi">03</span><span class="p">,</span> <span class="o">.</span><span class="mi">25</span><span class="p">,</span> <span class="o">.</span><span class="mi">15</span><span class="p">,</span> <span class="o">.</span><span class="mi">3</span><span class="p">,</span> <span class="o">.</span><span class="mi">1</span><span class="p">,</span> <span class="o">.</span><span class="mi">06</span><span class="p">,</span> <span class="o">.</span><span class="mi">04</span><span class="p">])</span>
             <span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">.</span><span class="mi">05</span><span class="p">,</span> <span class="o">.</span><span class="mi">05</span><span class="p">,</span> <span class="o">.</span><span class="mi">2</span><span class="p">,</span> <span class="o">.</span><span class="mi">2</span><span class="p">,</span> <span class="o">.</span><span class="mi">3</span><span class="p">,</span> <span class="o">.</span><span class="mi">1</span><span class="p">,</span> <span class="o">.</span><span class="mi">06</span><span class="p">,</span> <span class="o">.</span><span class="mi">04</span><span class="p">])</span>
             <span class="p">]</span>
-        <span class="n">num_hidden_states</span> <span class="o">=</span> <span class="mi">8</span>
-        <span class="n">num_ab_steps</span> <span class="o">=</span> <span class="mi">60</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;num_hidden_states=&#39;</span><span class="p">,</span> <span class="n">num_hidden_states</span><span class="p">)</span>
+
+        <span class="n">recursion_init</span> <span class="o">=</span> <span class="s1">&#39;eigen+&#39;</span>
+        <span class="n">num_ab_steps</span> <span class="o">=</span> <span class="mi">100</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;recursion_init=&#39;</span><span class="p">,</span> <span class="n">recursion_init</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;num_ab_steps=&#39;</span><span class="p">,</span> <span class="n">num_ab_steps</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">evas_of_dm</span> <span class="ow">in</span> <span class="n">evas_of_dm_list</span><span class="p">:</span>
             <span class="n">evas_of_dm</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">evas_of_dm</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;***************new dm&#39;</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;evas_of_dm</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">evas_of_dm</span><span class="p">)</span>
             <span class="n">dm</span><span class="o">.</span><span class="n">set_arr_to_rand_den_mat</span><span class="p">(</span><span class="n">evas_of_dm</span><span class="p">)</span>
-            <span class="n">ecase</span> <span class="o">=</span> <span class="n">SquashedEnt</span><span class="p">(</span><span class="n">dm</span><span class="p">,</span> <span class="n">num_hidden_states</span><span class="p">,</span> <span class="n">num_ab_steps</span><span class="p">,</span>
-                                <span class="n">recursion_init</span><span class="o">=</span><span class="s1">&#39;equi-diag&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">ecase</span> <span class="o">=</span> <span class="n">SquashedEnt</span><span class="p">(</span><span class="n">dm</span><span class="p">,</span> <span class="n">num_ab_steps</span><span class="p">,</span>
+                <span class="n">recursion_init</span><span class="o">=</span><span class="n">recursion_init</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ent_02_1=&#39;</span><span class="p">,</span> <span class="n">ecase</span><span class="o">.</span><span class="n">get_entang</span><span class="p">({</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">}))</span>
 
     <span class="kn">from</span> <span class="nn">entanglish.SymNupState</span> <span class="k">import</span> <span class="o">*</span>
@@ -540,12 +585,12 @@
         <span class="n">st_vec</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">get_st_vec</span><span class="p">()</span>
         <span class="n">dm1</span><span class="o">.</span><span class="n">set_arr_from_st_vec</span><span class="p">(</span><span class="n">st_vec</span><span class="p">)</span>
 
-        <span class="n">num_hidden_states</span> <span class="o">=</span> <span class="mi">16</span>
+        <span class="n">recursion_init</span> <span class="o">=</span> <span class="s1">&#39;eigen+&#39;</span>
         <span class="n">num_ab_steps</span> <span class="o">=</span> <span class="mi">5</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;num_hidden_states=&#39;</span><span class="p">,</span> <span class="n">num_hidden_states</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;recursion_init=&#39;</span><span class="p">,</span> <span class="n">recursion_init</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;num_ab_steps=&#39;</span><span class="p">,</span> <span class="n">num_ab_steps</span><span class="p">)</span>
-        <span class="n">ecase</span> <span class="o">=</span> <span class="n">SquashedEnt</span><span class="p">(</span><span class="n">dm1</span><span class="p">,</span> <span class="n">num_hidden_states</span><span class="p">,</span> <span class="n">num_ab_steps</span><span class="p">,</span>
-            <span class="n">recursion_init</span><span class="o">=</span><span class="s1">&#39;eigen&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">ecase</span> <span class="o">=</span> <span class="n">SquashedEnt</span><span class="p">(</span><span class="n">dm1</span><span class="p">,</span> <span class="n">num_ab_steps</span><span class="p">,</span>
+            <span class="n">recursion_init</span><span class="o">=</span><span class="n">recursion_init</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;entang_023: algo value, known value</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span>
               <span class="n">ecase</span><span class="o">.</span><span class="n">get_entang</span><span class="p">({</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">}),</span>
               <span class="n">st</span><span class="o">.</span><span class="n">get_known_entang</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
@@ -555,7 +600,6 @@
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;entang_1: algo value, known value</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span>
               <span class="n">ecase</span><span class="o">.</span><span class="n">get_entang</span><span class="p">({</span><span class="mi">1</span><span class="p">}),</span>
               <span class="n">st</span><span class="o">.</span><span class="n">get_known_entang</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
-
 
     <span class="n">main1</span><span class="p">()</span>
     <span class="n">main2</span><span class="p">()</span>
