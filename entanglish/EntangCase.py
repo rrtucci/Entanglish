@@ -302,7 +302,7 @@ class EntangCase:
             assert False
         return dm_out
 
-    def log(self, dm, method=None, clipped=True, eps=1e-5,
+    def log(self, dm, method=None, clipped=True, eps=1e-4,
             clip_to_zero=False):
         """
         This method is a simple wrapper for dm.log() so that all usages

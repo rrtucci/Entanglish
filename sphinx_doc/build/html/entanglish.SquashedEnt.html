@@ -186,7 +186,9 @@ the axes are given in the precise order self.x_axes + self.y_axes.</p></li>
 <li><p><strong>Dxy_proj_ops</strong> (<em>(</em><a class="reference internal" href="entanglish.DenMat.html#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat"><em>DenMat</em></a><em>, </em><a class="reference internal" href="entanglish.DenMat.html#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat"><em>DenMat</em></a><em>)</em>) – projection operators for zero and nonzero eigenvalues of Dxy</p></li>
 <li><p><strong>Dxy_sqrt</strong> (<a class="reference internal" href="entanglish.DenMat.html#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat"><em>DenMat</em></a>) – square root of Dxy</p></li>
 <li><p><strong>den_mat</strong> (<a class="reference internal" href="entanglish.DenMat.html#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat"><em>DenMat</em></a>) – </p></li>
-<li><p><strong>do_formation_ent</strong> (<em>bool</em>) – True iff want special case of entanglement of formation</p></li>
+<li><p><strong>calc_formation_ent</strong> (<em>bool</em>) – True iff want special case of entanglement of formation</p></li>
+<li><p><strong>eps_w</strong> (<em>float</em>) – weights (probabilities) &lt; eps_w are rounded to zero</p></li>
+<li><p><strong>eps_log</strong> (<em>float</em>) – logs are clipped at this value. log(x) = log(eps_log) if x &lt; eps_log</p></li>
 <li><p><strong>num_ab_steps</strong> (<em>int</em>) – number of iterations of Arimoto Blahut algo</p></li>
 <li><p><strong>num_hidden_states</strong> (<em>int</em>) – number of hidden states indexed by alpha, so this is number of
 alphas. In the above class docstring, alpha is denoted by h,

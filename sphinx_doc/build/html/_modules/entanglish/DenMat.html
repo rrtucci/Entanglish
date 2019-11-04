@@ -948,7 +948,7 @@
             <span class="k">assert</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;unsupported method&#39;</span>
         <span class="k">return</span> <span class="n">DenMat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_rows</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">row_shape</span><span class="p">,</span> <span class="n">expm_arr</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="DenMat.log"><a class="viewcode-back" href="../../entanglish.DenMat.html#entanglish.DenMat.DenMat.log">[docs]</a>    <span class="k">def</span> <span class="nf">log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;eigen&#39;</span><span class="p">,</span> <span class="n">clipped</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">,</span>
+<div class="viewcode-block" id="DenMat.log"><a class="viewcode-back" href="../../entanglish.DenMat.html#entanglish.DenMat.DenMat.log">[docs]</a>    <span class="k">def</span> <span class="nf">log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;eigen&#39;</span><span class="p">,</span> <span class="n">clipped</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span>
             <span class="n">clip_to_zero</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This method returns a DenMat which is the matrix natural log of self.</span>
@@ -988,9 +988,9 @@
             <span class="k">assert</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;unsupported method&#39;</span>
         <span class="k">return</span> <span class="n">DenMat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_rows</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">row_shape</span><span class="p">,</span> <span class="n">logm_arr</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="DenMat.positive_part"><a class="viewcode-back" href="../../entanglish.DenMat.html#entanglish.DenMat.DenMat.positive_part">[docs]</a>    <span class="k">def</span> <span class="nf">positive_part</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="DenMat.positive_part"><a class="viewcode-back" href="../../entanglish.DenMat.html#entanglish.DenMat.DenMat.positive_part">[docs]</a>    <span class="k">def</span> <span class="nf">positive_part</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This method returns a DenMat in which negative eigenvalues of</span>
+<span class="sd">        This method returns a DenMat in which negative (&lt; 0) eigenvalues of</span>
 <span class="sd">        self.arr are replaced by zero.</span>
 
 <span class="sd">        Returns</span>
@@ -1057,11 +1057,16 @@
         <span class="n">arr</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">diag_indices_from</span><span class="p">(</span><span class="n">arr</span><span class="p">)]</span> <span class="o">+=</span> <span class="n">regulator</span>
         <span class="k">return</span> <span class="n">DenMat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_rows</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">row_shape</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">arr</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="DenMat.pseudo_inv"><a class="viewcode-back" href="../../entanglish.DenMat.html#entanglish.DenMat.DenMat.pseudo_inv">[docs]</a>    <span class="k">def</span> <span class="nf">pseudo_inv</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="DenMat.pseudo_inv"><a class="viewcode-back" href="../../entanglish.DenMat.html#entanglish.DenMat.DenMat.pseudo_inv">[docs]</a>    <span class="k">def</span> <span class="nf">pseudo_inv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This method returns a DenMat which is the Penrose pseudo inverse</span>
 <span class="sd">        matrix of self. By pseudo inverse, we mean that it takes the inverse</span>
-<span class="sd">        of non-zero eigenvalues only, but keeps the zero ones the same.</span>
+<span class="sd">        of non-zero (abs &gt; eps) eigenvalues only, but sets those eigenvalues</span>
+<span class="sd">        with abs &lt; eps to exactly zero.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        eps : float</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -1069,21 +1074,26 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">pseudo_inv_arr</span> <span class="o">=</span> <span class="n">ut</span><span class="o">.</span><span class="n">fun_of_herm_arr</span><span class="p">(</span>
-            <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mi">1</span><span class="o">/</span><span class="n">x</span> <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1e-5</span> <span class="k">else</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">arr</span><span class="p">)</span>
+            <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mi">1</span><span class="o">/</span><span class="n">x</span> <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">eps</span> <span class="k">else</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">arr</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">DenMat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_rows</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">row_shape</span><span class="p">,</span> <span class="n">pseudo_inv_arr</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="DenMat.get_eigenvalue_proj_ops"><a class="viewcode-back" href="../../entanglish.DenMat.html#entanglish.DenMat.DenMat.get_eigenvalue_proj_ops">[docs]</a>    <span class="k">def</span> <span class="nf">get_eigenvalue_proj_ops</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="DenMat.get_eigenvalue_proj_ops"><a class="viewcode-back" href="../../entanglish.DenMat.html#entanglish.DenMat.DenMat.get_eigenvalue_proj_ops">[docs]</a>    <span class="k">def</span> <span class="nf">get_eigenvalue_proj_ops</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This method returns a tuple of 2 DenMat that carry Hermitian</span>
 <span class="sd">        projection operators:</span>
 
-<span class="sd">        proj_0 projects out the space of zero eigenvalues. It is obtained by</span>
-<span class="sd">        replacing in the eigen decomposition of self.arr, zero eigenvalues</span>
-<span class="sd">        by 1 and non-zero ones by 0.</span>
-
-<span class="sd">        proj_1 projects out the space of non-zero eigenvalues. It is</span>
+<span class="sd">        proj_0 projects out the space of zero (abs &lt; eps) eigenvalues. It is</span>
 <span class="sd">        obtained by replacing in the eigen decomposition of self.arr,</span>
-<span class="sd">        zero eigenvalues by 0 and non-zero ones by 1.</span>
+<span class="sd">        zero eigenvalues (abs &lt; eps) by 1 and non-zero ones (abs &gt; eps) by 0.</span>
+
+<span class="sd">        proj_1 projects out the space of non-zero (abs &gt; eps) eigenvalues.</span>
+<span class="sd">        It is obtained by replacing in the eigen decomposition of self.arr,</span>
+<span class="sd">        zero eigenvalues (abs &lt; eps) by 0 and non-zero ones (abs &gt; eps) by 1.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        eps : float</span>
+<span class="sd">            0 &lt; eps &lt;&lt; 1</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -1096,7 +1106,7 @@
         <span class="n">is_zero</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">is_not_zero</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">evas</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-5</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">eps</span><span class="p">:</span>
                 <span class="n">is_zero</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
                 <span class="n">is_not_zero</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>

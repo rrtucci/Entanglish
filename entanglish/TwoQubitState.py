@@ -5,7 +5,9 @@ from entanglish.DenMat import *
 class TwoQubitState:
     """
     This class has no constructor. It contains only static methods. Its
-    methods deal with entanglement of 2 qubit states.
+    methods deal with entanglement of 2 qubit states. In particular,
+    this class implements Wootters formula for the formation entanglement of
+    an arbitrary mixed state of 2 qubits.
 
     """
     @staticmethod
@@ -142,7 +144,8 @@ class TwoQubitState:
         dm_trev = TwoQubitState.get_time_reversed_dm(dm)
         dm_root = dm.sqrt()
         dm2 = dm_root*dm_trev*dm_root
-        evas = np.sqrt(np.linalg.eigvalsh(dm2.arr))
+        evas = np.linalg.eigvalsh(dm2.arr)
+        evas = np.array([np.sqrt(x) if x > 0 else 0 for x in evas])
         max_pos = np.argmax(evas)
         x = 0
         for pos in range(4):

@@ -6,6 +6,7 @@
 %\usepackage{subfig}    %allows figures 1a, 1b
 \usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage{url}
 
 \paperheight=11in
 \topmargin=0in
@@ -94,6 +95,8 @@
 \newcommand{\biprod}[2]{\left[\begin{array}{c}#1\\#2\end{array}\right]^\times}
 \newcommand{\setofall}[2]{\{#1\}_{\forall #2}}
 
+\newcommand{\cala}[0]{{\cal A}}
+\newcommand{\calb}[0]{{\cal B}}
 \newcommand{\calc}[0]{{\cal C}}
 \newcommand{\cald}[0]{{\cal D}}
 \newcommand{\cale}[0]{{\cal E}}
@@ -148,6 +151,7 @@ Squashed Entanglement and a \\Python Implementation Thereof}
 \section*{Abstract}
 In this paper, we propose an algorithm
 for calculating the squashed entanglement
+and the entanglement of formation
 of
 any pure or mixed quantum state.
 Our algorithm is a generalization
@@ -158,7 +162,7 @@ where it is used to calculate channel capacities.
 The author of this paper
 published
 a previous paper proposing a previous algorithm
-for calculating squashed entanglement.
+for calculating squashed and formation entanglements.
 Even though that previous algorithm was
 also based on the Arimoto-Blahut algorithm, the
 algorithm presented in this paper is
@@ -167,17 +171,18 @@ This paper is being released at the same time that
 a Python software library called ``Entanglish"
 is being released at GitHub as open source.
 Entanglish implements the algorithm for
-calculating squashed entanglement proposed
+calculating squashed and formation entanglements proposed
 in this paper and also several other algorithms related
 to quantum entanglement.
 In order to test
-the values of squashed
-entanglement that our algorithm
-yields, we introduce
+the values of squashed and formation
+entanglements that our algorithm
+yields, we discuss
 a family of pure states of multiple qubits
 that we call the symmetrized N-up states.
 We give and prove an analytical formula
-for the squashed entanglement of this
+for the pure state entanglement
+(= squashed and formation entanglements since they are pure states) of this
 family of states.
 This paper also proposes a method for doing density matrix perturbation theory that we call
   ``bootstrapped perturbation theory".
@@ -192,11 +197,16 @@ This paper also proposes a method for doing density matrix perturbation theory t
 \newpage
 \section{Introduction}
 
+
 In this paper, we propose an algorithm
 for calculating the squashed entanglement
-(Ref.\cite{sq-wiki}) of
+(Ref.\cite{sq-wiki}) and entanglement of
+formation(Ref.\cite{Wot}) of
 any pure or mixed quantum state.
-Our algorithm is a generalization
+Previous workers (Refs.\cite{Aud, Git, Ryu}) have
+used gradient descent methods to
+calculate entanglement of formation.
+Our algorithm, on the other hand, is a generalization
 of the Arimoto-Blahut algorithm (Ref.\cite{ab-algo})
  of classical
 information theory,
@@ -206,19 +216,23 @@ This paper is being released at the same time that
 a Python library called ``Entanglish"
 is being released at GitHub as open source.
 Entanglish implements the algorithm for
-calculating squashed entanglement proposed
+calculating squashed and formation entanglements proposed
 in this paper and many other algorithms related
 to quantum entanglement.
 
 In order to test
 the values of squashed
 entanglement that our algorithm
-yields, we introduce
+yields, we discuss
 a family of pure states of multiple qubits
 that we call the symmetrized N-up states.
 We give and prove an analytical formula
-for the squashed entanglement of this
-family of states.
+for the pure state entanglement
+(= squashed and formation entanglements since they are pure states) of this
+family of states. What we call symmetrized N-up states
+is not a new concept; they are often called Dicke states in the
+physics literature.
+
 
 One method of executing our algorithm for finding the
 squashed entanglement of a quantum state $\rho$ requires
@@ -514,7 +528,8 @@ with parts $\rvx$ and $\rvy$.
 
 
 
-\section{Generalization of Arimoto Blahut Algorithm}
+\section{Squashed Entanglement}
+\label{sec-squashed}
 In this section, we will
 propose an algorithm for
 calculating the squashed entanglement
@@ -638,9 +653,8 @@ is of the form
 \sum_\alp w^\alp \ket{\alp}\bra{\alp} \rho_{\rvx, \rvy}^\alp
 \;,
 \eeq
-where $w_\alp$ for $\alp\in Z_{[0, n_\rvalp)}$
-is a probability distribution
-, where $\rho^\alp_{\rvx, \rvy}$
+where $w^\alp$ for $\alp\in Z_{[0, n_\rvalp)}$
+is a probability distribution, where $\rho^\alp_{\rvx, \rvy}$
 for each $\alp$ is a density matrix,
 and where the states $\ket{\alp}$
 for all $\alp$ are orthonormal.
@@ -692,8 +706,8 @@ w^\alp=\tr_{\rvx, \rvy}K^\alp_{\rvx, \rvy}, \;\;
 \eeq
 Hence, one can always translate back and forth
 between the pair $(w^\alp, \rho^\alp_{\rvx, \rvy})$ and
-$K^\alp_{\rvx, \rvy}$ so one can think of these two constructs
-as 2 equivalent representations of the same thing.
+$K^\alp_{\rvx, \rvy}$ so one can think of these two quantities as being
+2 equivalent representations of the same thing.
 
 Suppose $M^\alp_{\rvx, \rvy}\in \call(\calh_{\rvx, \rvy})$ for all $\alp\in Z_{[0, n_\rvalp)}$.
 Define the function regulate() by
@@ -778,38 +792,9 @@ the following recursion relation to go from
 $K^{\alp}_{\rvx,\rvy}(n)$
 to $K^{\alp}_{\rvx,\rvy}(n+1)$ for $n=0,1,2,\ldots$.
 
-For $n=0$, define\footnote{Defining $K^{\alp}_{\rvx,\rvy}(0)=
-\frac{1}{n_\rvalp}\rho_{\rvx,\rvy}$ for all $\alp$, does not work because
-this is a stationary point of the recursion. Try it.}
-
-\beq
-K^{\alp}_{\rvx,\rvy}(0)=
-\left\{
-\begin{array}{ll}
-{\rm regulate}\left[\rho_{\rvx,\rvy}+(-1+\frac{1}{n_\rvalp})\rho^{\rm diag.part}_{\rvx,\rvy}\right]&{\rm if}\;\; \alp=0\\
-{\rm regulate}\left[\frac{1}{n_\rvalp}\rho^{\rm diag.part}_{\rvx,\rvy}\right]&{\rm otherwise}
-\end{array}
-\right.
-\eeq
-where $\rho^{\rm diag.part}_{\rvx,\rvy}$ is obtained from
-$\rho_{\rvx,\rvy}$ by replacing its non-diagonal elements by zero.
-
-Alternatively, for $n=0$, define $n_\rvalp=$
-number of rows of $\rho_{\rvx, \rvy}$ and
-
-\beq
-K^{\alp}_{\rvx,\rvy}(0)= \lam^\alp
-\ket{\psi^\alp}\bra{\psi^\alp}
-\;
-\eeq
-for all $\alp$. Here $\ket{\psi^\alp}$ for $\alp=0, 1, \ldots n_\rvalp-1$
-are orthonormal states (eigenvectors of $\rho_{\rvx, \rvy}$) such that
-
-\beq
-\rho_{\rvx, \rvy}= \sum_\alp \lam^\alp
-\ket{\psi^\alp}\bra{\psi^\alp}
-\;.
-\eeq
+Begin by setting $K^{\alp}_{\rvx,\rvy}(n=0)$
+in either the ``eigen" or ``eigen+" patterns discussed in
+Appendix \ref{sec-recursion-init}.
 
 
 
@@ -842,13 +827,20 @@ Set
 
 
 \beq
-M^\alp_{\rvx, \rvy}(n)=
+\cala^\alp(n)=
 \exp\left[
 \Delta_{\rvx, \rvy}(n)
 +
 \log \rho^{\alp}_{\rvx}(n)
 \rho^{\alp}_{\rvy}(n)
-\right]w^\alp
+\right]w^\alp(n)
+\;,
+\eeq
+
+\beq
+\calb(n)=
+\sqrt{\rho_{\rvx, \rvy}}
+\sqrt{{\rm pinv}\left(\sum_\alp \cala^\alp(n)\right)}
 \;,
 \eeq
 
@@ -856,13 +848,17 @@ M^\alp_{\rvx, \rvy}(n)=
 \beq
 K^{\alp}_{\rvx,\rvy}(n+1)
 =
-{\rm regulate}\left(\frac{1}{2}\rho_{\rvx, \rvy}[\sum_\alp M^\alp_{\rvx, \rvy}(n)]^{-1}
-M^\alp_{\rvx, \rvy}(n) + h.c.\right)
-\;,
+{\rm regulate}\left(\calb(n)
+\cala^\alp(n)[\calb(n)]^\dagger\right)
+\;,\label{eq-squashed-only1}
 \eeq
 
 \beq
-E_{\rvx, \rvy}(n) = \frac{1}{2}\tr_{\rvx, \rvy} \left[\rho_{\rvx, \rvy}\Delta_{\rvx, \rvy}(n)\right]
+E_{\rvx, \rvy}(n+1) =
+\frac{1}{2}\tr_{\rvx, \rvy} \left[
+\sum_\alp K^\alp _{\rvx, \rvy}(n+1)
+\Delta^\alp_{\rvx, \rvy}(n)\right]
+\rarrow \frac{1}{2}\tr_{\rvx, \rvy} \left[\rho_{\rvx, \rvy}\Delta_{\rvx, \rvy}(\infty)\right]
 \;,
 \eeq
 
@@ -906,6 +902,53 @@ as $n\rightarrow \infty$.
 
 
 
+\section{Formation Entanglement}
+
+In this section, we explain that the entanglement of formation
+can be viewed as a special case of the squashed
+entanglement, and the algorithm discussed in Section
+\ref{sec-squashed} can be easily
+adapted to calculate entanglement of formation.\footnote{This was all pointed out
+in Ref.\cite{ab-algo}}
+
+We've been calculating squashed entanglement from the formula
+
+\beq
+E_{\rvx, \rvy}(\rho_{\rvx, \rvy})=
+\frac{1}{2}
+{\rm min}\sum_\alp w^\alp [
+S(\rho^\alp_{\rvx})
++S(\rho^\alp_{\rvy})
+-S(\rho^\alp_{\rvx, \rvy})]
+\;,
+\eeq
+where the minimum is over all
+families of density matrices
+$\{\rho^\alp_{\rvx, \rvy}|\forall \alp\}$
+such that $\sum_\alp \rho^\alp_{\rvx, \rvy}=
+\rho_{\rvx, \rvy}$. If we just add
+the further constraint that
+the states $\rho^\alp_{\rvx, \rvy}$ are pure states, then
+$S(\rho^\alp_{\rvx, \rvy})=0$,
+$S(\rho^\alp_{\rvx})=S(\rho^\alp_{\rvy})$,
+and we get precisely the definition
+of Entanglement of Formation for a pure or mixed state.
+
+To adapt the algorithm of Section \ref{sec-squashed}
+to calculate formation entanglement,
+simply
+replace Eq.(\ref{eq-squashed-only1}) by the following.
+For each $\alp$, let $w^\alp(n)$ be the largest eigenvalue
+and $\ket{\psi^\alp(n)}$ its corresponding
+eigenvector of $\calb(n)
+\cala^\alp(n)[\calb(n)]^\dagger$.
+Then define
+
+\beq
+K^\alp_{\rvx, \rvy}(n+1)=
+w^\alp(n)\ket{\psi^\alp(n)}\bra{\psi^\alp(n)}
+\;.
+\eeq
 
 
 
@@ -1333,6 +1376,113 @@ the beginning of this section.
 
 
 \appendix
+\section{Appendix: Recursion Initialization}
+\label{sec-recursion-init}
+
+The purpose of this
+appendix is to define the starting family
+$\{K^{\alp}_{\rvx,\rvy}|\alp=0, 1, \ldots, n_\rvalp-1\}$
+used by Entanglish as a starting point ($n=0$)
+of the recursion relation
+proposed in this paper for
+calculating squashed and formation entanglement.
+
+Defining $K^{\alp}_{\rvx,\rvy}(n=0)=
+\frac{1}{n_\rvalp}\rho_{\rvx,\rvy}$ for $\alp=0, 1, \ldots, n_\rvalp-1$, does not work because
+this is a stationary point of the recursion. Try it.
+
+The
+next obvious choice is as follows. We call this
+choice ``eigen".
+Let $n_{rows}$ be the number of rows of $\rho_{\rvx, \rvy}$.
+For $n=0$, define $n_\rvalp=n_{rows}$ and
+
+\beq
+K^{\alp}_{\rvx,\rvy}(0)= \lam^\alp
+\ket{\psi^\alp}\bra{\psi^\alp}
+\;
+\eeq
+for all $\alp$. Here $\ket{\psi^\alp}$ for $\alp=0, 1, \ldots n_\rvalp-1$
+are orthonormal states and eigenvectors of $\rho_{\rvx, \rvy}$ such that
+
+\beq
+\rho_{\rvx, \rvy}= \sum_\alp \lam^\alp
+\ket{\psi^\alp}\bra{\psi^\alp}
+\;.
+\eeq
+
+The space spanning
+$\rho_{\rvx, \rvy}$ has $n_{rows}^2$ degrees of freedom (dofs)
+(in fact,
+all Hermitian matrices with $n_{rows}$ rows have $n_{rows}^2$ dofs)
+ and ``eigen" only has
+$n_{rows}$ dofs. The following choice,
+which we call ``eigen+", has $n_{rows}^2$ dofs,
+which is sufficient though not necessary.
+Let $\lam_{min}$ be the smallest non-zero
+eigenvalue of $\rho_{\rvx, \rvy}$, and let
+$n_{\neq 0}$ be the number of non-zero eigenvalues of
+$\rho_{\rvx, \rvy}$. Define
+
+\beq
+\epsilon = \frac{\lam_{min}}{2(n_{\neq 0}-1)}\theta(n_{\ne0}> 0)
+\;,
+\eeq
+\beq
+\epsilon'= e^{i\frac{\pi}{2}}\sqrt{\epsilon(1-\epsilon)}
+\;.
+\eeq
+Suppose $j, k, p, q\in \{0, 1, 2, \ldots, n_{rows}-1\}$. Let
+
+\beq
+w_{j,j}=
+(1-\epsilon)\theta(\lam_j\neq 0)
+\;,
+\eeq
+\beq
+(\rho_{\rvx, \rvy}^{j,j})_{p, q}=\theta(p=j, q=j)
+\;.
+\eeq
+For $j<k$, let
+
+\beq
+w_{j,k}=
+\epsilon \theta(\lam_j\neq 0, \lam_k \neq 0)
+\;,
+\eeq
+
+\beq
+(\rho_{\rvx, \rvy}^{j,k})_{p,q}=
+\left\{
+\begin{array}{l}
+(1-\epsilon)\theta(p=k, q=k)\\
++\epsilon\theta(p=j, q=j)\\
++\epsilon'\theta(p=j, q=k-1)\\
++(\epsilon')^* \theta(p=k-1, q=j)
+\end{array}
+\right.
+\;,
+\eeq
+
+\beq
+(\rho_{\rvx, \rvy}^{k, j})_{p,q}=
+\left\{
+\begin{array}{l}
+\epsilon\theta(p=k, q=k)\\
++(1-\epsilon)\theta(p=j, q=j)\\
+-\epsilon'\theta(p=j, q=k-1)\\
+-(\epsilon')^* \theta(p=k-1, q=j)
+\end{array}
+\right.
+\;.
+\eeq
+With $\alp=(j,k)$ , this family of states $\rho_{\rvx, \rvy}^\alp$
+and weights $w^\alp$ satisfies $w^\alp\geq0$,
+ $\sum_\alp w^\alp=1$, $n_\rvalp=n_{rows}^2$,
+  $\rho_{\rvx, \rvy}^\alp$ are pure states,
+and $\sum_\alp \rho_{\rvx, \rvy}^\alp =
+\rho_{\rvx, \rvy}$.
+
 \section{Appendix: Symmetrized N-up States}
 
 In order to test the numerical algorithms
@@ -1790,36 +1940,60 @@ of that diagonal density matrix.
 
 \begin{thebibliography}{99}
 \bibitem{sq-wiki}
-https://en.wikipedia.org/wiki/Squashed\_entanglement
+\url{https://en.wikipedia.org/wiki/Squashed_entanglement}
+\bibitem{Wot}
+William K. Wootters, 
+``Entanglement of Formation of an Arbitrary State of Two Qubits",
+\url{https://arxiv.org/abs/quant-ph/9709029}
+ 
+\bibitem{Aud}
+K. Audenaert, F. Verstraete, B. De Moor,
+``Variational Characterisations of Separability and Entanglement of Formation",
+\url{https://arxiv.org/abs/quant-ph/0006128}
+\bibitem{Git}
+J. R. Gittings, A. J. Fisher,
+``An efficient numerical method for calculating the entanglement of formation of arbitrary mixed quantum states of any dimension",
+\url{https://arxiv.org/abs/quant-ph/0302018}
+\bibitem{Ryu}
+Seunghwa Ryu, Wei Cai, and Alfredo Caro,
+``Quantum Entanglement of Formation between Qudits",
+Physical Review A 77, 052312 (2008),
+\url{http://micro.stanford.edu/~caiwei/papers/Ryu_Cai_Caro_Entangle_v11.pdf}
 \bibitem{ab-algo}
 Richard E. Blahut, {\it Principles and Practice of Information Theory} (1987, Addison-Wesley)
 \bibitem{subadd-proof} Elliott H. Lieb, Mary Beth Ruskai, ``Proof of the Strong Subadditivity of Quantum-Mechanical Entropy", Journal of Mathematical Physics 14 (1973) 1938-1941.
-\bibitem{Tuc99} Tucci, Robert R. (1999). ``Quantum Entanglement and Conditional Information Transmission". arXiv:quant-ph/9909041.
-\bibitem{Tuc00a} Tucci, Robert R. (2000). ``Separability of Density Matrices and Conditional Information Transmission". arXiv:quant-ph/0005119.
-\bibitem{Tuc00b} Tucci, Robert R. (2000). ``Entanglement of Formation and Conditional Information Transmission". arXiv:quant-ph/0010041.
-\bibitem{Tuc01a} Tucci, Robert R. (2001). ``Relaxation Method for Calculating Quantum Entanglement". arXiv:quant-ph/0101123.
-\bibitem{Tuc01b} Tucci, Robert R. (2001). ``Entanglement of Bell Mixtures of Two Qubits". arXiv:quant-ph/0103040.
-\bibitem{Tuc02} Tucci, Robert R. (2002). ``Entanglement of Distillation and Conditional Mutual Information". arXiv:quant-ph/0202144
+\bibitem{Tuc99} Tucci, Robert R. (1999). ``Quantum Entanglement and Conditional Information Transmission". 
+    \url{https://arxiv.org/abs/quant-ph/9909041}
+\bibitem{Tuc00a} Tucci, Robert R. (2000). ``Separability of Density Matrices and Conditional Information Transmission". 
+    \url{https://arxiv.org/abs/quant-ph/0005119}
+\bibitem{Tuc00b} Tucci, Robert R. (2000). ``Entanglement of Formation and Conditional Information Transmission". 
+    \url{https://arxiv.org/abs/quant-ph/0010041}
+\bibitem{Tuc01a} Tucci, Robert R. (2001). ``Relaxation Method for Calculating Quantum Entanglement". 
+    \url{https://arxiv.org/abs/quant-ph/0101123}
+\bibitem{Tuc01b} Tucci, Robert R. (2001). ``Entanglement of Bell Mixtures of Two Qubits". \url{https://arxiv.org/abs/quant-ph/0103040}
+\bibitem{Tuc02} Tucci, Robert R. (2002). ``Entanglement of Distillation and Conditional Mutual Information". 
+    \url{https://arxiv.org/abs/quant-ph/0202144}
 
-\bibitem{Chr03} Matthias Christandl, Andreas Winter (2003). ````Squashed Entanglement": An Additive Entanglement Measure". Journal of Mathematical Physics. 45 (3): 829–840. arXiv:quant-ph/0308088
+\bibitem{Chr03} Matthias Christandl, Andreas Winter (2003). ````Squashed Entanglement": An Additive Entanglement Measure". Journal of Mathematical Physics. 45 (3): 829–840. \url{https://arxiv.org/abs/quant-ph/0308088}
 
 \bibitem{sep-proof1}
  P. Hayden, R. Jozsa, D. Petz, and A. Winter.  ``Structure of states which satisfy strong subadditivity of
 quantum entropy with equality",
-Comm. Math. Phys.
-, 246:359, 2004
+Comm. Math. Phys., 246:359, 2004
 
 \bibitem{sep-proof2}
- Brandao, F., Christandl, M., Yard, J. (September 2011). ``Faithful Squashed Entanglement". Communications in Mathematical Physics. 306 (3): 805–830. arXiv:1010.1750
+ Brandao, F., Christandl, M., Yard, J. (September 2011). ``Faithful Squashed Entanglement". Communications in Mathematical Physics. 306 (3): 805–830. 
+ \url{https://arxiv.org/abs/1010.1750}
 
 \bibitem{pert-wiki}
-https://en.wikipedia.org/wiki/Perturbation\_theory\_(quantum\_mechanics)
+\url{https://en.wikipedia.org/wiki/Perturbation_theory_(quantum_mechanics)}
 
 \bibitem{cvit}
-P. Cvitanović, {\it Group Theory: Birdtracks, Lie's, and Exceptional Groups}, Princeton University Press, Princeton 2008, available online at http://birdtracks.eu/
+P. Cvitanović, {\it Group Theory: Birdtracks, Lie's, and Exceptional Groups}, Princeton University Press, Princeton 2008, available online at 
+\url{http://birdtracks.eu/}
 
 \bibitem{wiki-hypergeo}
-https://en.wikipedia.org/wiki/Hypergeometric\_distribution
+\url{https://en.wikipedia.org/wiki/Hypergeometric\_distribution}
 
 
 \end{thebibliography}

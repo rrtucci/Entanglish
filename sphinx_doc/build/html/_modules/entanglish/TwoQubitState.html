@@ -155,7 +155,9 @@
 <div class="viewcode-block" id="TwoQubitState"><a class="viewcode-back" href="../../entanglish.TwoQubitState.html#entanglish.TwoQubitState.TwoQubitState">[docs]</a><span class="k">class</span> <span class="nc">TwoQubitState</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This class has no constructor. It contains only static methods. Its</span>
-<span class="sd">    methods deal with entanglement of 2 qubit states.</span>
+<span class="sd">    methods deal with entanglement of 2 qubit states. In particular,</span>
+<span class="sd">    this class implements Wootters formula for the formation entanglement of</span>
+<span class="sd">    an arbitrary mixed state of 2 qubits.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="TwoQubitState.bell_key_set"><a class="viewcode-back" href="../../entanglish.TwoQubitState.html#entanglish.TwoQubitState.TwoQubitState.bell_key_set">[docs]</a>    <span class="nd">@staticmethod</span>
@@ -292,7 +294,8 @@
         <span class="n">dm_trev</span> <span class="o">=</span> <span class="n">TwoQubitState</span><span class="o">.</span><span class="n">get_time_reversed_dm</span><span class="p">(</span><span class="n">dm</span><span class="p">)</span>
         <span class="n">dm_root</span> <span class="o">=</span> <span class="n">dm</span><span class="o">.</span><span class="n">sqrt</span><span class="p">()</span>
         <span class="n">dm2</span> <span class="o">=</span> <span class="n">dm_root</span><span class="o">*</span><span class="n">dm_trev</span><span class="o">*</span><span class="n">dm_root</span>
-        <span class="n">evas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigvalsh</span><span class="p">(</span><span class="n">dm2</span><span class="o">.</span><span class="n">arr</span><span class="p">))</span>
+        <span class="n">evas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigvalsh</span><span class="p">(</span><span class="n">dm2</span><span class="o">.</span><span class="n">arr</span><span class="p">)</span>
+        <span class="n">evas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">evas</span><span class="p">])</span>
         <span class="n">max_pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">evas</span><span class="p">)</span>
         <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">pos</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>

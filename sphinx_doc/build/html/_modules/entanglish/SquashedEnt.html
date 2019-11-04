@@ -150,6 +150,7 @@
   <h1>Source code for entanglish.SquashedEnt</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">entanglish.EntangCase</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">entanglish.MaxEntangState</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">entanglish.PureStEnt</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 
@@ -195,8 +196,12 @@
 <span class="sd">    Dxy_sqrt : DenMat</span>
 <span class="sd">        square root of Dxy</span>
 <span class="sd">    den_mat : DenMat</span>
-<span class="sd">    do_formation_ent : bool</span>
+<span class="sd">    calc_formation_ent : bool</span>
 <span class="sd">        True iff want special case of entanglement of formation</span>
+<span class="sd">    eps_w : float</span>
+<span class="sd">        weights (probabilities) &lt; eps_w are rounded to zero</span>
+<span class="sd">    eps_log : float</span>
+<span class="sd">        logs are clipped at this value. log(x) = log(eps_log) if x &lt; eps_log</span>
 <span class="sd">    num_ab_steps : int</span>
 <span class="sd">        number of iterations of Arimoto Blahut algo</span>
 <span class="sd">    num_hidden_states : int</span>
@@ -241,13 +246,17 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">num_hidden_states</span> <span class="o">=</span> <span class="n">num_hidden_states</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">recursion_init</span> <span class="o">=</span> <span class="n">recursion_init</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">eps_w</span> <span class="o">=</span> <span class="mf">1e-5</span>
+        <span class="c1"># results very sensitive to eps_log, but not to eps_w</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eps_log</span> <span class="o">=</span> <span class="mf">2e-4</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">x_axes</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">y_axes</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">Dxy_proj_ops</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">Dxy_sqrt</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">do_formation_ent</span> <span class="o">=</span> <span class="kc">False</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">calc_formation_ent</span> <span class="o">=</span> <span class="kc">False</span></div>
 
 <div class="viewcode-block" id="SquashedEnt.regulate"><a class="viewcode-back" href="../../entanglish.SquashedEnt.html#entanglish.SquashedEnt.SquashedEnt.regulate">[docs]</a>    <span class="k">def</span> <span class="nf">regulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Kxy_a</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -273,13 +282,8 @@
         <span class="k">for</span> <span class="n">alp</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">Kxy_a</span><span class="p">)):</span>
             <span class="n">Kxy_alp</span> <span class="o">=</span> <span class="n">Kxy_a</span><span class="p">[</span><span class="n">alp</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">Kxy_alp</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="c1"># _, proj1 = self.Dxy_proj_ops</span>
-                <span class="c1"># Kxy_alp = proj1*Kxy_alp*proj1</span>
 
                 <span class="n">Kxy_alp</span> <span class="o">=</span> <span class="n">Kxy_alp</span><span class="o">.</span><span class="n">positive_part</span><span class="p">()</span>
-
-                <span class="c1"># _, proj1 = self.Dxy_proj_ops</span>
-                <span class="c1"># Kxy_alp = proj1*Kxy_alp*proj1</span>
 
                 <span class="n">sum_xya_Kxy_a</span> <span class="o">+=</span> <span class="n">Kxy_alp</span><span class="o">.</span><span class="n">trace</span><span class="p">()</span>
             <span class="n">new_Kxy_a</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Kxy_alp</span><span class="p">)</span>
@@ -330,7 +334,7 @@
                 <span class="k">for</span> <span class="n">alp</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_hidden_states</span><span class="p">):</span>
                     <span class="n">Kxy_alp</span> <span class="o">=</span> <span class="n">DenMat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span><span class="o">.</span><span class="n">num_rows</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span><span class="o">.</span><span class="n">row_shape</span><span class="p">)</span>
                     <span class="n">eva</span> <span class="o">=</span> <span class="n">evas</span><span class="p">[</span><span class="n">alp</span><span class="p">]</span>
-                    <span class="k">if</span> <span class="n">eva</span> <span class="o">&lt;</span> <span class="mf">1e-5</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">eva</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">eps_w</span><span class="p">:</span>
                         <span class="n">Kxy_alp</span> <span class="o">=</span> <span class="kc">None</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="n">Kxy_alp</span><span class="o">.</span><span class="n">set_arr_from_st_vec</span><span class="p">(</span><span class="n">evec_cols</span><span class="p">[:,</span> <span class="n">alp</span><span class="p">])</span>
@@ -346,11 +350,14 @@
 
                 <span class="n">num_nonzero_evas</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span><span class="o">.</span><span class="n">num_rows</span>
                 <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">evas</span><span class="p">)):</span>
-                    <span class="k">if</span> <span class="n">evas</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">1e-5</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">evas</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">eps_w</span><span class="p">:</span>
                         <span class="n">num_nonzero_evas</span> <span class="o">=</span> <span class="n">k</span>
                         <span class="k">break</span>
-
-                <span class="n">eps</span> <span class="o">=</span> <span class="n">evas</span><span class="p">[</span><span class="n">num_nonzero_evas</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span><span class="o">.</span><span class="n">num_rows</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">num_nonzero_evas</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">eps</span> <span class="o">=</span> <span class="n">evas</span><span class="p">[</span><span class="n">num_nonzero_evas</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="n">num_nonzero_evas</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">eps</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">eps9</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">eps</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">eps</span><span class="p">))</span>
                 <span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
                 <span class="n">zc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
                 <span class="n">diag_ind</span> <span class="o">=</span> <span class="p">[(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span><span class="o">.</span><span class="n">num_rows</span><span class="p">)]</span>
@@ -363,15 +370,20 @@
                 <span class="n">alp</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
                 <span class="k">for</span> <span class="n">row</span><span class="p">,</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">indices</span><span class="p">:</span>
                     <span class="n">alp</span> <span class="o">+=</span> <span class="mi">1</span>
-                    <span class="k">if</span> <span class="n">alp</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span><span class="o">.</span><span class="n">num_rows</span><span class="p">:</span>
-                        <span class="k">if</span> <span class="n">alp</span> <span class="o">&lt;</span> <span class="n">num_nonzero_evas</span><span class="p">:</span>
-                            <span class="n">w_alp</span> <span class="o">=</span> <span class="n">evas</span><span class="p">[</span><span class="n">alp</span><span class="p">]</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span><span class="o">.</span><span class="n">num_rows</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">eps</span>
+                    <span class="k">if</span> <span class="n">row</span> <span class="o">==</span> <span class="n">col</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">row</span> <span class="o">&lt;</span> <span class="n">num_nonzero_evas</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="n">num_nonzero_evas</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                                <span class="n">w_alp</span> <span class="o">=</span> <span class="n">evas</span><span class="p">[</span><span class="n">alp</span><span class="p">]</span> <span class="o">-</span> <span class="p">(</span><span class="n">num_nonzero_evas</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">eps</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="n">w_alp</span> <span class="o">=</span> <span class="n">evas</span><span class="p">[</span><span class="n">alp</span><span class="p">]</span>
                             <span class="k">assert</span> <span class="n">w_alp</span> <span class="o">&gt;</span> <span class="mi">0</span>
                         <span class="k">else</span><span class="p">:</span>
                             <span class="n">w_alp</span> <span class="o">=</span> <span class="mf">0.0</span>
+                    <span class="k">elif</span> <span class="n">row</span> <span class="o">&gt;</span> <span class="n">num_nonzero_evas</span><span class="o">-</span><span class="mi">1</span> <span class="ow">or</span> <span class="n">col</span> <span class="o">&gt;</span> <span class="n">num_nonzero_evas</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                        <span class="n">w_alp</span> <span class="o">=</span> <span class="mf">0.0</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="n">w_alp</span> <span class="o">=</span> <span class="n">eps</span>
-                    <span class="k">if</span> <span class="n">w_alp</span> <span class="o">&lt;</span> <span class="mf">1e-6</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">w_alp</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">eps_w</span><span class="p">:</span>
                         <span class="n">Kxy_a</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
                         <span class="k">continue</span>
                     <span class="n">Kxy_alp</span> <span class="o">=</span> <span class="n">DenMat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span><span class="o">.</span><span class="n">num_rows</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span><span class="o">.</span><span class="n">row_shape</span><span class="p">)</span>
@@ -382,11 +394,11 @@
                         <span class="n">Kxy_alp</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">row</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">eps</span><span class="p">)</span> <span class="o">*</span> <span class="n">w_alp</span>
                         <span class="n">Kxy_alp</span><span class="p">[</span><span class="n">col</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">eps</span> <span class="o">*</span> <span class="n">w_alp</span>
                         <span class="k">if</span> <span class="n">row</span> <span class="o">&lt;</span> <span class="n">col</span><span class="p">:</span>
-                            <span class="n">Kxy_alp</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">z</span><span class="o">*</span><span class="n">eps</span><span class="o">*</span><span class="n">w_alp</span>
-                            <span class="n">Kxy_alp</span><span class="p">[</span><span class="n">col</span><span class="p">,</span> <span class="n">row</span><span class="p">]</span> <span class="o">=</span> <span class="n">zc</span><span class="o">*</span><span class="n">eps</span><span class="o">*</span><span class="n">w_alp</span>
+                            <span class="n">Kxy_alp</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">z</span><span class="o">*</span><span class="n">eps9</span><span class="o">*</span><span class="n">w_alp</span>
+                            <span class="n">Kxy_alp</span><span class="p">[</span><span class="n">col</span><span class="p">,</span> <span class="n">row</span><span class="p">]</span> <span class="o">=</span> <span class="n">zc</span><span class="o">*</span><span class="n">eps9</span><span class="o">*</span><span class="n">w_alp</span>
                         <span class="k">else</span><span class="p">:</span>
-                            <span class="n">Kxy_alp</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">zc</span><span class="o">*</span><span class="n">eps</span><span class="o">*</span><span class="n">w_alp</span>
-                            <span class="n">Kxy_alp</span><span class="p">[</span><span class="n">col</span><span class="p">,</span> <span class="n">row</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">z</span><span class="o">*</span><span class="n">eps</span><span class="o">*</span><span class="n">w_alp</span>
+                            <span class="n">Kxy_alp</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">zc</span><span class="o">*</span><span class="n">eps9</span><span class="o">*</span><span class="n">w_alp</span>
+                            <span class="n">Kxy_alp</span><span class="p">[</span><span class="n">col</span><span class="p">,</span> <span class="n">row</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">z</span><span class="o">*</span><span class="n">eps9</span><span class="o">*</span><span class="n">w_alp</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="c1"># should never reach here because of continue</span>
                         <span class="k">assert</span> <span class="kc">False</span>
@@ -457,7 +469,7 @@
             <span class="n">Kxy_alp</span> <span class="o">=</span> <span class="n">Kxy_a</span><span class="p">[</span><span class="n">alp</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">Kxy_alp</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">w_alp</span> <span class="o">=</span> <span class="n">Kxy_alp</span><span class="o">.</span><span class="n">trace</span><span class="p">()</span>
-                <span class="k">if</span> <span class="n">w_alp</span> <span class="o">&lt;</span> <span class="mf">1e-6</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">w_alp</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">eps_w</span><span class="p">:</span>
                     <span class="n">w_alp</span> <span class="o">=</span> <span class="mi">0</span>
                     <span class="n">Kxy_alp</span> <span class="o">=</span> <span class="kc">None</span>
                 <span class="k">else</span><span class="p">:</span>
@@ -466,20 +478,25 @@
                 <span class="n">w_alp</span> <span class="o">=</span> <span class="mf">0.0</span>
             <span class="n">w_a</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">w_alp</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">Kxy_alp</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="c1"># proj0, proj1 = self.Dxy_proj_ops</span>
                 <span class="n">Dxy_alp</span> <span class="o">=</span> <span class="n">Kxy_alp</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">w_alp</span><span class="p">)</span>
-                <span class="n">log_Dxy_alp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">Dxy_alp</span><span class="p">)</span>
-                <span class="c1"># log_Dxy_alp = log_Dxy_alp*proj1</span>
+                <span class="n">log_Dxy_alp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">Dxy_alp</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">eps_log</span><span class="p">)</span>
 
                 <span class="n">Dx_alp</span> <span class="o">=</span> <span class="n">Dxy_alp</span><span class="o">.</span><span class="n">get_partial_tr</span><span class="p">(</span><span class="n">set_y</span><span class="p">)</span>
                 <span class="n">Dy_alp</span> <span class="o">=</span> <span class="n">Dxy_alp</span><span class="o">.</span><span class="n">get_partial_tr</span><span class="p">(</span><span class="n">set_x</span><span class="p">)</span>
                 <span class="n">log_Dx_Dy_alp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">DenMat</span><span class="o">.</span><span class="n">get_kron_prod_of_den_mats</span><span class="p">(</span>
-                                <span class="p">[</span><span class="n">Dx_alp</span><span class="p">,</span> <span class="n">Dy_alp</span><span class="p">]))</span>
-                <span class="c1"># log_Dx_Dy_alp = log_Dx_Dy_alp*proj1</span>
+                                <span class="p">[</span><span class="n">Dx_alp</span><span class="p">,</span> <span class="n">Dy_alp</span><span class="p">]),</span> <span class="n">eps</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">eps_log</span><span class="p">)</span>
 
                 <span class="n">Delta_xy</span> <span class="o">+=</span> <span class="n">log_Dxy_alp</span> <span class="o">-</span> <span class="n">log_Dx_Dy_alp</span>
-                <span class="n">entang</span> <span class="o">+=</span> <span class="p">(</span><span class="n">Dxy_alp</span><span class="o">*</span><span class="p">(</span><span class="n">log_Dxy_alp</span> <span class="o">-</span> <span class="n">log_Dx_Dy_alp</span><span class="p">))</span><span class="o">.</span>\
-                    <span class="n">trace</span><span class="p">()</span><span class="o">*</span><span class="n">w_alp</span><span class="o">/</span><span class="mi">2</span>
+
+                <span class="n">case</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="c1"># case = not self.calc_formation_ent</span>
+                <span class="k">if</span> <span class="n">case</span><span class="p">:</span>
+                    <span class="n">entang</span> <span class="o">+=</span> <span class="p">(</span><span class="n">Dxy_alp</span><span class="o">*</span><span class="p">(</span><span class="n">log_Dxy_alp</span> <span class="o">-</span> <span class="n">log_Dx_Dy_alp</span><span class="p">))</span><span class="o">.</span>\
+                        <span class="n">trace</span><span class="p">()</span><span class="o">*</span><span class="n">w_alp</span><span class="o">/</span><span class="mi">2</span>
+                <span class="k">else</span><span class="p">:</span>  <span class="c1"># slightly more precise</span>
+                    <span class="n">ecase</span> <span class="o">=</span> <span class="n">PureStEnt</span><span class="p">(</span><span class="n">Dxy_alp</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">method</span><span class="p">)</span>
+                    <span class="n">entang</span> <span class="o">+=</span> <span class="n">ecase</span><span class="o">.</span><span class="n">get_entang</span><span class="p">(</span><span class="n">set_x</span><span class="p">)</span><span class="o">*</span><span class="n">w_alp</span>
+
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">log_Dxy_alp</span> <span class="o">=</span> <span class="kc">None</span>
                 <span class="n">log_Dx_Dy_alp</span> <span class="o">=</span> <span class="kc">None</span>
@@ -503,20 +520,25 @@
         <span class="n">sum_numerator</span><span class="o">.</span><span class="n">set_arr_to_zero</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">alp</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_hidden_states</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">log_Dx_Dy_a</span><span class="p">[</span><span class="n">alp</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">exp_arg</span> <span class="o">=</span> <span class="n">Delta_xy</span> <span class="o">+</span> <span class="n">log_Dx_Dy_a</span><span class="p">[</span><span class="n">alp</span><span class="p">]</span>
-
-                <span class="c1"># this step eliminates proj0*exp_arg*proj0</span>
-                <span class="c1"># which is log(eps)*proj0</span>
-
-                <span class="c1"># proj0 , proj1 = self.Dxy_proj_ops</span>
-                <span class="c1"># exp_arg = exp_arg*proj1 + proj1*exp_arg*proj0</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_formation_ent</span><span class="p">:</span>
-                    <span class="n">new_Kxy_alp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">exp_arg</span><span class="p">)</span><span class="o">*</span><span class="n">w_a</span><span class="p">[</span><span class="n">alp</span><span class="p">]</span>
+                <span class="n">expo_arg</span> <span class="o">=</span> <span class="n">Delta_xy</span> <span class="o">+</span> <span class="n">log_Dx_Dy_a</span><span class="p">[</span><span class="n">alp</span><span class="p">]</span>
+                <span class="n">Kxy_alp</span> <span class="o">=</span> <span class="n">Kxy_a</span><span class="p">[</span><span class="n">alp</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">Kxy_alp</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="c1">#proj0, proj1 = Kxy_alp.get_eigenvalue_proj_ops()</span>
+                    <span class="c1">#proj0, proj1 = self.Dxy_proj_ops</span>
+                    <span class="c1">#proj0, proj1 = expo_arg.get_eigenvalue_proj_ops()</span>
+                    <span class="c1">#print(&quot;ggggggg&quot;, expo_arg.norm())</span>
+                    <span class="c1">#expo_arg = proj1*expo_arg*proj1</span>
+                    <span class="c1">#print(&quot;gggggggggggafter&quot;, expo_arg.norm()</span>
+                    <span class="k">pass</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_formation_ent</span><span class="p">:</span>
+                    <span class="n">new_Kxy_alp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">expo_arg</span><span class="p">)</span><span class="o">*</span><span class="n">w_a</span><span class="p">[</span><span class="n">alp</span><span class="p">]</span>
+                    <span class="c1">#new_Kxy_alp *= (proj0*eps_in_log + proj1)</span>
+                    <span class="c1">#new_Kxy_alp *= eps_in_log</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">evas</span><span class="p">,</span> <span class="n">evec_cols</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigh</span><span class="p">(</span><span class="n">exp_arg</span><span class="o">.</span><span class="n">arr</span><span class="p">)</span>
+                    <span class="n">evas</span><span class="p">,</span> <span class="n">evec_cols</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigh</span><span class="p">(</span><span class="n">expo_arg</span><span class="o">.</span><span class="n">arr</span><span class="p">)</span>
                     <span class="n">max_pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">evas</span><span class="p">)</span>
                     <span class="n">vec</span> <span class="o">=</span> <span class="n">evec_cols</span><span class="p">[:,</span> <span class="n">max_pos</span><span class="p">]</span>
-                    <span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">vec</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">vec</span><span class="p">))</span> <span class="o">*</span> <span class="n">w_a</span><span class="p">[</span><span class="n">alp</span><span class="p">]</span>
+                    <span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">vec</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">vec</span><span class="p">))</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">evas</span><span class="p">[</span><span class="n">max_pos</span><span class="p">])</span>
                     <span class="n">new_Kxy_alp</span> <span class="o">=</span> <span class="n">DenMat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span><span class="o">.</span><span class="n">num_rows</span><span class="p">,</span>
                                          <span class="bp">self</span><span class="o">.</span><span class="n">Dxy</span><span class="o">.</span><span class="n">row_shape</span><span class="p">,</span> <span class="n">arr</span><span class="p">)</span>
                 <span class="c1"># _, proj1 = self.Dxy_proj_ops</span>
@@ -527,7 +549,7 @@
                 <span class="n">new_Kxy_alp</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="n">new_Kxy_a</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_Kxy_alp</span><span class="p">)</span>
 
-        <span class="n">inv_sum_numerator</span> <span class="o">=</span> <span class="n">sum_numerator</span><span class="o">.</span><span class="n">pseudo_inv</span><span class="p">()</span>
+        <span class="n">inv_sum_numerator</span> <span class="o">=</span> <span class="n">sum_numerator</span><span class="o">.</span><span class="n">pseudo_inv</span><span class="p">(</span><span class="n">eps</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">eps_w</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">alp</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_hidden_states</span><span class="p">):</span>
             <span class="c1"># print(&#39;rrrrr&#39;, np.linalg.norm(self.Dxy.arr),</span>
             <span class="c1">#             np.linalg.norm(inv_sum_numerator.arr),</span>
@@ -541,7 +563,7 @@
                 <span class="c1"># new_Kxy_alp = (new_Kxy_alp + new_Kxy_alp.herm())*(1/2)</span>
 
                 <span class="n">new_Kxy_a</span><span class="p">[</span><span class="n">alp</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_Kxy_alp</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_formation_ent</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_formation_ent</span><span class="p">:</span>
             <span class="n">new_Kxy_a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">regulate</span><span class="p">(</span><span class="n">new_Kxy_a</span><span class="p">)</span>
 
         <span class="c1"># not as precise, only valid asymptotically</span>

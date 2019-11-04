@@ -153,7 +153,7 @@
 <span id="entanglish-purestent-module"></span><h1>entanglish.PureStEnt module<a class="headerlink" href="#module-entanglish.PureStEnt" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="entanglish.PureStEnt.PureStEnt">
-<em class="property">class </em><code class="sig-prename descclassname">entanglish.PureStEnt.</code><code class="sig-name descname">PureStEnt</code><span class="sig-paren">(</span><em class="sig-param">den_mat</em>, <em class="sig-param">method='eigen'</em>, <em class="sig-param">num_bstrap_steps=1</em>, <em class="sig-param">verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/PureStEnt.html#PureStEnt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.PureStEnt.PureStEnt" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">entanglish.PureStEnt.</code><code class="sig-name descname">PureStEnt</code><span class="sig-paren">(</span><em class="sig-param">den_mat</em>, <em class="sig-param">method='eigen'</em>, <em class="sig-param">num_bstrap_steps=1</em>, <em class="sig-param">check_purity=True</em>, <em class="sig-param">verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/PureStEnt.html#PureStEnt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.PureStEnt.PureStEnt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="entanglish.EntangCase.html#entanglish.EntangCase.EntangCase" title="entanglish.EntangCase.EntangCase"><code class="xref py py-class docutils literal notranslate"><span class="pre">entanglish.EntangCase.EntangCase</span></code></a></p>
 <p>This class is a child of class EntangCase. Its purpose is to calculate
 the ( bipartite) quantum entanglement E_xy of a pure state <a href="#id1"><span class="problematic" id="id2">|psi_xy&gt;
@@ -167,15 +167,16 @@ matrix dm_x, where dm_x = trace_y dm_xy, where dm_xy = |psi_xy&gt;&lt;psi_xy|</s
 </dl>
 <dl class="method">
 <dt id="entanglish.PureStEnt.PureStEnt.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">den_mat</em>, <em class="sig-param">method='eigen'</em>, <em class="sig-param">num_bstrap_steps=1</em>, <em class="sig-param">verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/PureStEnt.html#PureStEnt.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.PureStEnt.PureStEnt.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Constructor
-Checks that den_mat is a pure state (has rank 1)</p>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">den_mat</em>, <em class="sig-param">method='eigen'</em>, <em class="sig-param">num_bstrap_steps=1</em>, <em class="sig-param">check_purity=True</em>, <em class="sig-param">verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/PureStEnt.html#PureStEnt.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.PureStEnt.PureStEnt.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructor. If check_purity = True, checks that den_mat is a pure
+state (has rank 1)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>den_mat</strong> (<a class="reference internal" href="entanglish.DenMat.html#entanglish.DenMat.DenMat" title="entanglish.DenMat.DenMat"><em>DenMat</em></a>) – </p></li>
 <li><p><strong>method</strong> (<em>str</em>) – </p></li>
 <li><p><strong>num_bstrap_steps</strong> (<em>int</em>) – </p></li>
+<li><p><strong>check_purity</strong> (<em>bool</em>) – </p></li>
 <li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
 </ul>
 </dd>

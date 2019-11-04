@@ -22,9 +22,10 @@ class FormationEnt(SquashedEnt):
 
     In this class, most of the steps used for calculating entang of
     formation are the same as those for calculating squashed entang. Those
-    steps that aren't are turned on or off with the bool flag do_formation_ent
+    steps that aren't are turned on or off with the bool flag
+    calc_formation_ent
 
-    A closed exact formula is known, thanks to Wootters et al., for the
+    A closed exact formula is known, thanks to Wootters, for the
     entang of formation of an arbitrary mixture of 2 qubits. Class
     TwoQubitState of entanglish contains an implementation of said formula.
 
@@ -51,7 +52,7 @@ class FormationEnt(SquashedEnt):
         """
 
         SquashedEnt.__init__(self, *args, **kwargs)
-        self.do_formation_ent = True
+        self.calc_formation_ent = True
 
 
 if __name__ == "__main__":
@@ -111,7 +112,7 @@ if __name__ == "__main__":
         dm1 = TwoQubitState.get_bell_basis_diag_dm(.7)
 
         recursion_init = "eigen+"
-        num_ab_steps = 100
+        num_ab_steps = 150
         print("recursion_init=", recursion_init)
         print('num_ab_steps=', num_ab_steps)
         for dm in [dm1]:
@@ -132,7 +133,7 @@ if __name__ == "__main__":
         dm3.set_arr_to_rand_den_mat(np.array([.1, .1, .1, .7]))
 
         recursion_init = "eigen+"
-        num_ab_steps = 200
+        num_ab_steps = 50
         print("recursion_init=", recursion_init)
         print('num_ab_steps=', num_ab_steps)
         for dm in [dm2, dm3]:

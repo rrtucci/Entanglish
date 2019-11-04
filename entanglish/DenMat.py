@@ -798,7 +798,7 @@ class DenMat:
             assert False, 'unsupported method'
         return DenMat(self.num_rows, self.row_shape, expm_arr)
 
-    def log(self, method='eigen', clipped=True, eps=1e-5,
+    def log(self, method='eigen', clipped=True, eps=1e-4,
             clip_to_zero=False):
         """
         This method returns a DenMat which is the matrix natural log of self.
@@ -838,9 +838,9 @@ class DenMat:
             assert False, 'unsupported method'
         return DenMat(self.num_rows, self.row_shape, logm_arr)
 
-    def positive_part(self):
+    def positive_part(self, threshold=1e-5):
         """
-        This method returns a DenMat in which negative eigenvalues of
+        This method returns a DenMat in which negative (< 0) eigenvalues of
         self.arr are replaced by zero.
 
         Returns
@@ -907,11 +907,16 @@ class DenMat:
         arr[np.diag_indices_from(arr)] += regulator
         return DenMat(self.num_rows, self.row_shape, np.linalg.inv(arr))
 
-    def pseudo_inv(self):
+    def pseudo_inv(self, eps=1e-5):
         """
         This method returns a DenMat which is the Penrose pseudo inverse
         matrix of self. By pseudo inverse, we mean that it takes the inverse
-        of non-zero eigenvalues only, but keeps the zero ones the same.
+        of non-zero (abs > eps) eigenvalues only, but sets those eigenvalues
+        with abs < eps to exactly zero.
+
+        Parameters
+        ----------
+        eps : float
 
         Returns
         -------
@@ -919,21 +924,26 @@ class DenMat:
 
         """
         pseudo_inv_arr = ut.fun_of_herm_arr(
-            lambda x: 1/x if abs(x) > 1e-5 else 0, self.arr)
+            lambda x: 1/x if abs(x) > eps else 0, self.arr)
         return DenMat(self.num_rows, self.row_shape, pseudo_inv_arr)
 
-    def get_eigenvalue_proj_ops(self):
+    def get_eigenvalue_proj_ops(self, eps=1e-5):
         """
         This method returns a tuple of 2 DenMat that carry Hermitian
         projection operators:
 
-        proj_0 projects out the space of zero eigenvalues. It is obtained by
-        replacing in the eigen decomposition of self.arr, zero eigenvalues
-        by 1 and non-zero ones by 0.
-
-        proj_1 projects out the space of non-zero eigenvalues. It is
+        proj_0 projects out the space of zero (abs < eps) eigenvalues. It is
         obtained by replacing in the eigen decomposition of self.arr,
-        zero eigenvalues by 0 and non-zero ones by 1.
+        zero eigenvalues (abs < eps) by 1 and non-zero ones (abs > eps) by 0.
+
+        proj_1 projects out the space of non-zero (abs > eps) eigenvalues.
+        It is obtained by replacing in the eigen decomposition of self.arr,
+        zero eigenvalues (abs < eps) by 0 and non-zero ones (abs > eps) by 1.
+
+        Parameters
+        ----------
+        eps : float
+            0 < eps << 1
 
         Returns
         -------
@@ -946,7 +956,7 @@ class DenMat:
         is_zero = []
         is_not_zero = []
         for x in evas:
-            if abs(x) < 1e-5:
+            if abs(x) < eps:
                 is_zero.append(1)
                 is_not_zero.append(0)
             else:

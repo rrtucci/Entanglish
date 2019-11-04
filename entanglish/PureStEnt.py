@@ -16,16 +16,17 @@ class PureStEnt(EntangCase):
     """
 
     def __init__(self, den_mat, method='eigen',
-                 num_bstrap_steps=1, verbose=False):
+                 num_bstrap_steps=1, check_purity=True, verbose=False):
         """
-        Constructor
-        Checks that den_mat is a pure state (has rank 1)
+        Constructor. If check_purity = True, checks that den_mat is a pure
+        state (has rank 1)
 
         Parameters
         ----------
         den_mat : DenMat
         method : str
         num_bstrap_steps : int
+        check_purity : bool
         verbose : bool
 
         Returns
@@ -33,8 +34,9 @@ class PureStEnt(EntangCase):
 
 
         """
-        assert den_mat.is_pure_state(), \
-            'the density matrix does not represent a pure state'
+        if check_purity:
+            assert den_mat.is_pure_state(), \
+                'the density matrix does not represent a pure state'
         EntangCase.__init__(self, len(den_mat.row_shape), method,
                         num_bstrap_steps, verbose)
         self.den_mat = den_mat
