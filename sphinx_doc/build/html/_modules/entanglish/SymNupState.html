@@ -159,8 +159,8 @@
 <span class="sd">    SymNupState is an abbreviation for Symmetrized N-qubits-up State,</span>
 <span class="sd">    which is a special, very convenient for testing purposes, type of</span>
 <span class="sd">    quantum state vector. Note, this is a pure state of qubits only. No</span>
-<span class="sd">    qudits with d != 2 in this state. The state contains a total of num_bits</span>
-<span class="sd">    qubits. num_up of them are up (in state |1&gt;) and num_bits - num_up are</span>
+<span class="sd">    qudits with d != 2 in this state. The state contains a total of num_qbits</span>
+<span class="sd">    qubits. num_up of them are up (in state |1&gt;) and num_qbits - num_up are</span>
 <span class="sd">    down (in state |0&gt;). To build such a state, we first create any (</span>
 <span class="sd">    normalized) initial state vector with the required number of up and down</span>
 <span class="sd">    qubits, and then we apply a total symmetrizer to that initial state</span>
@@ -180,30 +180,30 @@
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
-<span class="sd">    num_bits : int</span>
+<span class="sd">    num_qbits : int</span>
 <span class="sd">        total number of qubits in the state</span>
 <span class="sd">    num_up : int</span>
-<span class="sd">        should be &lt;= num_bits. The number of qubits that is up (in state</span>
-<span class="sd">        |1&gt;). The other num_bits - n_up are down (in state |0&gt;)</span>
+<span class="sd">        should be &lt;= num_qbits. The number of qubits that is up (in state</span>
+<span class="sd">        |1&gt;). The other num_qbits - n_up are down (in state |0&gt;)</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="SymNupState.__init__"><a class="viewcode-back" href="../../entanglish.SymNupState.html#entanglish.SymNupState.SymNupState.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_up</span><span class="p">,</span> <span class="n">num_bits</span><span class="p">):</span>
+<div class="viewcode-block" id="SymNupState.__init__"><a class="viewcode-back" href="../../entanglish.SymNupState.html#entanglish.SymNupState.SymNupState.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_up</span><span class="p">,</span> <span class="n">num_qbits</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constructor</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        num_up : int</span>
-<span class="sd">        num_bits : int</span>
+<span class="sd">        num_qbits : int</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">assert</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">num_up</span> <span class="o">&lt;=</span> <span class="n">num_bits</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">num_bits</span> <span class="o">=</span> <span class="n">num_bits</span>
+        <span class="k">assert</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">num_up</span> <span class="o">&lt;=</span> <span class="n">num_qbits</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_qbits</span> <span class="o">=</span> <span class="n">num_qbits</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">num_up</span> <span class="o">=</span> <span class="n">num_up</span></div>
 
 <div class="viewcode-block" id="SymNupState.get_st_vec"><a class="viewcode-back" href="../../entanglish.SymNupState.html#entanglish.SymNupState.SymNupState.get_st_vec">[docs]</a>    <span class="k">def</span> <span class="nf">get_st_vec</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -214,19 +214,19 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        np.ndarray</span>
-<span class="sd">            shape=(2^self.num_bits, )</span>
+<span class="sd">            shape=(2^self.num_qbits, )</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">st_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">tuple</span><span class="p">([</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">num_bits</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">complex</span><span class="p">)</span>
-        <span class="n">all_axes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_bits</span><span class="p">))</span>
+        <span class="n">st_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">tuple</span><span class="p">([</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">num_qbits</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">complex</span><span class="p">)</span>
+        <span class="n">all_axes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_qbits</span><span class="p">))</span>
         <span class="n">comb_len</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_up</span>
         <span class="k">for</span> <span class="n">up_axes</span> <span class="ow">in</span> <span class="n">it</span><span class="o">.</span><span class="n">combinations</span><span class="p">(</span><span class="n">all_axes</span><span class="p">,</span> <span class="n">comb_len</span><span class="p">):</span>
             <span class="n">index</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">([</span><span class="mi">1</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">up_axes</span> <span class="k">else</span> <span class="mi">0</span>
-                          <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_bits</span><span class="p">)])</span>
+                          <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_qbits</span><span class="p">)])</span>
             <span class="n">st_vec</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="n">mag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">st_vec</span><span class="p">)</span>
         <span class="n">st_vec</span> <span class="o">/=</span> <span class="n">mag</span>
-        <span class="k">return</span> <span class="n">st_vec</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_bits</span><span class="p">,))</span></div>
+        <span class="k">return</span> <span class="n">st_vec</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_qbits</span><span class="p">,))</span></div>
 
 <div class="viewcode-block" id="SymNupState.get_known_entang"><a class="viewcode-back" href="../../entanglish.SymNupState.html#entanglish.SymNupState.SymNupState.get_known_entang">[docs]</a>    <span class="k">def</span> <span class="nf">get_known_entang</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_x_axes</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -256,8 +256,8 @@
 <span class="sd">        float</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">assert</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">num_x_axes</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_bits</span>
-        <span class="n">nn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_bits</span>
+        <span class="k">assert</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">num_x_axes</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_qbits</span>
+        <span class="n">nn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_qbits</span>
         <span class="n">n</span> <span class="o">=</span> <span class="n">num_x_axes</span>
         <span class="n">xx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_up</span>
         <span class="n">probs</span> <span class="o">=</span> <span class="p">[</span><span class="n">ut</span><span class="o">.</span><span class="n">prob_hypergeometric</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">xx</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">nn</span><span class="p">)</span>
@@ -268,10 +268,10 @@
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
     <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
         <span class="n">num_up</span> <span class="o">=</span> <span class="mi">4</span>
-        <span class="n">num_bits</span> <span class="o">=</span> <span class="mi">5</span>
-        <span class="n">st</span> <span class="o">=</span> <span class="n">SymNupState</span><span class="p">(</span><span class="n">num_up</span><span class="p">,</span> <span class="n">num_bits</span><span class="p">)</span>
+        <span class="n">num_qbits</span> <span class="o">=</span> <span class="mi">5</span>
+        <span class="n">st</span> <span class="o">=</span> <span class="n">SymNupState</span><span class="p">(</span><span class="n">num_up</span><span class="p">,</span> <span class="n">num_qbits</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;st_vec=</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">st</span><span class="o">.</span><span class="n">get_st_vec</span><span class="p">())</span>
-        <span class="k">for</span> <span class="n">num_x_axes</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_bits</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">num_x_axes</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_qbits</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;known entang for &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">num_x_axes</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; x axes=&#39;</span><span class="p">,</span>
                   <span class="n">st</span><span class="o">.</span><span class="n">get_known_entang</span><span class="p">(</span><span class="n">num_x_axes</span><span class="p">))</span>
     <span class="n">main</span><span class="p">()</span>

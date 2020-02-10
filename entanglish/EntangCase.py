@@ -350,10 +350,10 @@ if __name__ == "__main__":
     from entanglish.PureStEnt import *
 
     def main():
-        num_bits = 5
+        num_qbits = 5
         num_up = 2
-        dm = DenMat(1 << num_bits, tuple([2]*num_bits))
-        st = SymNupState(num_up, num_bits)
+        dm = DenMat(1 << num_qbits, tuple([2]*num_qbits))
+        st = SymNupState(num_up, num_qbits)
         st_vec = st.get_st_vec()
         dm.set_arr_from_st_vec(st_vec)
         ecase = PureStEnt(dm, 'eigen')

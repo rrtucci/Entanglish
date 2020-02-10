@@ -182,7 +182,7 @@ class DenMat:
         """
         Sets self.arr to st_vec*set_vec^dag where st_vec is a column vector 
         of shape (num_rows, ). For qubits, st_vec should be a traditional 
-        state vector, meaning that when reshaped to [2]*num_bits, 
+        state vector, meaning that when reshaped to [2]*num_qbits,
         the components are .. |s_2>|s_1>|s_0> where s_i = 0, 1 corresponds 
         to the i'th qubit. s_0 is last so ZL (Zero Last) convention. 
 

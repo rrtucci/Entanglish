@@ -89,10 +89,10 @@ if __name__ == "__main__":
         def extra_str(meth, num_steps):
             return ', ' + str(num_steps) + ' steps' \
                     if meth == 'pert' else ''
-        num_bits = 4
+        num_qbits = 4
         num_up = 2
-        dm1 = DenMat(1 << num_bits, tuple([2]*num_bits))
-        st = SymNupState(num_up, num_bits)
+        dm1 = DenMat(1 << num_qbits, tuple([2]*num_qbits))
+        st = SymNupState(num_up, num_qbits)
         st_vec = st.get_st_vec()
         dm1.set_arr_from_st_vec(st_vec)
         print('-------------------dm1')

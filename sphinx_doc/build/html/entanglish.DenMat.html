@@ -966,7 +966,7 @@ pure state.</p>
 <code class="sig-name descname">set_arr_from_st_vec</code><span class="sig-paren">(</span><em class="sig-param">st_vec</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/entanglish/DenMat.html#DenMat.set_arr_from_st_vec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#entanglish.DenMat.DenMat.set_arr_from_st_vec" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets self.arr to st_vec*set_vec^dag where st_vec is a column vector
 of shape (num_rows, ). For qubits, st_vec should be a traditional
-state vector, meaning that when reshaped to [2]*num_bits,
+state vector, meaning that when reshaped to [2]*num_qbits,
 the components are .. <a href="#id3"><span class="problematic" id="id4">|</span></a>s_2&gt;|s_1&gt;|s_0&gt; where s_i = 0, 1 corresponds
 to the i’th qubit. s_0 is last so ZL (Zero Last) convention.</p>
 <dl class="field-list simple">

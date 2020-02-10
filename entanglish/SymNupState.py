@@ -9,8 +9,8 @@ class SymNupState:
     SymNupState is an abbreviation for Symmetrized N-qubits-up State,
     which is a special, very convenient for testing purposes, type of
     quantum state vector. Note, this is a pure state of qubits only. No
-    qudits with d != 2 in this state. The state contains a total of num_bits
-    qubits. num_up of them are up (in state |1>) and num_bits - num_up are
+    qudits with d != 2 in this state. The state contains a total of num_qbits
+    qubits. num_up of them are up (in state |1>) and num_qbits - num_up are
     down (in state |0>). To build such a state, we first create any (
     normalized) initial state vector with the required number of up and down
     qubits, and then we apply a total symmetrizer to that initial state
@@ -30,30 +30,30 @@ class SymNupState:
 
     Attributes
     ----------
-    num_bits : int
+    num_qbits : int
         total number of qubits in the state
     num_up : int
-        should be <= num_bits. The number of qubits that is up (in state
-        |1>). The other num_bits - n_up are down (in state |0>)
+        should be <= num_qbits. The number of qubits that is up (in state
+        |1>). The other num_qbits - n_up are down (in state |0>)
 
     """
 
-    def __init__(self, num_up, num_bits):
+    def __init__(self, num_up, num_qbits):
         """
         Constructor
 
         Parameters
         ----------
         num_up : int
-        num_bits : int
+        num_qbits : int
 
         Returns
         -------
 
 
         """
-        assert 0 <= num_up <= num_bits
-        self.num_bits = num_bits
+        assert 0 <= num_up <= num_qbits
+        self.num_qbits = num_qbits
         self.num_up = num_up
 
     def get_st_vec(self):
@@ -64,19 +64,19 @@ class SymNupState:
         Returns
         -------
         np.ndarray
-            shape=(2^self.num_bits, )
+            shape=(2^self.num_qbits, )
 
         """
-        st_vec = np.zeros(tuple([2]*self.num_bits), dtype=complex)
-        all_axes = list(range(0, self.num_bits))
+        st_vec = np.zeros(tuple([2]*self.num_qbits), dtype=complex)
+        all_axes = list(range(0, self.num_qbits))
         comb_len = self.num_up
         for up_axes in it.combinations(all_axes, comb_len):
             index = tuple([1 if k in up_axes else 0
-                          for k in range(self.num_bits)])
+                          for k in range(self.num_qbits)])
             st_vec[index] = 1
         mag = np.linalg.norm(st_vec)
         st_vec /= mag
-        return st_vec.reshape((1 << self.num_bits,))
+        return st_vec.reshape((1 << self.num_qbits,))
 
     def get_known_entang(self, num_x_axes):
         """
@@ -106,8 +106,8 @@ class SymNupState:
         float
 
         """
-        assert 0 <= num_x_axes <= self.num_bits
-        nn = self.num_bits
+        assert 0 <= num_x_axes <= self.num_qbits
+        nn = self.num_qbits
         n = num_x_axes
         xx = self.num_up
         probs = [ut.prob_hypergeometric(x, xx, n, nn)
@@ -118,10 +118,10 @@ class SymNupState:
 if __name__ == "__main__":
     def main():
         num_up = 4
-        num_bits = 5
-        st = SymNupState(num_up, num_bits)
+        num_qbits = 5
+        st = SymNupState(num_up, num_qbits)
         print('st_vec=\n', st.get_st_vec())
-        for num_x_axes in range(0, num_bits+1):
+        for num_x_axes in range(0, num_qbits+1):
             print('known entang for ' + str(num_x_axes) + ' x axes=',
                   st.get_known_entang(num_x_axes))
     main()

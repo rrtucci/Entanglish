@@ -600,10 +600,10 @@
 
     <span class="k">def</span> <span class="nf">main2</span><span class="p">():</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;###############################main2&#39;</span><span class="p">)</span>
-        <span class="n">num_bits</span> <span class="o">=</span> <span class="mi">4</span>
+        <span class="n">num_qbits</span> <span class="o">=</span> <span class="mi">4</span>
         <span class="n">num_up</span> <span class="o">=</span> <span class="mi">1</span>
-        <span class="n">dm1</span> <span class="o">=</span> <span class="n">DenMat</span><span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="n">num_bits</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">([</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">num_bits</span><span class="p">))</span>
-        <span class="n">st</span> <span class="o">=</span> <span class="n">SymNupState</span><span class="p">(</span><span class="n">num_up</span><span class="p">,</span> <span class="n">num_bits</span><span class="p">)</span>
+        <span class="n">dm1</span> <span class="o">=</span> <span class="n">DenMat</span><span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="n">num_qbits</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">([</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">num_qbits</span><span class="p">))</span>
+        <span class="n">st</span> <span class="o">=</span> <span class="n">SymNupState</span><span class="p">(</span><span class="n">num_up</span><span class="p">,</span> <span class="n">num_qbits</span><span class="p">)</span>
         <span class="n">st_vec</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">get_st_vec</span><span class="p">()</span>
         <span class="n">dm1</span><span class="o">.</span><span class="n">set_arr_from_st_vec</span><span class="p">(</span><span class="n">st_vec</span><span class="p">)</span>
 
