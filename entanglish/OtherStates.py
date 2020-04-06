@@ -50,7 +50,7 @@ if __name__ == "__main__":
         print('bound entang state **********************')
         dm_bd = OtherStates.get_den_mat_with_bound_entang(.5)
 
-        recursion_init='eigen+'
+        recursion_init = 'eigen+'
         num_ab_steps = 30
         ecase = SquashedEnt(dm_bd, num_ab_steps,
                             recursion_init=recursion_init, verbose=True)
