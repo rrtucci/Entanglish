@@ -484,16 +484,17 @@ def prob_hypergeometric(x, xx, n, nn):
 
     P(x | xx, n, nn) = comb(xx, x)*comb(nn-xx, n-x)/comb(nn, n)
 
-    where
-    0 <= x <= xx
-    0 <= n-x <= nn-xx
-    0 <= n <= nn
+    where::
+
+        0 <= x <= xx
+        0 <= n-x <= nn-xx
+        0 <= n <= nn
 
     This P(x | ) defines the hypergeometric distribution
 
     References
     ----------
-    1. https://en.wikipedia.org/wiki/Hypergeometric_distribution
+    1. `<https://en.wikipedia.org/wiki/Hypergeometric_distribution>`_
 
     Parameters
     ----------

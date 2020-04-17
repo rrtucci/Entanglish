@@ -31,7 +31,7 @@ class SquashedEnt(EntangCase):
 
     References
     ----------
-    1. https://en.wikipedia.org/wiki/Squashed_entanglement
+    1. `<https://en.wikipedia.org/wiki/Squashed_entanglement>`_
 
     2. R.R. Tucci, "A New  Algorithm for Calculating Squashed Entanglement
     and a Python Implementation Thereof"

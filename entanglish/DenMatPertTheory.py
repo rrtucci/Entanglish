@@ -70,8 +70,8 @@ class DenMatPertTheory:
         1D array of floats. Eigenvalues of dm to second order.
     evec_cols_of_dm_to_2nd_order : np.ndarray
         This is a unitary matrix with (a second order approx of) the
-        eigenvectors of dm as columns. If this matrix is U, the dm \approx
-        UDU^dag, where D is diagonal and U^dag is the Hermitian conjugate of
+        eigenvectors of dm as columns. If this matrix is U, the `dm \approx
+        UDU^dag`, where D is diagonal and U^dag is the Hermitian conjugate of
         U.
     verbose : bool
 
@@ -217,8 +217,8 @@ class DenMatPertTheory:
 
         References
         ----------
-        1. https://en.wikipedia.org/wiki/Perturbation_theory_(
-        quantum_mechanics)
+        1. `<https://en.wikipedia.org/wiki/Perturbation_theory_(
+        quantum_mechanics)>`_
 
         Returns
         -------
