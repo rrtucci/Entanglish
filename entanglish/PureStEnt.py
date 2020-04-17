@@ -15,7 +15,7 @@ class PureStEnt(EntangCase):
 
     """
 
-    def __init__(self, den_mat, method='eigen',
+    def __init__(self, den_mat, approx='eigen',
                  num_bstrap_steps=1, check_purity=True, verbose=False):
         """
         Constructor. If check_purity = True, checks that den_mat is a pure
@@ -24,7 +24,7 @@ class PureStEnt(EntangCase):
         Parameters
         ----------
         den_mat : DenMat
-        method : str
+        approx : str
         num_bstrap_steps : int
         check_purity : bool
         verbose : bool
@@ -37,7 +37,7 @@ class PureStEnt(EntangCase):
         if check_purity:
             assert den_mat.is_pure_state(), \
                 'the density matrix does not represent a pure state'
-        EntangCase.__init__(self, len(den_mat.row_shape), method,
+        EntangCase.__init__(self, len(den_mat.row_shape), approx,
                         num_bstrap_steps, verbose)
         self.den_mat = den_mat
 
@@ -58,11 +58,11 @@ class PureStEnt(EntangCase):
         """
         traced_axes_set = self.den_mat.get_set_of_all_other_axes(axes_subset)
         partial_dm = self.den_mat.get_partial_tr(traced_axes_set)
-        if self.method == 'eigen':
+        if self.approx == 'eigen':
             entang = partial_dm.get_entropy('eigen')
-        elif self.method == 'pade':
+        elif self.approx == 'pade':
             entang = partial_dm.get_entropy('pade')
-        elif self.method == 'pert':
+        elif self.approx == 'pert':
             if self.num_bstrap_steps == 1:
                 pert = DenMatPertTheory.new_with_separable_dm0(partial_dm,
                                                                self.verbose)
@@ -96,11 +96,11 @@ if __name__ == "__main__":
         st_vec = st.get_st_vec()
         dm1.set_arr_from_st_vec(st_vec)
         print('-------------------dm1')
-        for method in ['eigen', 'pert']:
+        for approx in ['eigen', 'pert']:
             num_bstrap_steps = 40
-            print('-----method=' + method +
-                  extra_str(method, num_bstrap_steps))
-            ecase = PureStEnt(dm1, method,
+            print('-----approx=' + approx +
+                  extra_str(approx, num_bstrap_steps))
+            ecase = PureStEnt(dm1, approx,
                                  num_bstrap_steps, verbose=False)
             print('entang_023: algo value, known value\n',
                   ecase.get_entang({0, 2, 3}),
@@ -118,10 +118,10 @@ if __name__ == "__main__":
         dm2.set_arr_from_st_vec(st_vec)
         print('-------------------dm2')
         num_bstrap_steps = 40
-        for method in ['eigen', 'pert']:
-            print('-----method=', method +
-                  extra_str(method, num_bstrap_steps))
-            ecase = PureStEnt(dm2, method,
+        for approx in ['eigen', 'pert']:
+            print('-----approx=', approx +
+                  extra_str(approx, num_bstrap_steps))
+            ecase = PureStEnt(dm2, approx,
                                  num_bstrap_steps, verbose=False)
             print('entang_023:', ecase.get_entang({0, 2, 3}))
             print('entang_02:', ecase.get_entang({0, 2}))

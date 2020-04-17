@@ -413,7 +413,7 @@ class DenMat:
         comp_axes_set = set([ax for ax in all_axes if ax not in axes_set])
         return comp_axes_set
 
-    def get_entropy(self, method='eigen'):
+    def get_entropy(self, approx='eigen'):
         """
         This method returns an exact entropy of density matrix self. Uses
         natural log for entropy. Assumes eigenvalues of self are
@@ -421,8 +421,8 @@ class DenMat:
 
         Parameters
         ----------
-        method : str        
-            method used to calculate log of array. Either 'eigen' or 'pade' 
+        approx : str
+            approx used to calculate log of array. Either 'eigen' or 'pade'
 
         Returns
         -------
@@ -430,18 +430,18 @@ class DenMat:
 
         """
         ent = 0.0
-        if method == 'eigen':
+        if approx == 'eigen':
             evas = np.real(np.linalg.eigvalsh(self.arr))
             ent = ut.get_entropy_from_probs(evas)
-        elif method == 'pade':
+        elif approx == 'pade':
             ent = - np.trace(np.dot(self.arr, la.logm(self.arr))).real
         else:
-            assert False, 'unsupported method for ' +\
+            assert False, 'unsupported approx for ' +\
                           'calculating entropy of a density matrix.'
 
         return ent
 
-    def get_mutual_info(self, traced_axes_set, method='eigen'):
+    def get_mutual_info(self, traced_axes_set, approx='eigen'):
         """
         This method returns the mutual information for x_axes = list(
         traced_axes_set) and y_axes = row axes not in x_axes. Uses natural
@@ -451,8 +451,8 @@ class DenMat:
         Parameters
         ----------
         traced_axes_set : set[int]
-        method : str        
-            method used to calculate log of array. Either 'eigen' or 'pade' 
+        approx : str
+            approx used to calculate log of array. Either 'eigen' or 'pade'
 
         Returns
         -------
@@ -466,9 +466,9 @@ class DenMat:
 
         dm_x = self.get_partial_tr(set(y_axes))
         dm_y = self.get_partial_tr(set(x_axes))
-        mi = - self.get_entropy(method) \
-             + dm_x.get_entropy(method) \
-             + dm_y.get_entropy(method)
+        mi = - self.get_entropy(approx) \
+             + dm_x.get_entropy(approx) \
+             + dm_y.get_entropy(approx)
         return mi
 
     def dm_op(self, right, arr_op):
@@ -751,14 +751,14 @@ class DenMat:
         """
         return np.linalg.norm(self.arr)
 
-    def sqrt(self, method='eigen'):
+    def sqrt(self, approx='eigen'):
         """
         This method returns a DenMat which is the matrix square root of self.
 
         Parameters
         ----------
-        method : str
-            method used to calculate sqrt. Either 'eigen' or 'pade'.
+        approx : str
+            approx used to calculate sqrt. Either 'eigen' or 'pade'.
 
         Returns
         -------
@@ -766,23 +766,23 @@ class DenMat:
 
         """
         sqrtm_arr = None
-        if method == 'eigen':
+        if approx == 'eigen':
             sqrtm_arr = ut.fun_of_herm_arr(lambda x: np.sqrt(x) if x > 0 else
             0, self.arr)
-        elif method == 'pade':
+        elif approx == 'pade':
             sqrtm_arr = la.sqrtm(self.arr)
         else:
-            assert False, 'unsupported method'
+            assert False, 'unsupported approx'
         return DenMat(self.num_rows, self.row_shape, sqrtm_arr)
 
-    def exp(self, method='eigen'):
+    def exp(self, approx='eigen'):
         """
         This method returns a DenMat which is the matrix exponential of self.
 
         Parameters
         ----------
-        method : str
-            method used to calculate exp. Either 'eigen' or 'pade'.
+        approx : str
+            approx used to calculate exp. Either 'eigen' or 'pade'.
 
         Returns
         -------
@@ -790,29 +790,22 @@ class DenMat:
 
         """
         expm_arr = None
-        if method == 'eigen':
+        if approx == 'eigen':
             expm_arr = ut.fun_of_herm_arr(np.exp, self.arr)
-        elif method == 'pade':
+        elif approx == 'pade':
             expm_arr = la.expm(self.arr)
         else:
-            assert False, 'unsupported method'
+            assert False, 'unsupported approx'
         return DenMat(self.num_rows, self.row_shape, expm_arr)
 
-    def log(self, method='eigen', clipped=True, eps=1e-4,
-            clip_to_zero=False):
+    def log(self, approx='eigen'):
         """
         This method returns a DenMat which is the matrix natural log of self.
 
         Parameters
         ----------
-        method : str
-            method used to calculate the natural log. Either 'eigen' or 'pade'.
-        clipped : bool
-            clips logs (see ut.clipped_log_of_vec) iff this is True
-        eps : float
-            used only if clipping log
-        clip_to_zero : bool
-            used only if clipping log
+        approx : str
+            approx used to calculate the natural log. Either 'eigen' or 'pade'.
 
         Returns
         -------
@@ -822,20 +815,12 @@ class DenMat:
         # self.add_const_to_diag_of_arr(1e-8)
         # self.normalize_diag_of_arr()
         logm_arr = None
-        if method == 'eigen':
-            if clipped:
-                logm_arr = ut.fun_of_herm_arr(ut.clipped_log_of_vec,
-                                              self.arr,
-                                              eps=eps,
-                                              clip_to_zero=clip_to_zero)
-            else:
-                logm_arr = ut.fun_of_herm_arr(np.log,
-                                              self.arr)
-
-        elif method == 'pade':
+        if approx == 'eigen':
+            logm_arr = ut.fun_of_herm_arr(ut.clipped_log_of_vec, self.arr)
+        elif approx == 'pade':
             logm_arr = la.logm(self.arr)
         else:
-            assert False, 'unsupported method'
+            assert False, 'unsupported approx'
         return DenMat(self.num_rows, self.row_shape, logm_arr)
 
     def positive_part(self, threshold=1e-5):

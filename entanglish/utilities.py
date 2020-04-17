@@ -110,7 +110,7 @@ def clip(x, limits):
     return min(max(limits[0], x), limits[1])
 
 
-def clipped_log_of_vec(vec, eps=1e-5, clip_to_zero=False):
+def clipped_log_of_vec(vec, eps=1e-10, clip_to_zero=False):
     """
     This method takes as input a int|float or a 1D array of floats. It
     returns the log element-wise of that array, except when an element of
@@ -184,30 +184,6 @@ def positive_part_of_vec(vec):
     return np.array(li_new)
 
 
-def max_or_zero_of_vec(vec):
-    """
-    This method takes as input a int|float or a 1D array of floats. It
-    returns the array, with all items except the max item replaced by zero
-
-    Parameters
-    ----------
-    vec : int|float|np.ndarray
-
-    Returns
-    -------
-    np.ndarray
-
-    """
-    vec1 = vec
-    if isinstance(vec, (int, float)):
-        vec1 = [vec]
-    li = list(vec1)
-    (xmax, i) = max((x, i) for i, x in enumerate(li))
-    vec1 = np.zeros((len(li),))
-    vec1[i] = xmax
-    return vec1
-
-
 def fun_of_herm_arr_from_eigen_sys(fun_of_evas, evas, evec_cols,
                                    **fun_kwargs):
     """
@@ -246,6 +222,24 @@ def fun_of_herm_arr_from_eigen_sys(fun_of_evas, evas, evec_cols,
         umat[:, k] *= fun_of_evas(evas[k], **fun_kwargs)
     # print(',,', evec_cols)
     return np.dot(umat, umat_H)
+
+
+def herm_arr_from_eigen_sys(evas, evec_cols):
+    """
+    Same as fun_of_herm_arr_from_eigen_sys() but for special case when
+    fun_of_evas() is identity.
+
+    Parameters
+    ----------
+    evas : np.ndarray
+    evec_cols : np.ndarray
+
+    Returns
+    -------
+    np.ndarray
+
+    """
+    return fun_of_herm_arr_from_eigen_sys(lambda x: x, evas, evec_cols)
 
 
 def fun_of_herm_arr(fun_of_evas, herm_arr, **fun_kwargs):

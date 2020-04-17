@@ -16,13 +16,13 @@ class EntangCase:
 
     Attributes
     ----------
-    method : str
-        method used to calculate the (natural) log of a density matrix that
+    approx : str
+        approx used to calculate the (natural) log of a density matrix that
         appears in the definition of the von Neumann entropy. This parameter
         can be either 'eigen', 'pade', 'pert'.
     num_bstrap_steps : int
         number bootstrap steps used in perturbation theory. Only used if
-        method = 'pert'
+        approx = 'pert'
     num_row_axes : int
         number of row axes, same as number of qudits, equal to len(
         row_shape) of a DenMat
@@ -30,7 +30,7 @@ class EntangCase:
 
     """
 
-    def __init__(self, num_row_axes, method='eigen', num_bstrap_steps=1,
+    def __init__(self, num_row_axes, approx='eigen', num_bstrap_steps=1,
                  verbose=False):
         """
         Constructor
@@ -38,7 +38,7 @@ class EntangCase:
         Parameters
         ----------
         num_row_axes : int
-        method : str
+        approx : str
         num_bstrap_steps : int
         verbose : bool
 
@@ -48,8 +48,8 @@ class EntangCase:
 
         """
         self.num_row_axes = num_row_axes
-        self.method = method
-        assert method in ['eigen', 'pade', 'pert']
+        self.approx = approx
+        assert approx in ['eigen', 'pade', 'pert']
         self.num_bstrap_steps = num_bstrap_steps
         assert num_bstrap_steps > 0
         self.verbose = verbose
@@ -102,7 +102,7 @@ class EntangCase:
         Parameters
         ----------
         axes_subset : set[int]
-            the entanglement is calculate for parts axes_subset and its
+            the entanglement is calculated for parts axes_subset and its
             complement
 
         Returns
@@ -171,11 +171,12 @@ class EntangCase:
         """
         This method constructs a dictionary that we call an entanglement
         profile. Given a state with num_row_axes qudits, this method
-        calculates a (bipartite) entanglement for each possible bi-partition of
-        range( num_row_axes). By a bi-partition we mean two nonempty disjoint
-        subsets whose union is range(num_row_axes). An entanglement profile
-        is a dictionary mapping bi-partition half-size to a dictionary that
-        maps each bi-partition of that half-size to its entanglement.
+        calculates a (bipartite) entanglement for each possible bi-partition
+        of range( num_row_axes). By a bi-partition we mean two nonempty
+        disjoint subsets whose union is range(num_row_axes). An entanglement
+        profile is a dictionary mapping bi-partition half-size to a
+        dictionary that maps each bi-partition of that half-size to its
+        entanglement.
 
         Returns
         -------
@@ -236,34 +237,33 @@ class EntangCase:
                         if row_shape:
                             line += ', max-entang=' + \
                                 "{:8.5f}".format(EntangCase.get_max_entag(
-                                row_shape, comb, comb_c)) + '\n'
+                                    row_shape, comb, comb_c)) + '\n'
                         else:
                             line += '\n'
                 all_lines += line
         print(all_lines)
 
-    def sqrt(self, dm, method=None):
+    def sqrt(self, dm, approx=None):
         """
         This method is a simple wrapper for dm.sqrt() so that all usages
-        inside the class utilize the same method self.method which is an
-        attribute of the class.
+        inside the class utilize approx=self.approx if approx!=None.
 
         Parameters
         ----------
         dm : DenMat
-        method : str
+        approx : str
 
         Returns
         -------
         DenMat
 
         """
-        if method is None:
-            method = self.method
+        if approx is None:
+            approx = self.approx
         dm_out = None
-        if method in ['eigen', 'pade']:
-            dm_out = dm.sqrt(method=method)
-        elif method == 'pert':
+        if approx in ['eigen', 'pade']:
+            dm_out = dm.sqrt(approx=approx)
+        elif approx == 'pert':
             esys = DenMatPertTheory.do_bstrap_with_separable_dm0(
                 dm, self.num_bstrap_steps)
             dm_out = DenMat.get_fun_of_dm_from_eigen_sys(
@@ -272,28 +272,27 @@ class EntangCase:
             assert False
         return dm_out
 
-    def exp(self, dm, method=None):
+    def exp(self, dm, approx=None):
         """
         This method is a simple wrapper for dm.exp() so that all usages
-        inside the class utilize the same method self.method which is an
-        attribute of the class.
+        inside the class utilize approx=self.approx if approx!=None.
 
         Parameters
         ----------
         dm : DenMat
-        method : str
+        approx : str
 
         Returns
         -------
         DenMat
 
         """
-        if method is None:
-            method = self.method
+        if approx is None:
+            approx = self.approx
         dm_out = None
-        if method in ['eigen', 'pade']:
-            dm_out = dm.exp(method)
-        elif method == 'pert':
+        if approx in ['eigen', 'pade']:
+            dm_out = dm.exp(approx)
+        elif approx == 'pert':
             esys = DenMatPertTheory.do_bstrap_with_separable_dm0(
                 dm, self.num_bstrap_steps)
             dm_out = DenMat.get_fun_of_dm_from_eigen_sys(
@@ -302,43 +301,31 @@ class EntangCase:
             assert False
         return dm_out
 
-    def log(self, dm, method=None, clipped=True, eps=1e-4,
-            clip_to_zero=False):
+    def log(self, dm, approx=None):
         """
         This method is a simple wrapper for dm.log() so that all usages
-        inside the class utilize the same method self.method which an
-        attribute of the class.
+        inside the class utilize approx=self.approx if approx!=None.
 
         Parameters
         ----------
         dm : DenMat
-        method : str
-        clipped : bool
-        eps : float
-        clip_to_zero : bool
+        approx : str|None
 
         Returns
         -------
         DenMat
 
         """
-        if method is None:
-            method = self.method
+        if approx is None:
+            approx = self.approx
         dm_out = None
-        if method in ['eigen', 'pade']:
-            dm_out = dm.log(method=method,
-                            clipped=clipped,
-                            eps=eps,
-                            clip_to_zero=clip_to_zero)
-        elif method == 'pert':
+        if approx in ['eigen', 'pade']:
+            dm_out = dm.log(approx=approx)
+        elif approx == 'pert':
             esys = DenMatPertTheory.do_bstrap_with_separable_dm0(
                 dm, self.num_bstrap_steps)
-            fun = np.log
-            if clipped:
-                fun = ut.clipped_log_of_vec
             dm_out = DenMat.get_fun_of_dm_from_eigen_sys(
-                dm.num_rows, dm.row_shape, esys, fun,
-                clipped=clipped, eps=eps, clip_to_zero=clip_to_zero)
+                dm.num_rows, dm.row_shape, esys, np.log)
         else:
             assert False
         return dm_out
