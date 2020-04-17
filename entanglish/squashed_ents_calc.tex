@@ -800,7 +800,7 @@ Appendix \ref{sec-recursion-init}.
 
 Let
 \beq
-\av{x^\alp}_\rvalp = \frac{1}{n_\rva}\sum_{\alp=0}^{n_\rvalp-1}x^\alp
+\av{x^\alp}_\rvalp = \sum_{\alp=0}^{n_\rvalp-1}w^\alp x^\alp
 \;.
 \eeq
 
@@ -822,13 +822,13 @@ Set
 \beq
 \Delta_{\rvx, \rvy}(n)=
 \av{\Delta^\alp_{\rvx, \rvy}(n)}_\rvalp
-\;,
+\;.
 \eeq
-
+Let
 
 \beq
 \cala^\alp(n)=
-\exp\left[
+\exp^-\left[
 \Delta_{\rvx, \rvy}(n)
 +
 \log \rho^{\alp}_{\rvx}(n)
@@ -836,34 +836,31 @@ Set
 \right]w^\alp(n)
 \;,
 \eeq
-
-\beq
-\calb(n)=
-\sqrt{\rho_{\rvx, \rvy}}
-\sqrt{{\rm pinv}\left(\sum_\alp \cala^\alp(n)\right)}
-\;,
-\eeq
+where $\exp^-(H)$ for any Hermitian matrix $H$ is calculated by expressing 
+$H=UDU^\dag$ where $U$ is a unitary matrix and $D$ is real diagonal matrix, and
+replacing each diagonal value
+$d$ of $D$ by $\exp(\min(0, d))$. Finally, let
 
 
 \beq
 K^{\alp}_{\rvx,\rvy}(n+1)
 =
-{\rm regulate}\left(\calb(n)
-\cala^\alp(n)[\calb(n)]^\dagger\right)
+{\rm regulate}\left(
+\cala^\alp(n)\right)
 \;,\label{eq-squashed-only1}
 \eeq
 
 \beq
 E_{\rvx, \rvy}(n+1) =
 \frac{1}{2}\tr_{\rvx, \rvy} \left[
-\sum_\alp K^\alp _{\rvx, \rvy}(n+1)
+\sum_\alp K^\alp _{\rvx, \rvy}(n)
 \Delta^\alp_{\rvx, \rvy}(n)\right]
 \rarrow \frac{1}{2}\tr_{\rvx, \rvy} \left[\rho_{\rvx, \rvy}\Delta_{\rvx, \rvy}(\infty)\right]
 \;,
 \eeq
 
 \beq
-err(n)=
+err(n+1)=
 \av{\|\Delta^\alp_{\rvx, \rvy}(n)-\Delta_{\rvx, \rvy}(n)\|}_\rvalp
 \;.
 \eeq
@@ -1942,10 +1939,10 @@ of that diagonal density matrix.
 \bibitem{sq-wiki}
 \url{https://en.wikipedia.org/wiki/Squashed_entanglement}
 \bibitem{Wot}
-William K. Wootters, 
+William K. Wootters,
 ``Entanglement of Formation of an Arbitrary State of Two Qubits",
 \url{https://arxiv.org/abs/quant-ph/9709029}
- 
+
 \bibitem{Aud}
 K. Audenaert, F. Verstraete, B. De Moor,
 ``Variational Characterisations of Separability and Entanglement of Formation",
@@ -1962,16 +1959,16 @@ Physical Review A 77, 052312 (2008),
 \bibitem{ab-algo}
 Richard E. Blahut, {\it Principles and Practice of Information Theory} (1987, Addison-Wesley)
 \bibitem{subadd-proof} Elliott H. Lieb, Mary Beth Ruskai, ``Proof of the Strong Subadditivity of Quantum-Mechanical Entropy", Journal of Mathematical Physics 14 (1973) 1938-1941.
-\bibitem{Tuc99} Tucci, Robert R. (1999). ``Quantum Entanglement and Conditional Information Transmission". 
+\bibitem{Tuc99} Tucci, Robert R. (1999). ``Quantum Entanglement and Conditional Information Transmission".
     \url{https://arxiv.org/abs/quant-ph/9909041}
-\bibitem{Tuc00a} Tucci, Robert R. (2000). ``Separability of Density Matrices and Conditional Information Transmission". 
+\bibitem{Tuc00a} Tucci, Robert R. (2000). ``Separability of Density Matrices and Conditional Information Transmission".
     \url{https://arxiv.org/abs/quant-ph/0005119}
-\bibitem{Tuc00b} Tucci, Robert R. (2000). ``Entanglement of Formation and Conditional Information Transmission". 
+\bibitem{Tuc00b} Tucci, Robert R. (2000). ``Entanglement of Formation and Conditional Information Transmission".
     \url{https://arxiv.org/abs/quant-ph/0010041}
-\bibitem{Tuc01a} Tucci, Robert R. (2001). ``Relaxation Method for Calculating Quantum Entanglement". 
+\bibitem{Tuc01a} Tucci, Robert R. (2001). ``Relaxation Method for Calculating Quantum Entanglement".
     \url{https://arxiv.org/abs/quant-ph/0101123}
 \bibitem{Tuc01b} Tucci, Robert R. (2001). ``Entanglement of Bell Mixtures of Two Qubits". \url{https://arxiv.org/abs/quant-ph/0103040}
-\bibitem{Tuc02} Tucci, Robert R. (2002). ``Entanglement of Distillation and Conditional Mutual Information". 
+\bibitem{Tuc02} Tucci, Robert R. (2002). ``Entanglement of Distillation and Conditional Mutual Information".
     \url{https://arxiv.org/abs/quant-ph/0202144}
 
 \bibitem{Chr03} Matthias Christandl, Andreas Winter (2003). ````Squashed Entanglement": An Additive Entanglement Measure". Journal of Mathematical Physics. 45 (3): 829–840. \url{https://arxiv.org/abs/quant-ph/0308088}
@@ -1982,14 +1979,14 @@ quantum entropy with equality",
 Comm. Math. Phys., 246:359, 2004
 
 \bibitem{sep-proof2}
- Brandao, F., Christandl, M., Yard, J. (September 2011). ``Faithful Squashed Entanglement". Communications in Mathematical Physics. 306 (3): 805–830. 
+ Brandao, F., Christandl, M., Yard, J. (September 2011). ``Faithful Squashed Entanglement". Communications in Mathematical Physics. 306 (3): 805–830.
  \url{https://arxiv.org/abs/1010.1750}
 
 \bibitem{pert-wiki}
 \url{https://en.wikipedia.org/wiki/Perturbation_theory_(quantum_mechanics)}
 
 \bibitem{cvit}
-P. Cvitanović, {\it Group Theory: Birdtracks, Lie's, and Exceptional Groups}, Princeton University Press, Princeton 2008, available online at 
+P. Cvitanović, {\it Group Theory: Birdtracks, Lie's, and Exceptional Groups}, Princeton University Press, Princeton 2008, available online at
 \url{http://birdtracks.eu/}
 
 \bibitem{wiki-hypergeo}
