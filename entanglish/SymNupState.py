@@ -9,12 +9,12 @@ class SymNupState:
     SymNupState is an abbreviation for Symmetrized N-qubits-up State,
     which is a special, very convenient for testing purposes, type of
     quantum state vector. Note, this is a pure state of qubits only. No
-    qudits with d != 2 in this state. The state contains a total of num_qbits
-    qubits. num_up of them are up (in state |1>) and num_qbits - num_up are
-    down (in state |0>). To build such a state, we first create any (
-    normalized) initial state vector with the required number of up and down
-    qubits, and then we apply a total symmetrizer to that initial state
-    vector.
+    qudits with d != 2 in this state. The state contains a total of
+    num_qbits qubits. num_up of them are up (in state ``|1>``) and num_qbits
+    - num_up are down (in state ``|0>``). To build such a state, we first
+    create any ( normalized) initial state vector with the required number
+    of up and down qubits, and then we apply a total symmetrizer to that
+    initial state vector.
 
     It turns out that SymNupState's have a (bipartite) entanglement that is
     known and has a simple analytical expression given by the classical
@@ -34,7 +34,7 @@ class SymNupState:
         total number of qubits in the state
     num_up : int
         should be <= num_qbits. The number of qubits that is up (in state
-        |1>). The other num_qbits - n_up are down (in state |0>)
+        ``|1>``). The other num_qbits - n_up are down (in state ``|0>``)
 
     """
 
@@ -95,7 +95,7 @@ class SymNupState:
 
         References
         ----------
-        1. https://en.wikipedia.org/wiki/Hypergeometric_distribution)
+        1. `<https://en.wikipedia.org/wiki/Hypergeometric_distribution)>`_
 
         Parameters
         ----------

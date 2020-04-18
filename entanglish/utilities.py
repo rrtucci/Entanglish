@@ -47,7 +47,7 @@ def kron_prod(mat_list):
 
 def mat_elem(v1, a, v2):
     """
-    This method returns the matrix element <v1|a|v2>, where v1 and v2 are
+    This method returns the matrix element ``<v1|a|v2>``, where v1 and v2 are
     column vectors and 'a' a matrix.
 
     Parameters

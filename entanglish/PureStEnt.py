@@ -4,10 +4,10 @@ from entanglish.EntangCase import *
 class PureStEnt(EntangCase):
     """
     This class is a child of class EntangCase. Its purpose is to calculate
-    the ( bipartite) quantum entanglement E_xy of a pure state |psi_xy>
+    the ( bipartite) quantum entanglement E_xy of a pure state ``|psi_xy>``
     where x and y constitute a bi-partition of the set of all qudits.
     E_xy is defined here as the von Neumann entropy S(dm_x) of a density
-    matrix dm_x, where dm_x = trace_y dm_xy, where dm_xy = |psi_xy><psi_xy|.
+    matrix dm_x, where dm_x = trace_y dm_xy, where ``dm_xy = |psi_xy><psi_xy|``.
 
     Attributes
     ----------

@@ -28,12 +28,12 @@ class TwoQubitState:
         """
         This method returns one Bell basis state out of 4 possible ones. The
         4 Bell basis states are orthonormal, maximally entangled, 2 qubit
-        states.
+        states.::
 
-        |==+> = 1/sqrt(2)[|00> + |11>]
-        |==-> = 1/sqrt(2)[|00> - |11>]
-        |!=+> = 1/sqrt(2)[|01> + |10>]
-        |!=-> = 1/sqrt(2)[|01> - |10>]
+            |==+> = 1/sqrt(2)[|00> + |11>]
+            |==-> = 1/sqrt(2)[|00> - |11>]
+            |!=+> = 1/sqrt(2)[|01> + |10>]
+            |!=-> = 1/sqrt(2)[|01> - |10>]
 
         Parameters
         ----------
