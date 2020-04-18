@@ -95,8 +95,6 @@ class SquashedEnt(EntangCase):
         self.x_axes = None
         self.y_axes = None
         self.Dxy = None
-        self.Dxy_proj_ops = None
-        self.Dxy_sqrt = None
 
         self.calc_formation_ent = False
 

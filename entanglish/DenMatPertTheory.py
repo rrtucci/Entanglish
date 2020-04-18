@@ -63,7 +63,8 @@ class DenMatPertTheory:
     del_dm_in_sbasis: DenMat
         del_dm is in inbasis. It is convenient to change it to sbasis (
         separable basis) so that if v1 = dm0_eigen_sys[1][n1] and v2 =
-        dm0_eigen_sys[1][n2] then del_dm_in_sbasis[n1, n2] = <v1| del_dm |v2>
+        dm0_eigen_sys[1][n2] then ``del_dm_in_sbasis[n1, n2] = <v1| del_dm
+        |v2>``
     dm0_eigen_sys : tuple[np.ndarray, np.ndarray]
         eigensystem of density matrix dm0.
     evas_of_dm_to_2nd_order : np.ndarray
@@ -71,8 +72,8 @@ class DenMatPertTheory:
     evec_cols_of_dm_to_2nd_order : np.ndarray
         This is a unitary matrix with (a second order approx of) the
         eigenvectors of dm as columns. If this matrix is U, the ``dm \approx
-        UDU^dag``, where D is diagonal and U^dag is the Hermitian conjugate of
-        U.
+        UDU^dag``, where D is diagonal and U^dag is the Hermitian conjugate
+        of U.
     verbose : bool
 
     """
