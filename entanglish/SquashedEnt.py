@@ -407,9 +407,6 @@ class SquashedEnt(EntangCase):
                 else:
                     max_pos = np.argmax(evas)
                     vec = evec_cols[:, max_pos]
-                    # _, proj1 = self.Dxy_proj_ops
-                    # vec = np.dot(proj1.arr, vec)
-                    # vec = vec/np.linalg.norm(vec)
                     arr = np.outer(vec, np.conj(vec)) * np.exp(evas[max_pos])
                     new_Kxy_alp = DenMat(
                         self.Dxy.num_rows, self.Dxy.row_shape, arr)
