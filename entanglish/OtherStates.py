@@ -50,12 +50,13 @@ if __name__ == "__main__":
 
     def main():
         print('bound entang state **********************')
-        dm_bd = OtherStates.get_den_mat_with_bound_entang(.5)
+        dm_bd = OtherStates.get_den_mat_with_bound_entang(.7)
 
         recursion_init = 'eigen+'
-        num_ab_steps = 30
+        num_ab_steps = 100
         ecase = SquashedEnt(dm_bd, num_ab_steps,
                             recursion_init=recursion_init, verbose=True)
+        ecase.eps_log = 1e-10
         pf = ecase.get_entang_profile()
         ecase.print_entang_profiles([pf], dm_bd.row_shape)
 
