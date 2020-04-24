@@ -798,7 +798,7 @@ class DenMat:
             assert False, 'unsupported approx'
         return DenMat(self.num_rows, self.row_shape, expm_arr)
 
-    def log(self, approx='eigen'):
+    def log(self, approx='eigen', eps=None, clip_to_zero=False):
         """
         This method returns a DenMat which is the matrix natural log of self.
 
@@ -806,6 +806,12 @@ class DenMat:
         ----------
         approx : str
             approx used to calculate the natural log. Either 'eigen' or 'pade'.
+        eps : float | None
+            clips logs larger than log(eps) to log(eps) (or to zero if
+            clip_to_zero=True) if this is a float. Doesn't clip if this is
+            None
+        clip_to_zero : bool
+            clips to zero iff this is True
 
         Returns
         -------
@@ -816,7 +822,13 @@ class DenMat:
         # self.normalize_diag_of_arr()
         logm_arr = None
         if approx == 'eigen':
-            logm_arr = ut.fun_of_herm_arr(ut.clipped_log_of_vec, self.arr)
+            if eps is None:
+                logm_arr = ut.fun_of_herm_arr(np.log, self.arr)
+            else:
+                logm_arr = ut.fun_of_herm_arr(ut.clipped_log_of_vec,
+                                              self.arr,
+                                              eps=eps,
+                                              clip_to_zero=clip_to_zero)
         elif approx == 'pade':
             logm_arr = la.logm(self.arr)
         else:

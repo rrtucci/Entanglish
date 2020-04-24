@@ -301,7 +301,7 @@ class EntangCase:
             assert False
         return dm_out
 
-    def log(self, dm, approx=None):
+    def log(self, dm, approx=None, eps=None, clip_to_zero=False):
         """
         This method is a simple wrapper for dm.log() so that all usages
         inside the class utilize approx=self.approx if approx!=None.
@@ -310,6 +310,8 @@ class EntangCase:
         ----------
         dm : DenMat
         approx : str|None
+        eps : float | None
+        clip_to_zero : bool
 
         Returns
         -------
@@ -320,12 +322,19 @@ class EntangCase:
             approx = self.approx
         dm_out = None
         if approx in ['eigen', 'pade']:
-            dm_out = dm.log(approx=approx)
+            dm_out = dm.log(approx=approx,
+                            eps=eps,
+                            clip_to_zero=clip_to_zero)
         elif approx == 'pert':
             esys = DenMatPertTheory.do_bstrap_with_separable_dm0(
                 dm, self.num_bstrap_steps)
+            if eps is None:
+                fun = np.log
+            else:
+                fun = ut.clipped_log_of_vec
             dm_out = DenMat.get_fun_of_dm_from_eigen_sys(
-                dm.num_rows, dm.row_shape, esys, np.log)
+                dm.num_rows, dm.row_shape, esys, fun,
+                eps=eps, clip_to_zero=clip_to_zero)
         else:
             assert False
         return dm_out

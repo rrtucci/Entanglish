@@ -16,6 +16,8 @@ class OtherStates:
         This method returns a DenMat with num_rows = 8 and row_shape = (2,
         4) that is known to have bound entanglement.
 
+        https://arxiv.org/abs/quant-ph/9703004
+
         Parameters
         ----------
         p : float

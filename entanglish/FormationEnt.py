@@ -53,6 +53,43 @@ class FormationEnt(SquashedEnt):
 
         SquashedEnt.__init__(self, *args, **kwargs)
         self.calc_formation_ent = True
+        # much smaller than for squashed entang
+        self.eps_log = 1e-2
+
+    def regulate(self, Kxy_a):
+        """
+        This internal method returns a list new_Kxy_a which is constructed
+        by replacing each item Kxy_alp of list Kxy_a by root*Kxy_alp*root^H,
+        where root = sqrt(Dxy)* (sum_alp Kxy_alp)^(-1/2).
+
+        Some items of list Kxy_a may be None (those with very small w_alp).
+        None items are not changed, they are left as None
+
+        Parameters
+        ----------
+        Kxy_a : list[DenMat|None]
+
+        Returns
+        -------
+        list[DenMat|None]
+
+        """
+        sumk = DenMat(self.Dxy.num_rows, self.Dxy.row_shape)
+        sumk.set_arr_to_zero()
+        for alp in range(len(Kxy_a)):
+            Kxy_alp = Kxy_a[alp]
+            if Kxy_alp is not None:
+                sumk += Kxy_alp
+        evas, evec_cols = np.linalg.eigh(sumk.arr)
+        evas = np.array([1/np.sqrt(x) if x > 1e-6 else 0 for x in evas])
+        sqrt_inv_sumk = \
+            DenMat(self.Dxy.num_rows, self.Dxy.row_shape,
+                   arr=ut.herm_arr_from_eigen_sys(evas, evec_cols))
+        root = self.Dxy_sqrt*sqrt_inv_sumk
+        root_h = root.herm()
+        new_Kxy_a = [(root*Kxy_alp*root_h if Kxy_alp is not None
+                     else None) for Kxy_alp in Kxy_a]
+        return new_Kxy_a
 
 
 if __name__ == "__main__":
@@ -112,7 +149,7 @@ if __name__ == "__main__":
         dm1 = TwoQubitState.get_bell_basis_diag_dm(.7)
 
         recursion_init = "eigen+"
-        num_ab_steps = 150
+        num_ab_steps = 50
         print("recursion_init=", recursion_init)
         print('num_ab_steps=', num_ab_steps)
         for dm in [dm1]:

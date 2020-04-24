@@ -46,6 +46,8 @@ class SquashedEnt(EntangCase):
         True iff want to calculate entanglement of formation
     eps_w : float
         weights (probabilities) < eps_w are rounded to zero
+    eps_log : float | None
+        logs larger than log(eps_log) are clipped to log(eps_log)
     num_ab_steps : int
         number of iterations of Arimoto Blahut algo
     num_hidden_states : int
@@ -91,10 +93,12 @@ class SquashedEnt(EntangCase):
         self.recursion_init = recursion_init
 
         self.eps_w = 1e-6
+        self.eps_log = 1e-10
 
         self.x_axes = None
         self.y_axes = None
         self.Dxy = None
+        self.Dxy_sqrt = None
 
         self.calc_formation_ent = False
 
@@ -122,9 +126,7 @@ class SquashedEnt(EntangCase):
         for alp in range(len(Kxy_a)):
             Kxy_alp = Kxy_a[alp]
             if Kxy_alp is not None:
-
                 Kxy_alp = Kxy_alp.positive_part()
-
                 sum_xya_Kxy_a += Kxy_alp.trace()
             new_Kxy_a.append(Kxy_alp)
 
@@ -152,6 +154,8 @@ class SquashedEnt(EntangCase):
         self.y_axes = [k for k in range(num_row_axes) if k not in self.x_axes]
         num_y_axes = len(self.y_axes)
         self.Dxy = self.den_mat.get_rho_xy(self.x_axes, self.y_axes)
+        if self.calc_formation_ent:
+            self.Dxy_sqrt = self.sqrt(self.Dxy)
 
         Kxy_a = []
         if self.recursion_init == 'stat-pt':
@@ -323,17 +327,21 @@ class SquashedEnt(EntangCase):
                 log_Dx_Dy_alp = None
             else:
                 Dxy_alp = Kxy_alp*(1/w_alp)
-                log_Dxy_alp = self.log(Dxy_alp)
+                log_Dxy_alp = self.log(Dxy_alp, eps=self.eps_log)
 
                 Dx_alp = Dxy_alp.get_partial_tr(set_y)
                 Dy_alp = Dxy_alp.get_partial_tr(set_x)
                 log_Dx_Dy_alp = self.log(DenMat.get_kron_prod_of_den_mats(
-                                [Dx_alp, Dy_alp]))
+                                [Dx_alp, Dy_alp]), eps=self.eps_log)
 
                 Delta_xy_alp = log_Dxy_alp - log_Dx_Dy_alp
                 Delta_xy += Delta_xy_alp*w_alp
                 # print('cccvvvbbb', Dxy_alp,  w_alp)
-                entang += (Dxy_alp * Delta_xy_alp).trace() * w_alp / 2
+                if not self.calc_formation_ent:
+                    entang += (Dxy_alp * Delta_xy_alp).trace() * w_alp / 2
+                else:  # more precise
+                    ecase = PureStEnt(Dxy_alp, approx=self.approx)
+                    entang += ecase.get_entang(set_x)*w_alp
             log_Dxy_a.append(log_Dxy_alp)
             log_Dx_Dy_a.append(log_Dx_Dy_alp)
 
@@ -354,9 +362,9 @@ class SquashedEnt(EntangCase):
             else:
                 arg_of_exp = Delta_xy + log_Dx_Dy_a[alp]
                 evas, evec_cols = np.linalg.eigh(arg_of_exp.arr)
-                # set positive evas to zero
-                evas = np.array([min(x, 0) for x in evas])
                 if not self.calc_formation_ent:
+                    # set positive evas to zero
+                    evas = np.array([min(x, 0) for x in evas])
                     arr = ut.fun_of_herm_arr_from_eigen_sys(
                         np.exp, evas, evec_cols)
                     Dxy_alp = DenMat(
@@ -365,14 +373,16 @@ class SquashedEnt(EntangCase):
                 else:
                     max_pos = np.argmax(evas)
                     vec = evec_cols[:, max_pos]
+                    # _, proj1 = self.Dxy_proj_ops
+                    # vec = np.dot(proj1.arr, vec)
+                    # vec = vec/np.linalg.norm(vec)
                     arr = np.outer(vec, np.conj(vec)) * np.exp(evas[max_pos])
                     new_Kxy_alp = DenMat(
                         self.Dxy.num_rows, self.Dxy.row_shape, arr)
 
             new_Kxy_a.append(new_Kxy_alp)
 
-        if not self.calc_formation_ent:
-            new_Kxy_a = self.regulate(new_Kxy_a)
+        new_Kxy_a = self.regulate(new_Kxy_a)
 
         return new_Kxy_a, entang, err
 
