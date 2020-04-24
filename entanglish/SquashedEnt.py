@@ -102,7 +102,7 @@ class SquashedEnt(EntangCase):
 
         self.calc_formation_ent = False
 
-    def regulate(self, Kxy_a):
+    def regulate1(self, Kxy_a):
         """
         This internal method returns a list new_Kxy_a which is constructed
         by replacing each item Kxy_alp of list Kxy_a by its positive_part(),
@@ -134,6 +134,41 @@ class SquashedEnt(EntangCase):
                      else None) for Kxy_alp in new_Kxy_a]
         return new_Kxy_a
 
+    def regulate2(self, Kxy_a):
+        """
+        This internal method returns a list new_Kxy_a which is constructed
+        by replacing each item Kxy_alp of list Kxy_a by root*Kxy_alp*root^H,
+        where root = sqrt(Dxy)* (sum_alp Kxy_alp)^(-1/2).
+
+        Some items of list Kxy_a may be None (those with very small w_alp).
+        None items are not changed, they are left as None
+
+        Parameters
+        ----------
+        Kxy_a : list[DenMat|None]
+
+        Returns
+        -------
+        list[DenMat|None]
+
+        """
+        sumk = DenMat(self.Dxy.num_rows, self.Dxy.row_shape)
+        sumk.set_arr_to_zero()
+        for alp in range(len(Kxy_a)):
+            Kxy_alp = Kxy_a[alp]
+            if Kxy_alp is not None:
+                sumk += Kxy_alp
+        evas, evec_cols = np.linalg.eigh(sumk.arr)
+        evas = np.array([1/np.sqrt(x) if x > 1e-6 else 0 for x in evas])
+        sqrt_inv_sumk = \
+            DenMat(self.Dxy.num_rows, self.Dxy.row_shape,
+                   arr=ut.herm_arr_from_eigen_sys(evas, evec_cols))
+        root = self.Dxy_sqrt*sqrt_inv_sumk
+        root_h = root.herm()
+        new_Kxy_a = [(root*Kxy_alp*root_h if Kxy_alp is not None
+                     else None) for Kxy_alp in Kxy_a]
+        return new_Kxy_a
+
     def get_entang(self, axes_subset):
         """
         This method returns the squashed entanglement Exy, where x =
@@ -154,8 +189,7 @@ class SquashedEnt(EntangCase):
         self.y_axes = [k for k in range(num_row_axes) if k not in self.x_axes]
         num_y_axes = len(self.y_axes)
         self.Dxy = self.den_mat.get_rho_xy(self.x_axes, self.y_axes)
-        if self.calc_formation_ent:
-            self.Dxy_sqrt = self.sqrt(self.Dxy)
+        self.Dxy_sqrt = self.sqrt(self.Dxy)
 
         Kxy_a = []
         if self.recursion_init == 'stat-pt':
@@ -381,9 +415,10 @@ class SquashedEnt(EntangCase):
                         self.Dxy.num_rows, self.Dxy.row_shape, arr)
 
             new_Kxy_a.append(new_Kxy_alp)
-
-        new_Kxy_a = self.regulate(new_Kxy_a)
-
+        if not self.calc_formation_ent:
+            new_Kxy_a = self.regulate2(new_Kxy_a)
+        else:
+            new_Kxy_a = self.regulate2(new_Kxy_a)
         return new_Kxy_a, entang, err
 
 
