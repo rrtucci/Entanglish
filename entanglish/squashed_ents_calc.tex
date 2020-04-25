@@ -710,21 +710,31 @@ $K^\alp_{\rvx, \rvy}$ so one can think of these two quantities as being
 2 equivalent representations of the same thing.
 
 Suppose $M^\alp_{\rvx, \rvy}\in \call(\calh_{\rvx, \rvy})$ for all $\alp\in Z_{[0, n_\rvalp)}$.
-Define the function regulate() by
+For $\rho_{\rvx, \rvy}\in\call(\calh_{\rvx, \rvy})$, define the function ${\tt regulate}_{\rho_{\rvx, \rvy}}()$
+by
 
 
 \beq
-{\rm regulate}(M^\alp_{\rvx, \rvy}) =
- \frac{[M^\alp_{\rvx, \rvy}]_{\rm pos. part}}{\sum_{\alp}\tr_{\rvx, \rvy} (numerator)}
- \;.
+{\tt regulate}_{\rho_{\rvx, \rvy}}(M^\alp_{\rvx, \rvy}) = X M^\alp_{\rvx, \rvy} X^\dag
+ \;,
 \eeq
-Here $[M]_{\rm pos.part}$ is the positive part of the operator $M$,
-which is obtained by replacing all negative eigenvalues of $M$ by zero
-and leaving non-negative ones the same.
-Note that the regulate() function maps $K^\alp_{\rvx, \rvy}$ to itself:
+where
 
 \beq
-{\rm regulate}(K^\alp_{\rvx, \rvy})=K^\alp_{\rvx, \rvy}
+X= \sqrt{\rho_{\rvx, \rvy}}\;\;{\rm pinv}
+\left(\sqrt{\sum_\alp M^\alp_{\rvx, \rvy}}\right)
+\;.
+\eeq
+Note that if 
+
+\beq 
+\rho_{\rvx, \rvy}=\sum_\alp M^\alp_{\rvx, \rvy}
+\;,
+\eeq
+then:
+
+\beq
+\rho_{\rvx, \rvy}= \sum_\alp {\tt regulate}_{\rho_{\rvx, \rvy}}(M^\alp_{\rvx, \rvy})
 \;.
 \eeq
 
@@ -836,7 +846,7 @@ Let
 \right]w^\alp(n)
 \;,
 \eeq
-where $\exp^-(H)$ for any Hermitian matrix $H$ is calculated by expressing 
+where $\exp^-(H)$ for any Hermitian matrix $H$ is calculated by expressing
 $H=UDU^\dag$ where $U$ is a unitary matrix and $D$ is real diagonal matrix, and
 replacing each diagonal value
 $d$ of $D$ by $\exp(\min(0, d))$. Finally, let
@@ -845,8 +855,8 @@ $d$ of $D$ by $\exp(\min(0, d))$. Finally, let
 \beq
 K^{\alp}_{\rvx,\rvy}(n+1)
 =
-{\rm regulate}\left(
-\cala^\alp(n)\right)
+{\tt regulate}_{\rho_{\rvx, \rvy}}\left[
+\cala^\alp(n)\right]
 \;,\label{eq-squashed-only1}
 \eeq
 
@@ -879,25 +889,6 @@ err(n)\rightarrow 0
 \;
 \eeq
 as $n\rightarrow \infty$.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 \section{Formation Entanglement}
 
@@ -937,13 +928,13 @@ simply
 replace Eq.(\ref{eq-squashed-only1}) by the following.
 For each $\alp$, let $w^\alp(n)$ be the largest eigenvalue
 and $\ket{\psi^\alp(n)}$ its corresponding
-eigenvector of $\calb(n)
-\cala^\alp(n)[\calb(n)]^\dagger$.
+eigenvector of $
+\cala^\alp(n)$.
 Then define
 
 \beq
-K^\alp_{\rvx, \rvy}(n+1)=
-w^\alp(n)\ket{\psi^\alp(n)}\bra{\psi^\alp(n)}
+K^\alp_{\rvx, \rvy}(n+1)={\tt regulate}_{\rho_{\rvx, \rvy}}\left[
+w^\alp(n)\ket{\psi^\alp(n)}\bra{\psi^\alp(n)}\right]
 \;.
 \eeq
 
