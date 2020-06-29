@@ -28,3 +28,5 @@ The Entanglish project aims to  provide eventually a full suite of tools, writte
 
 (Alphabetical Order)
 * Tucci, Robert
+
+Brought to you by www.ar-tiste.xyz
